@@ -6,7 +6,11 @@ import { createWebsiteInbox } from '@/lib/chatwoot';
 import { renderDemoHTML } from '@/lib/renderDemo';
 import { slugify } from '@/lib/slug';
 import { writeTextFile, readTextFileIfExists, atomicJSONUpdate } from '@/lib/fsutils';
+import { getWorkflow, createWorkflow, patchWorkflowForBusiness } from '@/lib/n8n';
+import { createAgentBot, assignBotToInbox } from '@/lib/chatwoot_admin';
 import path from 'path';
+
+export const runtime = "nodejs";
 
 export interface OnboardPayload {
   business_url: string;
@@ -26,6 +30,11 @@ export interface DemoRegistry {
     chatwoot: {
       inbox_id: number;
       website_token: string;
+    };
+    workflow_id?: string;
+    agent_bot?: {
+      id: number | string;
+      access_token: string;
     };
     created_at: string;
     updated_at?: string;
@@ -116,7 +125,51 @@ export async function POST(request: NextRequest) {
     const demoIndexPath = path.join(demoRoot, slug, 'index.html');
     await writeTextFile(demoIndexPath, demoHTML);
 
-    // Step 9: Update registry
+    // Step 9: Auto-clone n8n workflow and setup Chatwoot bot
+    const N8N_READY = !!(process.env.N8N_BASE_URL && process.env.N8N_API_KEY && process.env.MAIN_WORKFLOW_ID);
+    let workflowId: string | undefined;
+    let botId: number | string | undefined;
+    let botAccessToken: string | undefined;
+    let botSetupSkipped = false;
+    let botSetupReason = '';
+
+    try {
+      // 1) Create Chatwoot Agent Bot named "<BusinessName> Bot" with webhook https://n8n.sost.work/webhook/<BusinessName>
+      const bot = await createAgentBot(businessName);
+      botId = bot.id;
+      botAccessToken = bot.access_token;
+
+      // 2) Assign bot to the newly created inbox
+      await assignBotToInbox(inbox_id, botId);
+
+      // 3) Clone n8n Main and patch it
+      if (N8N_READY) {
+        const main = await getWorkflow(process.env.MAIN_WORKFLOW_ID!);
+        main.name = businessName;
+
+        // wipe identity so POST creates a new workflow
+        delete main.id; 
+        delete main.staticData; 
+        delete main.createdAt; 
+        delete main.updatedAt;
+
+        // inject system message, set webhook path/URL, and add bot token to Chatwoot HTTP nodes
+        patchWorkflowForBusiness(main, businessName, finalSystemMessage, botAccessToken || "");
+
+        const created = await createWorkflow(main);
+        workflowId = created.id;
+      }
+    } catch (e: any) {
+      console.error("Auto-create n8n/bot failed:", e);
+      
+      // Handle agent bot API not available
+      if (e.message === 'AGENT_BOT_API_NOT_AVAILABLE') {
+        botSetupSkipped = true;
+        botSetupReason = 'Agent bot API not available; configure via UI.';
+      }
+    }
+
+    // Step 10: Update registry
     const registryPath = './data/registry/demos.json';
     await atomicJSONUpdate<DemoRegistry>(registryPath, (registry) => {
       const now = new Date().toISOString();
@@ -132,6 +185,13 @@ export async function POST(request: NextRequest) {
           inbox_id,
           website_token
         },
+        ...(workflowId && { workflow_id: workflowId }),
+        ...(botId && botAccessToken && { 
+          agent_bot: { 
+            id: botId, 
+            access_token: botAccessToken 
+          } 
+        }),
         created_at: existingEntry?.created_at || now,
         ...(existingEntry && { updated_at: now })
       };
@@ -139,8 +199,8 @@ export async function POST(request: NextRequest) {
       return registry;
     });
 
-    // Step 10: Return success response
-    const response = {
+    // Step 11: Return success response
+    const response: any = {
       slug,
       business: businessName,
       url: payload.business_url,
@@ -150,8 +210,29 @@ export async function POST(request: NextRequest) {
         inbox_id,
         website_token
       },
+      ...(workflowId && { workflow_id: workflowId }),
+      ...(botId && botAccessToken && { 
+        agent_bot: { 
+          id: botId, 
+          access_token: botAccessToken 
+        } 
+      }),
       created_at: new Date().toISOString()
     };
+
+    // Handle bot setup failures
+    if (botSetupSkipped) {
+      response.bot_setup_skipped = true;
+      response.reason = botSetupReason;
+      response.suggested_steps = ["Create bot", "Set webhook", "Assign to inbox"];
+    } else if (workflowId && botId) {
+      // Add success notes
+      response.notes = {
+        chatwoot_bot: `Created ${businessName} Bot, webhook set to https://n8n.sost.work/webhook/${businessName}, assigned to the new inbox.`,
+        n8n_webhook: `Cloned workflow has Webhook node path set to ${businessName}; production URL uses https://n8n.sost.work/webhook/${businessName}.`,
+        http_nodes_auth: "All Chatwoot HTTP POST nodes updated with bot token in headers (api_access_token + Authorization: Bearer ...)."
+      };
+    }
 
     return NextResponse.json(response, { status: 200 });
 

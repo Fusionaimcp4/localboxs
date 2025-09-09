@@ -18,6 +18,19 @@ interface OnboardResponse {
     inbox_id: number;
     website_token: string;
   };
+  workflow_id?: string;
+  agent_bot?: {
+    id: number | string;
+    access_token: string;
+  };
+  bot_setup_skipped?: boolean;
+  reason?: string;
+  suggested_steps?: string[];
+  notes?: {
+    chatwoot_bot: string;
+    n8n_webhook: string;
+    http_nodes_auth: string;
+  };
   created_at: string;
 }
 
@@ -216,6 +229,24 @@ export default function OnboardPage() {
                   <Label className="text-sm font-medium text-muted-foreground">Website Token</Label>
                   <p className="font-mono text-xs">{result.chatwoot.website_token}</p>
                 </div>
+                {result.workflow_id && (
+                  <div>
+                    <Label className="text-sm font-medium text-muted-foreground">n8n Workflow ID</Label>
+                    <p className="font-mono">{result.workflow_id}</p>
+                  </div>
+                )}
+                {result.agent_bot && (
+                  <>
+                    <div>
+                      <Label className="text-sm font-medium text-muted-foreground">Agent Bot ID</Label>
+                      <p className="font-mono">{result.agent_bot.id}</p>
+                    </div>
+                    <div className="md:col-span-2">
+                      <Label className="text-sm font-medium text-muted-foreground">Bot Access Token</Label>
+                      <p className="font-mono text-xs break-all">{result.agent_bot.access_token}</p>
+                    </div>
+                  </>
+                )}
               </div>
 
               <div className="space-y-2">
@@ -244,13 +275,46 @@ export default function OnboardPage() {
                 </div>
               </div>
 
+              {result.bot_setup_skipped && (
+                <Alert>
+                  <AlertDescription>
+                    <strong>Bot Setup Skipped:</strong> {result.reason}
+                    <br />
+                    <strong>Manual Steps:</strong> {result.suggested_steps?.join(', ')}
+                  </AlertDescription>
+                </Alert>
+              )}
+
+              {result.notes && (
+                <div className="bg-green-50 p-4 rounded-lg border border-green-200">
+                  <h4 className="font-medium mb-2 text-green-800">Automation Success:</h4>
+                  <div className="space-y-2 text-sm text-green-700">
+                    <p><strong>Chatwoot Bot:</strong> {result.notes.chatwoot_bot}</p>
+                    <p><strong>n8n Webhook:</strong> {result.notes.n8n_webhook}</p>
+                    <p><strong>HTTP Authentication:</strong> {result.notes.http_nodes_auth}</p>
+                  </div>
+                </div>
+              )}
+
               <div className="bg-muted p-4 rounded-lg">
                 <h4 className="font-medium mb-2">Next Steps:</h4>
                 <ol className="list-decimal list-inside space-y-1 text-sm text-muted-foreground">
-                  <li>Duplicate the Main n8n workflow in the n8n UI</li>
-                  <li>Name the new workflow "{result.business}"</li>
-                  <li>Open the "Main AI" node and paste the system message content</li>
-                  <li>Test the demo URL to ensure the chat widget works end-to-end</li>
+                  {result.workflow_id ? (
+                    <>
+                      <li>✅ n8n workflow "{result.business}" has been automatically created</li>
+                      <li>✅ System message has been injected into the Main AI node</li>
+                      <li>✅ Webhook path set to "{result.slug}"</li>
+                      <li>✅ Chatwoot bot created and assigned to inbox</li>
+                      <li>Test the demo URL to ensure the chat widget works end-to-end</li>
+                    </>
+                  ) : (
+                    <>
+                      <li>Duplicate the Main n8n workflow in the n8n UI</li>
+                      <li>Name the new workflow "{result.business}"</li>
+                      <li>Open the "Main AI" node and paste the system message content</li>
+                      <li>Test the demo URL to ensure the chat widget works end-to-end</li>
+                    </>
+                  )}
                 </ol>
               </div>
 
