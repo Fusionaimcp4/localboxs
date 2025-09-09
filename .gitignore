@@ -28,6 +28,7 @@ yarn-error.log*
 # local env files
 .env*.local
 .env
+!.env.example
 
 # vercel
 .vercel
@@ -90,3 +91,6 @@ dist
 # Storybook build outputs
 .out
 .storybook-out
+
+# Temporary files
+temp/
