@@ -127,6 +127,12 @@ export async function POST(request: NextRequest) {
 
     // Step 9: Auto-clone n8n workflow and setup Chatwoot bot
     const N8N_READY = !!(process.env.N8N_BASE_URL && process.env.N8N_API_KEY && process.env.MAIN_WORKFLOW_ID);
+    console.log('n8n Configuration Check:');
+    console.log('- N8N_BASE_URL:', process.env.N8N_BASE_URL || 'NOT SET');
+    console.log('- N8N_API_KEY:', process.env.N8N_API_KEY ? 'SET (' + process.env.N8N_API_KEY.substring(0, 10) + '...)' : 'NOT SET');
+    console.log('- MAIN_WORKFLOW_ID:', process.env.MAIN_WORKFLOW_ID || 'NOT SET');
+    console.log('- N8N_READY:', N8N_READY);
+    
     let workflowId: string | undefined;
     let botId: number | string | undefined;
     let botAccessToken: string | undefined;
@@ -135,15 +141,26 @@ export async function POST(request: NextRequest) {
 
     try {
       // 1) Create Chatwoot Agent Bot named "<BusinessName> Bot" with webhook https://n8n.sost.work/webhook/<BusinessName>
+      console.log(`Creating agent bot for ${businessName}...`);
       const bot = await createAgentBot(businessName);
       botId = bot.id;
       botAccessToken = bot.access_token;
+      console.log(`Agent bot created with ID: ${botId}`);
 
       // 2) Assign bot to the newly created inbox
-      await assignBotToInbox(inbox_id, botId);
+      console.log(`Assigning bot ${botId} to inbox ${inbox_id}...`);
+      try {
+        await assignBotToInbox(inbox_id, botId);
+        console.log(`Bot successfully assigned to inbox`);
+      } catch (assignError) {
+        console.warn(`Bot assignment failed, but continuing with workflow creation:`, assignError);
+        // Don't fail the entire process if bot assignment fails
+        // The bot was created successfully, assignment can be done manually
+      }
 
       // 3) Clone n8n Main and patch it
       if (N8N_READY) {
+        console.log(`Cloning n8n workflow for ${businessName}...`);
         const main = await getWorkflow(process.env.MAIN_WORKFLOW_ID!);
         main.name = businessName;
 
@@ -158,14 +175,29 @@ export async function POST(request: NextRequest) {
 
         const created = await createWorkflow(main);
         workflowId = created.id;
+        console.log(`n8n workflow created with ID: ${workflowId}`);
+      } else {
+        console.log('n8n API not configured, skipping workflow creation');
       }
     } catch (e: any) {
       console.error("Auto-create n8n/bot failed:", e);
       
-      // Handle agent bot API not available
+      // Handle specific error types
       if (e.message === 'AGENT_BOT_API_NOT_AVAILABLE') {
         botSetupSkipped = true;
         botSetupReason = 'Agent bot API not available; configure via UI.';
+      } else if (e.message && e.message.includes('chatwoot')) {
+        botSetupSkipped = true;
+        botSetupReason = 'Chatwoot API error; check configuration and try again.';
+      } else if (e.message && e.message.includes('n8n')) {
+        console.warn('n8n workflow creation failed, but demo creation continues:', e.message);
+        // Don't mark as skipped if only n8n failed but bot creation succeeded
+        if (!botId) {
+          botSetupSkipped = true;
+          botSetupReason = 'n8n API error; check configuration and try again.';
+        }
+      } else {
+        console.warn('Automation partially failed, but demo creation continues:', e.message);
       }
     }
 

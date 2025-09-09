@@ -59,21 +59,77 @@ export async function createAgentBot(businessName: string) {
 
 /**
  * Assign bot to inbox
- *  - POST /api/v1/accounts/:account_id/inboxes/:inbox_id/agent_bot
- *  - body: { id: <bot_id> }  (some builds expect { agent_bot: { id } })
+ * Try multiple API endpoints and payload formats for maximum compatibility
  */
 export async function assignBotToInbox(inboxId: number | string, botId: number | string) {
-  try {
-    await cwPost(`/api/v1/accounts/${CW_ACCT}/inboxes/${inboxId}/agent_bot`, { id: botId });
-  } catch (error) {
+  const endpoints = [
+    // Standard endpoint with simple payload
+    { path: `/api/v1/accounts/${CW_ACCT}/inboxes/${inboxId}/agent_bot`, payload: { id: botId } },
+    // Alternative payload format
+    { path: `/api/v1/accounts/${CW_ACCT}/inboxes/${inboxId}/agent_bot`, payload: { agent_bot: { id: botId } } },
+    // Alternative endpoint structure (some Chatwoot versions)
+    { path: `/api/v1/accounts/${CW_ACCT}/inboxes/${inboxId}/agent_bots`, payload: { id: botId } },
+    // PUT method instead of POST (some versions)
+    { path: `/api/v1/accounts/${CW_ACCT}/inboxes/${inboxId}/agent_bot`, payload: { id: botId }, method: 'PUT' },
+    // Alternative: Update inbox configuration to include bot
+    { path: `/api/v1/accounts/${CW_ACCT}/inboxes/${inboxId}`, payload: { agent_bot_id: botId }, method: 'PATCH' }
+  ];
+
+  const errors: string[] = [];
+
+  for (const endpoint of endpoints) {
     try {
-      // fallback shape
-      await cwPost(`/api/v1/accounts/${CW_ACCT}/inboxes/${inboxId}/agent_bot`, { agent_bot: { id: botId } });
-    } catch (fallbackError) {
-      // If both fail, surface the original API response
-      const originalError = error instanceof Error ? error.message : 'Unknown error';
-      const fallbackErrorMsg = fallbackError instanceof Error ? fallbackError.message : 'Unknown fallback error';
-      throw new Error(`Bot assignment failed. Original: ${originalError}. Fallback: ${fallbackErrorMsg}`);
+      if (endpoint.method === 'PUT') {
+        await cwPut(endpoint.path, endpoint.payload);
+      } else if (endpoint.method === 'PATCH') {
+        await cwPatch(endpoint.path, endpoint.payload);
+      } else {
+        await cwPost(endpoint.path, endpoint.payload);
+      }
+      // If we get here, the assignment succeeded
+      return;
+    } catch (error) {
+      const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+      errors.push(`${endpoint.path} (${endpoint.method || 'POST'}): ${errorMsg}`);
+      
+      // If it's a 404, the endpoint doesn't exist, continue trying
+      // If it's a different error, it might be worth logging but continue
+      console.warn(`Bot assignment attempt failed for ${endpoint.path}:`, errorMsg);
     }
   }
+
+  // If all attempts failed, throw a comprehensive error
+  throw new Error(`Bot assignment failed for all attempted methods. Errors: ${errors.join('; ')}`);
+}
+
+async function cwPut(path: string, body: any) {
+  const r = await fetch(`${CW_BASE}${path}`, {
+    method: "PUT",
+    headers: {
+      "api_access_token": CW_KEY,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+  });
+  if (!r.ok) {
+    const txt = await r.text().catch(() => "");
+    throw new Error(`chatwoot PUT ${path} ${r.status} ${txt}`);
+  }
+  return r.json();
+}
+
+async function cwPatch(path: string, body: any) {
+  const r = await fetch(`${CW_BASE}${path}`, {
+    method: "PATCH",
+    headers: {
+      "api_access_token": CW_KEY,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+  });
+  if (!r.ok) {
+    const txt = await r.text().catch(() => "");
+    throw new Error(`chatwoot PATCH ${path} ${r.status} ${txt}`);
+  }
+  return r.json();
 }

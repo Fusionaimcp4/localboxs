@@ -281,6 +281,12 @@ export default function OnboardPage() {
                     <strong>Bot Setup Skipped:</strong> {result.reason}
                     <br />
                     <strong>Manual Steps:</strong> {result.suggested_steps?.join(', ')}
+                    {result.agent_bot && (
+                      <div className="mt-2">
+                        <strong>Note:</strong> Agent bot was created (ID: {result.agent_bot.id}) but assignment to inbox failed. 
+                        You can manually assign it in the Chatwoot admin interface.
+                      </div>
+                    )}
                   </AlertDescription>
                 </Alert>
               )}

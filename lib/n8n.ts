@@ -5,14 +5,25 @@ const N8N_BASE = process.env.N8N_BASE_URL!;
 const N8N_KEY = process.env.N8N_API_KEY!;
 
 async function n8nGet(path: string) {
+  console.log(`n8n GET request to: ${N8N_BASE}${path}`);
+  console.log(`Using API key: ${N8N_KEY ? N8N_KEY.substring(0, 10) + '...' : 'NOT SET'}`);
+  
   const r = await fetch(`${N8N_BASE}${path}`, {
     headers: { "X-N8N-API-KEY": N8N_KEY },
   });
-  if (!r.ok) throw new Error(`n8n GET ${path} ${r.status}`);
+  
+  if (!r.ok) {
+    const errorText = await r.text().catch(() => '');
+    console.error(`n8n GET ${path} failed:`, r.status, r.statusText, errorText);
+    throw new Error(`n8n GET ${path} ${r.status} - ${r.statusText}`);
+  }
+  
   return r.json();
 }
 
 async function n8nPost(path: string, body: any) {
+  console.log(`n8n POST request to: ${N8N_BASE}${path}`);
+  
   const r = await fetch(`${N8N_BASE}${path}`, {
     method: "POST",
     headers: {
@@ -21,10 +32,13 @@ async function n8nPost(path: string, body: any) {
     },
     body: JSON.stringify(body),
   });
+  
   if (!r.ok) {
-    const txt = await r.text().catch(() => "");
-    throw new Error(`n8n POST ${path} ${r.status} ${txt}`);
+    const errorText = await r.text().catch(() => "");
+    console.error(`n8n POST ${path} failed:`, r.status, r.statusText, errorText);
+    throw new Error(`n8n POST ${path} ${r.status} - ${r.statusText}`);
   }
+  
   return r.json();
 }
 
