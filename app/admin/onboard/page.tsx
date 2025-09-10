@@ -18,7 +18,7 @@ interface OnboardResponse {
     inbox_id: number;
     website_token: string;
   };
-  workflow_id?: string;
+  workflow_duplication?: 'success' | 'failed';
   agent_bot?: {
     id: number | string;
     access_token: string;
@@ -229,10 +229,10 @@ export default function OnboardPage() {
                   <Label className="text-sm font-medium text-muted-foreground">Website Token</Label>
                   <p className="font-mono text-xs">{result.chatwoot.website_token}</p>
                 </div>
-                {result.workflow_id && (
+                {result.workflow_duplication && (
                   <div>
-                    <Label className="text-sm font-medium text-muted-foreground">n8n Workflow ID</Label>
-                    <p className="font-mono">{result.workflow_id}</p>
+                    <Label className="text-sm font-medium text-muted-foreground">n8n Workflow Status</Label>
+                    <p className="font-mono">{result.workflow_duplication === 'success' ? '✅ Duplication Triggered' : '❌ Duplication Failed'}</p>
                   </div>
                 )}
                 {result.agent_bot && (
@@ -254,11 +254,14 @@ export default function OnboardPage() {
                 <div className="flex items-center gap-2">
                   <p className="font-mono flex-1">{result.demo_url}</p>
                   <Button variant="outline" size="sm" asChild>
-                    <a href={result.demo_url} target="_blank" rel="noopener noreferrer">
+                    <a href={`/demo/${result.slug}`} target="_blank" rel="noopener noreferrer">
                       <ExternalLink className="h-4 w-4 mr-1" />
                       Open Demo
                     </a>
                   </Button>
+                </div>
+                <div className="text-xs text-muted-foreground">
+                  Direct link: <a href={`/demo/${result.slug}`} className="text-blue-600 hover:underline" target="_blank" rel="noopener noreferrer">/demo/{result.slug}</a>
                 </div>
               </div>
 
@@ -267,11 +270,14 @@ export default function OnboardPage() {
                 <div className="flex items-center gap-2">
                   <p className="font-mono flex-1">{result.system_message_file}</p>
                   <Button variant="outline" size="sm" asChild>
-                    <a href={result.system_message_file} target="_blank" rel="noopener noreferrer">
+                    <a href={`/system-message/n8n_System_Message_${result.business}`} target="_blank" rel="noopener noreferrer">
                       <FileText className="h-4 w-4 mr-1" />
                       View File
                     </a>
                   </Button>
+                </div>
+                <div className="text-xs text-muted-foreground">
+                  Direct link: <a href={`/system-message/n8n_System_Message_${result.business}`} className="text-blue-600 hover:underline" target="_blank" rel="noopener noreferrer">/system-message/n8n_System_Message_{result.business}</a>
                 </div>
               </div>
 
@@ -303,22 +309,22 @@ export default function OnboardPage() {
               )}
 
               <div className="bg-muted p-4 rounded-lg">
-                <h4 className="font-medium mb-2">Next Steps:</h4>
+                <h4 className="font-medium mb-2">This demo shows how an AI assistant can</h4>
                 <ol className="list-decimal list-inside space-y-1 text-sm text-muted-foreground">
-                  {result.workflow_id ? (
+                  {result.workflow_duplication === 'success' ? (
                     <>
-                      <li>✅ n8n workflow "{result.business}" has been automatically created</li>
-                      <li>✅ System message has been injected into the Main AI node</li>
-                      <li>✅ Webhook path set to "{result.slug}"</li>
+                      <li>✅ n8n workflow duplication request sent successfully</li>
+                      <li>✅ System message and bot configuration triggered</li>
+                      <li>✅ Webhook automation initiated for "{result.slug}"</li>
                       <li>✅ Chatwoot bot created and assigned to inbox</li>
                       <li>Test the demo URL to ensure the chat widget works end-to-end</li>
                     </>
                   ) : (
                     <>
-                      <li>Duplicate the Main n8n workflow in the n8n UI</li>
-                      <li>Name the new workflow "{result.business}"</li>
-                      <li>Open the "Main AI" node and paste the system message content</li>
-                      <li>Test the demo URL to ensure the chat widget works end-to-end</li>
+                      <li>Provide consistent, accurate, and friendly support.</li>
+                      <li>Reduce response times and improve customer satisfaction."</li>
+                      <li>Scale with your team — available 24/7.</li>
+                      <li>This demo shows how an AI assistant can</li>
                     </>
                   )}
                 </ol>

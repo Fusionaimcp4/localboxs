@@ -52,15 +52,17 @@ CHATWOOT_BASE_URL=https://chatwoot.mcp4.ai
 CHATWOOT_ACCOUNT_ID=1
 CHATWOOT_API_KEY=your_chatwoot_api_key_here
 
-# n8n API (for auto-cloning workflows)
-N8N_BASE_URL=https://n8n.sost.work
-N8N_API_KEY=your_n8n_api_key_here
-MAIN_WORKFLOW_ID=your_main_workflow_id_here
+# n8n Integration (webhook-based workflow duplication)
+N8N_DUPLICATE_ENDPOINT=https://n8n.sost.work/webhook/duplicate-agent
 
 # LLM
 OPENAI_API_KEY=sk-your_openai_api_key_here
 
-# Files/hosting
+# Application URL (for demo links)
+NEXT_PUBLIC_BASE_URL=http://localhost:3000  # Local development
+# NEXT_PUBLIC_BASE_URL=https://your-domain.com  # Production
+
+# Files/hosting (legacy - now uses Next.js routes)
 SKELETON_PATH=./data/templates/n8n_System_Message.md
 DEMO_ROOT=./public/demos
 DEMO_DOMAIN=localboxs.com
@@ -71,24 +73,26 @@ DEMO_DOMAIN=localboxs.com
 The system generates:
 
 1. **Knowledge Base**: AI-extracted business information in Markdown format
-2. **System Message**: Merged skeleton template with business-specific knowledge
-3. **Demo Site**: Custom-branded HTML page with embedded Chatwoot widget
-4. **Chatwoot Inbox**: Dedicated chat inbox for the business demo
-5. **n8n Workflow**: Auto-cloned and configured workflow with business-specific settings
-6. **Chatwoot Agent Bot**: Automated bot assigned to the inbox with proper webhook configuration
-7. **Registry Entry**: JSON record of the created demo for tracking
+2. **System Message**: Merged skeleton template with business-specific knowledge at `/public/system_messages/n8n_System_Message_<Business>.md`
+3. **Demo Site**: Custom-branded HTML page served via Next.js route `/demo/<slug>`
+4. **System Message View**: Formatted view via Next.js route `/system-message/<filename>`
+5. **Chatwoot Inbox**: Dedicated chat inbox for the business demo
+6. **n8n Workflow**: Auto-cloned and configured workflow with business-specific settings (when n8n API is configured)
+7. **Chatwoot Agent Bot**: Automated bot assigned to the inbox with proper webhook configuration (when n8n API is configured)
+8. **JSON Registry**: Persistent record of created demos for tracking
 
-### Auto-Cloning Features
+### Automated Workflow Integration
 
-When n8n API credentials are configured, the system automatically:
+When the n8n webhook endpoint is configured, the system automatically:
 
-- **Clones** the main n8n workflow and renames it to the business name
-- **Injects** the generated system message into the "Main AI" node
-- **Updates** webhook node path to `<BusinessName>` with production URL `https://n8n.sost.work/webhook/<BusinessName>`
-- **Creates** a Chatwoot Agent Bot named `<BusinessName> Bot`
-- **Assigns** the bot to the new inbox with webhook URL pointing to n8n
-- **Configures** all HTTP POST nodes with the bot's access token for authentication
-- **Sets** proper headers (`api_access_token` and `Authorization: Bearer`) for Chatwoot API calls
+- **Creates** a Chatwoot website inbox for the business demo
+- **Creates** a Chatwoot Agent Bot named `<BusinessName> Bot` with webhook URL pointing to n8n
+- **Assigns** the bot to the inbox using the correct `/set_agent_bot` endpoint with `{"agent_bot": <bot_id>}`
+- **Verifies** bot assignment by checking inbox details
+- **Triggers** n8n workflow duplication via webhook endpoint
+- **Sends** business name, bot access token, and system message to your n8n automation
+- **Provides** fire-and-forget integration that doesn't block the demo creation process
+- **Logs** success/failure status for monitoring and troubleshooting
 
 ### File Structure
 
@@ -105,19 +109,19 @@ When n8n API credentials are configured, the system automatically:
 
 ### Manual Steps After Generation
 
-**With n8n API configured (automatic):**
-1. ✅ n8n workflow automatically cloned and configured
-2. ✅ System message automatically injected
-3. ✅ Webhook path and URL automatically set
-4. ✅ Chatwoot bot automatically created and assigned
+**With n8n webhook endpoint configured (automatic):**
+1. ✅ Chatwoot bot automatically created and assigned
+2. ✅ n8n workflow duplication automatically triggered via webhook
+3. ✅ System message and bot configuration sent to your n8n automation
+4. ✅ Webhook automation handles workflow setup
 5. Test the demo URL to ensure the chat widget works end-to-end
 
-**Without n8n API (manual):**
-1. Duplicate the Main n8n workflow in the n8n UI
-2. Name the new workflow with the business name
-3. Open the "Main AI" node and paste the generated system message content
-4. Set webhook path to the business name
-5. Create and assign Chatwoot bot manually
+**Without n8n webhook (manual):**
+1. Create and assign Chatwoot bot manually
+2. Duplicate the Main n8n workflow in the n8n UI  
+3. Name the new workflow with the business name
+4. Open the "Main AI" node and paste the generated system message content
+5. Set webhook path to the business name and configure bot authentication
 6. Test the demo URL to ensure the chat widget works end-to-end
 
 ## Getting Started

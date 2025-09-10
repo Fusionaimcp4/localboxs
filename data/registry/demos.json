@@ -16,17 +16,18 @@
     "business": "sost",
     "url": "https://sost.work/",
     "system_message_file": "./public/system_messages/n8n_System_Message_sost.md",
-    "demo_url": "https://sost-demo.localhost",
+    "demo_url": "http://localhost:3000/demo/sost",
     "chatwoot": {
-      "inbox_id": 10,
-      "website_token": "np7hiXQAV2yRnaD2a2PZKmze"
+      "inbox_id": 18,
+      "website_token": "Xeakk3GUdwb6AaeH2UgsunLp"
     },
+    "workflow_duplication": "success",
     "agent_bot": {
-      "id": 10,
-      "access_token": "fQEKE6e57mHG8tvkWw9HFexF"
+      "id": 18,
+      "access_token": "yPAVnR9bGRttMMuftJvWQ6Lv"
     },
     "created_at": "2025-09-09T18:58:21.167Z",
-    "updated_at": "2025-09-09T19:45:13.153Z"
+    "updated_at": "2025-09-10T16:33:54.884Z"
   },
   "btcpayprovider": {
     "slug": "btcpayprovider",
@@ -43,5 +44,90 @@
       "access_token": "xfYXRriSc4AWfpMQtiuNwfXA"
     },
     "created_at": "2025-09-09T19:03:18.530Z"
+  },
+  "moveworks-com": {
+    "slug": "moveworks-com",
+    "business": "moveworks.com",
+    "url": "https://www.moveworks.com",
+    "system_message_file": "./public/system_messages/n8n_System_Message_moveworks.com.md",
+    "demo_url": "https://moveworks-com-demo.localhost",
+    "chatwoot": {
+      "inbox_id": 11,
+      "website_token": "vk1ekeGqS5zp9KfpEGnXx3mo"
+    },
+    "agent_bot": {
+      "id": 11,
+      "access_token": "GDh8xRBEp7L9ES5t4CqSiCzj"
+    },
+    "created_at": "2025-09-10T05:12:49.438Z"
+  },
+  "bairesdev-com": {
+    "slug": "bairesdev-com",
+    "business": "bairesdev.com",
+    "url": "https://www.bairesdev.com/",
+    "system_message_file": "./public/system_messages/n8n_System_Message_bairesdev.com.md",
+    "demo_url": "https://bairesdev-com-demo.localhost",
+    "chatwoot": {
+      "inbox_id": 14,
+      "website_token": "XFUyVwKxKTNnmUJyhfZpP6mc"
+    },
+    "agent_bot": {
+      "id": 14,
+      "access_token": "kmtv2Ry7R5zZFWREKQgJHfcQ"
+    },
+    "created_at": "2025-09-10T05:50:31.993Z",
+    "updated_at": "2025-09-10T05:52:35.040Z"
+  },
+  "sost-work": {
+    "slug": "sost-work",
+    "business": "sost.work",
+    "url": "https://sost.work/",
+    "system_message_file": "./public/system_messages/n8n_System_Message_sost.work.md",
+    "demo_url": "http://localhost:3000/demo/sost-work",
+    "chatwoot": {
+      "inbox_id": 22,
+      "website_token": "BemLVstX6aR3qaZVccRfrnmb"
+    },
+    "workflow_duplication": "success",
+    "agent_bot": {
+      "id": 22,
+      "access_token": "GvSX7dKJUxtpSHaorWBqqTjF"
+    },
+    "created_at": "2025-09-10T06:11:50.564Z",
+    "updated_at": "2025-09-10T19:20:30.388Z"
+  },
+  "magiceden-us": {
+    "slug": "magiceden-us",
+    "business": "magiceden.us",
+    "url": "https://magiceden.us/",
+    "system_message_file": "./public/system_messages/n8n_System_Message_magiceden.us.md",
+    "demo_url": "http://localhost:3000/demo/magiceden-us",
+    "chatwoot": {
+      "inbox_id": 20,
+      "website_token": "f4NApceBr3MpGFwRrnsmAi49"
+    },
+    "workflow_duplication": "success",
+    "agent_bot": {
+      "id": 20,
+      "access_token": "FCGrPkgE1YtCKcjf7n97JS4b"
+    },
+    "created_at": "2025-09-10T18:59:12.541Z"
+  },
+  "unosquare-com": {
+    "slug": "unosquare-com",
+    "business": "unosquare.com",
+    "url": "https://www.unosquare.com/",
+    "system_message_file": "./public/system_messages/n8n_System_Message_unosquare.com.md",
+    "demo_url": "http://localhost:3000/demo/unosquare-com",
+    "chatwoot": {
+      "inbox_id": 21,
+      "website_token": "xHeiDRkkrpiiHQGWUZh69c6r"
+    },
+    "workflow_duplication": "success",
+    "agent_bot": {
+      "id": 21,
+      "access_token": "VTeaLkEPHuQeodzRHgCw13PJ"
+    },
+    "created_at": "2025-09-10T19:06:45.015Z"
   }
 }

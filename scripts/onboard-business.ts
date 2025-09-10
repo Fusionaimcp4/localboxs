@@ -128,8 +128,11 @@ async function main() {
     await writeTextFile(systemMessageFile, finalSystemMessage);
 
     console.error('💬 Creating Chatwoot inbox...');
-    const demoDomain = process.env.DEMO_DOMAIN || 'localboxs.com';
-    const demoUrl = `https://${slug}-demo.${demoDomain}`;
+    // Use Next.js route structure for both local and production
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || process.env.VERCEL_URL 
+      ? `https://${process.env.VERCEL_URL}` 
+      : 'http://localhost:3000';
+    const demoUrl = `${baseUrl}/demo/${slug}`;
     
     const { inbox_id, website_token } = await createWebsiteInbox(businessName, demoUrl);
 

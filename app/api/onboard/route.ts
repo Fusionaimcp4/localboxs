@@ -6,7 +6,7 @@ import { createWebsiteInbox } from '@/lib/chatwoot';
 import { renderDemoHTML } from '@/lib/renderDemo';
 import { slugify } from '@/lib/slug';
 import { writeTextFile, readTextFileIfExists, atomicJSONUpdate } from '@/lib/fsutils';
-import { getWorkflow, createWorkflow, patchWorkflowForBusiness } from '@/lib/n8n';
+import { duplicateWorkflowViaWebhook } from '@/lib/n8n-webhook';
 import { createAgentBot, assignBotToInbox } from '@/lib/chatwoot_admin';
 import path from 'path';
 
@@ -31,7 +31,7 @@ export interface DemoRegistry {
       inbox_id: number;
       website_token: string;
     };
-    workflow_id?: string;
+    workflow_duplication?: 'success' | 'failed';
     agent_bot?: {
       id: number | string;
       access_token: string;
@@ -103,8 +103,11 @@ export async function POST(request: NextRequest) {
     await writeTextFile(systemMessageFile, finalSystemMessage);
 
     // Step 6: Create demo URL and Chatwoot inbox
-    const demoDomain = process.env.DEMO_DOMAIN || 'localboxs.com';
-    const demoUrl = `https://${slug}-demo.${demoDomain}`;
+    // Use Next.js route structure for both local and production
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || process.env.VERCEL_URL 
+      ? `https://${process.env.VERCEL_URL}` 
+      : 'http://localhost:3000';
+    const demoUrl = `${baseUrl}/demo/${slug}`;
     
     const { inbox_id, website_token } = await createWebsiteInbox(businessName, demoUrl);
 
@@ -125,19 +128,12 @@ export async function POST(request: NextRequest) {
     const demoIndexPath = path.join(demoRoot, slug, 'index.html');
     await writeTextFile(demoIndexPath, demoHTML);
 
-    // Step 9: Auto-clone n8n workflow and setup Chatwoot bot
-    const N8N_READY = !!(process.env.N8N_BASE_URL && process.env.N8N_API_KEY && process.env.MAIN_WORKFLOW_ID);
-    console.log('n8n Configuration Check:');
-    console.log('- N8N_BASE_URL:', process.env.N8N_BASE_URL || 'NOT SET');
-    console.log('- N8N_API_KEY:', process.env.N8N_API_KEY ? 'SET (' + process.env.N8N_API_KEY.substring(0, 10) + '...)' : 'NOT SET');
-    console.log('- MAIN_WORKFLOW_ID:', process.env.MAIN_WORKFLOW_ID || 'NOT SET');
-    console.log('- N8N_READY:', N8N_READY);
-    
-    let workflowId: string | undefined;
+    // Step 9: Setup Chatwoot bot and trigger n8n workflow duplication
     let botId: number | string | undefined;
     let botAccessToken: string | undefined;
     let botSetupSkipped = false;
     let botSetupReason = '';
+    let workflowDuplicationResult: { success: boolean; error?: string } | undefined;
 
     try {
       // 1) Create Chatwoot Agent Bot named "<BusinessName> Bot" with webhook https://n8n.sost.work/webhook/<BusinessName>
@@ -158,29 +154,19 @@ export async function POST(request: NextRequest) {
         // The bot was created successfully, assignment can be done manually
       }
 
-      // 3) Clone n8n Main and patch it
-      if (N8N_READY) {
-        console.log(`Cloning n8n workflow for ${businessName}...`);
-        const main = await getWorkflow(process.env.MAIN_WORKFLOW_ID!);
-        main.name = businessName;
-
-        // wipe identity so POST creates a new workflow
-        delete main.id; 
-        delete main.staticData; 
-        delete main.createdAt; 
-        delete main.updatedAt;
-
-        // inject system message, set webhook path/URL, and add bot token to Chatwoot HTTP nodes
-        patchWorkflowForBusiness(main, businessName, finalSystemMessage, botAccessToken || "");
-
-        const created = await createWorkflow(main);
-        workflowId = created.id;
-        console.log(`n8n workflow created with ID: ${workflowId}`);
+      // 3) Trigger n8n workflow duplication via webhook (fire-and-forget)
+      if (botAccessToken) {
+        workflowDuplicationResult = await duplicateWorkflowViaWebhook(
+          businessName,
+          botAccessToken,
+          finalSystemMessage
+        );
       } else {
-        console.log('n8n API not configured, skipping workflow creation');
+        console.warn('No bot access token available, skipping workflow duplication');
+        workflowDuplicationResult = { success: false, error: 'No bot access token available' };
       }
     } catch (e: any) {
-      console.error("Auto-create n8n/bot failed:", e);
+      console.error("Auto-create bot failed:", e);
       
       // Handle specific error types
       if (e.message === 'AGENT_BOT_API_NOT_AVAILABLE') {
@@ -189,15 +175,10 @@ export async function POST(request: NextRequest) {
       } else if (e.message && e.message.includes('chatwoot')) {
         botSetupSkipped = true;
         botSetupReason = 'Chatwoot API error; check configuration and try again.';
-      } else if (e.message && e.message.includes('n8n')) {
-        console.warn('n8n workflow creation failed, but demo creation continues:', e.message);
-        // Don't mark as skipped if only n8n failed but bot creation succeeded
-        if (!botId) {
-          botSetupSkipped = true;
-          botSetupReason = 'n8n API error; check configuration and try again.';
-        }
       } else {
-        console.warn('Automation partially failed, but demo creation continues:', e.message);
+        console.warn('Bot creation failed, but demo creation continues:', e.message);
+        botSetupSkipped = true;
+        botSetupReason = 'Bot creation failed; ' + e.message;
       }
     }
 
@@ -217,7 +198,7 @@ export async function POST(request: NextRequest) {
           inbox_id,
           website_token
         },
-        ...(workflowId && { workflow_id: workflowId }),
+        ...(workflowDuplicationResult?.success && { workflow_duplication: 'success' }),
         ...(botId && botAccessToken && { 
           agent_bot: { 
             id: botId, 
@@ -242,7 +223,7 @@ export async function POST(request: NextRequest) {
         inbox_id,
         website_token
       },
-      ...(workflowId && { workflow_id: workflowId }),
+      ...(workflowDuplicationResult?.success && { workflow_duplication: 'success' }),
       ...(botId && botAccessToken && { 
         agent_bot: { 
           id: botId, 
@@ -257,12 +238,14 @@ export async function POST(request: NextRequest) {
       response.bot_setup_skipped = true;
       response.reason = botSetupReason;
       response.suggested_steps = ["Create bot", "Set webhook", "Assign to inbox"];
-    } else if (workflowId && botId) {
+    } else if (botId) {
       // Add success notes
       response.notes = {
         chatwoot_bot: `Created ${businessName} Bot, webhook set to https://n8n.sost.work/webhook/${businessName}, assigned to the new inbox.`,
-        n8n_webhook: `Cloned workflow has Webhook node path set to ${businessName}; production URL uses https://n8n.sost.work/webhook/${businessName}.`,
-        http_nodes_auth: "All Chatwoot HTTP POST nodes updated with bot token in headers (api_access_token + Authorization: Bearer ...)."
+        n8n_webhook_trigger: workflowDuplicationResult?.success 
+          ? `Workflow duplication request sent successfully to n8n webhook endpoint.`
+          : `Workflow duplication failed: ${workflowDuplicationResult?.error || 'Unknown error'}`,
+        automation_status: workflowDuplicationResult?.success ? "✅ Complete" : "⚠️ Partial (manual setup may be required)"
       };
     }
 
@@ -272,19 +255,66 @@ export async function POST(request: NextRequest) {
     console.error('Onboard API error:', error);
     
     if (error instanceof Error) {
-      if (error.message.includes('Chatwoot')) {
+      const errorMessage = error.message;
+      
+      // Website fetching errors
+      if (errorMessage.includes('not accessible') || errorMessage.includes('connection refused')) {
         return NextResponse.json(
-          { error: 'Chatwoot inbox create failed' },
+          { error: `Website not accessible: ${errorMessage}` },
+          { status: 400 }
+        );
+      }
+      
+      if (errorMessage.includes('SSL certificate error')) {
+        return NextResponse.json(
+          { error: `SSL certificate issue: ${errorMessage}` },
+          { status: 400 }
+        );
+      }
+      
+      if (errorMessage.includes('Timeout error')) {
+        return NextResponse.json(
+          { error: `Website timeout: ${errorMessage}` },
+          { status: 408 }
+        );
+      }
+      
+      if (errorMessage.includes('DNS error')) {
+        return NextResponse.json(
+          { error: `DNS resolution failed: ${errorMessage}` },
+          { status: 400 }
+        );
+      }
+      
+      // Chatwoot errors
+      if (errorMessage.includes('Chatwoot')) {
+        return NextResponse.json(
+          { error: `Chatwoot API error: ${errorMessage}` },
           { status: 502 }
         );
       }
       
-      if (error.message.includes('EACCES') || error.message.includes('permission')) {
+      // OpenAI errors
+      if (errorMessage.includes('OpenAI') || errorMessage.includes('API key')) {
+        return NextResponse.json(
+          { error: 'AI service error. Please check API configuration.' },
+          { status: 502 }
+        );
+      }
+      
+      // File system errors
+      if (errorMessage.includes('EACCES') || errorMessage.includes('permission')) {
         return NextResponse.json(
           { error: 'File permission denied. Check DEMO_ROOT permissions.' },
           { status: 500 }
         );
       }
+      
+      // Generic error with message
+      return NextResponse.json(
+        { error: `Request failed: ${errorMessage}` },
+        { status: 400 }
+      );
     }
 
     return NextResponse.json(

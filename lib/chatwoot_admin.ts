@@ -58,48 +58,65 @@ export async function createAgentBot(businessName: string) {
 }
 
 /**
- * Assign bot to inbox
- * Try multiple API endpoints and payload formats for maximum compatibility
+ * Assign bot to inbox using the correct Chatwoot API endpoint
+ * POST /api/v1/accounts/{account_id}/inboxes/{inbox_id}/set_agent_bot
+ * with payload: { "agent_bot": <bot_id> }
  */
 export async function assignBotToInbox(inboxId: number | string, botId: number | string) {
-  const endpoints = [
-    // Standard endpoint with simple payload
-    { path: `/api/v1/accounts/${CW_ACCT}/inboxes/${inboxId}/agent_bot`, payload: { id: botId } },
-    // Alternative payload format
-    { path: `/api/v1/accounts/${CW_ACCT}/inboxes/${inboxId}/agent_bot`, payload: { agent_bot: { id: botId } } },
-    // Alternative endpoint structure (some Chatwoot versions)
-    { path: `/api/v1/accounts/${CW_ACCT}/inboxes/${inboxId}/agent_bots`, payload: { id: botId } },
-    // PUT method instead of POST (some versions)
-    { path: `/api/v1/accounts/${CW_ACCT}/inboxes/${inboxId}/agent_bot`, payload: { id: botId }, method: 'PUT' },
-    // Alternative: Update inbox configuration to include bot
-    { path: `/api/v1/accounts/${CW_ACCT}/inboxes/${inboxId}`, payload: { agent_bot_id: botId }, method: 'PATCH' }
-  ];
+  const path = `/api/v1/accounts/${CW_ACCT}/inboxes/${inboxId}/set_agent_bot`;
+  const payload = {
+    agent_bot: botId
+  };
 
-  const errors: string[] = [];
+  console.log(`Assigning bot ${botId} to inbox ${inboxId} using correct Chatwoot endpoint...`);
+  console.log(`POST ${CW_BASE}${path}`);
+  console.log('Payload:', JSON.stringify(payload, null, 2));
 
-  for (const endpoint of endpoints) {
-    try {
-      if (endpoint.method === 'PUT') {
-        await cwPut(endpoint.path, endpoint.payload);
-      } else if (endpoint.method === 'PATCH') {
-        await cwPatch(endpoint.path, endpoint.payload);
-      } else {
-        await cwPost(endpoint.path, endpoint.payload);
-      }
-      // If we get here, the assignment succeeded
-      return;
-    } catch (error) {
-      const errorMsg = error instanceof Error ? error.message : 'Unknown error';
-      errors.push(`${endpoint.path} (${endpoint.method || 'POST'}): ${errorMsg}`);
-      
-      // If it's a 404, the endpoint doesn't exist, continue trying
-      // If it's a different error, it might be worth logging but continue
-      console.warn(`Bot assignment attempt failed for ${endpoint.path}:`, errorMsg);
-    }
+  try {
+    const result = await cwPost(path, payload);
+    console.log('✅ Bot successfully assigned to inbox using /set_agent_bot endpoint');
+    
+    // Verify assignment by checking inbox agent bot
+    await verifyBotAssignment(inboxId, botId);
+    
+    return result;
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+    console.error(`❌ Bot assignment failed: ${errorMsg}`);
+    throw new Error(`Failed to assign bot ${botId} to inbox ${inboxId}: ${errorMsg}`);
   }
+}
 
-  // If all attempts failed, throw a comprehensive error
-  throw new Error(`Bot assignment failed for all attempted methods. Errors: ${errors.join('; ')}`);
+/**
+ * Verify that the bot is properly assigned to the inbox
+ * GET /api/v1/accounts/{account_id}/inboxes/{inbox_id}
+ * Check if the agent_bot field matches our bot ID
+ */
+export async function verifyBotAssignment(inboxId: number | string, botId: number | string) {
+  const path = `/api/v1/accounts/${CW_ACCT}/inboxes/${inboxId}`;
+  
+  try {
+    console.log(`Verifying bot assignment for inbox ${inboxId}...`);
+    const inboxDetails = await cwGet(path);
+    
+    // Check if the agent_bot field matches our bot ID
+    const assignedBotId = inboxDetails.agent_bot?.id || inboxDetails.agent_bot;
+    
+    console.log('Inbox details agent_bot field:', JSON.stringify(inboxDetails.agent_bot, null, 2));
+    console.log(`Expected bot ID: ${botId}, Found bot ID: ${assignedBotId}`);
+    
+    if (assignedBotId && assignedBotId == botId) {
+      console.log('✅ Bot assignment verified - agent_bot field matches expected bot ID');
+      return true;
+    } else {
+      console.warn('⚠️ Bot assignment verification failed - agent_bot field does not match');
+      console.log('Full inbox details:', JSON.stringify(inboxDetails, null, 2));
+      return false;
+    }
+  } catch (error) {
+    console.warn('⚠️ Could not verify bot assignment:', error instanceof Error ? error.message : 'Unknown error');
+    return false;
+  }
 }
 
 async function cwPut(path: string, body: any) {
