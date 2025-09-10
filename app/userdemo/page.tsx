@@ -25,8 +25,20 @@ import { motion } from "framer-motion";
 type BusinessInfo = {
   url: string;
   name?: string;
+  slug?: string;
   logoUrl?: string;
   summary?: string;
+  knowledge_preview?: {
+    project_overview?: string;
+    goals_objectives?: string;
+    unique_value_prop?: string;
+    key_features?: string[];
+    architecture_tech_stack?: string;
+    user_journey?: string;
+  };
+  system_message_file?: string;
+  generated_at?: string;
+  from_cache?: boolean;
   primaryColor?: string;
   secondaryColor?: string;
 };
@@ -77,8 +89,12 @@ const Card: React.FC<React.PropsWithChildren<{ title?: string; subtitle?: string
 // -----------------------------
 
 async function fetchBusinessInfo(url: string): Promise<BusinessInfo> {
-  // Replace with your scraper/ingestor endpoint
-  const res = await fetch("/api/demo/inspect?url=" + encodeURIComponent(url));
+  // Use POST with generateKB flag to get rich knowledge preview
+  const res = await fetch("/api/demo/inspect", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ url, generateKB: true }),
+  });
   if (!res.ok) throw new Error("Unable to fetch business info");
   return res.json();
 }
@@ -215,8 +231,8 @@ export default function UserFacingDemoPage() {
               </form>
             </Card>
 
-            <Card title="Business Information" subtitle="This is what we’ll use to tailor your demo." className="min-h-[280px]">
-              {!biz && <p className="text-zinc-400">Enter a URL and click “Show Business Info”.</p>}
+            <Card title="Business Information" subtitle="AI-generated knowledge preview from your website." className="min-h-[400px] max-h-[500px] overflow-y-auto">
+              {!biz && <p className="text-zinc-400">Enter a URL and click "Show Business Info".</p>}
               {biz && (
                 <div className="space-y-4">
                   <div className="flex items-center gap-4">
@@ -228,21 +244,75 @@ export default function UserFacingDemoPage() {
                     <div>
                       <div className="text-lg font-semibold">{biz.name || new URL(biz.url).hostname}</div>
                       <div className="text-sm text-zinc-400">{biz.url}</div>
+                      {biz.generated_at && (
+                        <div className="text-xs text-zinc-500">
+                          {biz.from_cache ? 'Cached' : 'Generated'} {new Date(biz.generated_at).toLocaleString()}
+                        </div>
+                      )}
                     </div>
                   </div>
-                  {biz.summary && <p className="text-sm text-zinc-300 leading-relaxed">{biz.summary}</p>}
-                  <div className="flex items-center gap-4">
-                    <div className="text-sm text-zinc-400">Brand colors</div>
-                    <div className="flex items-center gap-2">
-                      <span className="h-5 w-5 rounded-full border border-zinc-700" style={{ background: biz.primaryColor || "#7ee787" }} />
-                      <span className="h-5 w-5 rounded-full border border-zinc-700" style={{ background: biz.secondaryColor || "#f4a261" }} />
+                  
+                  {/* Rich Knowledge Preview */}
+                  {biz.knowledge_preview && (
+                    <div className="space-y-4 border-t border-zinc-700 pt-4">
+                      {biz.knowledge_preview.project_overview && (
+                        <div>
+                          <h4 className="text-sm font-medium text-zinc-200 mb-2">Project Overview</h4>
+                          <div className="text-sm text-zinc-300 leading-relaxed space-y-2">
+                            {biz.knowledge_preview.project_overview.split('\n\n').map((part, idx) => (
+                              <p key={idx} dangerouslySetInnerHTML={{ 
+                                __html: part.replace(/\*\*(.*?)\*\*/g, '<strong class="text-zinc-200">$1</strong>') 
+                              }} />
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                      
+                      {biz.knowledge_preview.unique_value_prop && (
+                        <div>
+                          <h4 className="text-sm font-medium text-zinc-200 mb-2">Unique Value Proposition</h4>
+                          <p className="text-sm text-zinc-300 leading-relaxed">{biz.knowledge_preview.unique_value_prop}</p>
+                        </div>
+                      )}
+                      
+                      {biz.knowledge_preview.key_features && biz.knowledge_preview.key_features.length > 0 && (
+                        <div>
+                          <h4 className="text-sm font-medium text-zinc-200 mb-2">Key Features</h4>
+                          <ul className="text-sm text-zinc-300 space-y-1">
+                            {biz.knowledge_preview.key_features.slice(0, 5).map((feature, idx) => (
+                              <li key={idx} className="flex items-start gap-2">
+                                <span className="text-emerald-400 mt-1">•</span>
+                                <span>{feature}</span>
+                              </li>
+                            ))}
+                            {biz.knowledge_preview.key_features.length > 5 && (
+                              <li className="text-zinc-400 text-xs">...and {biz.knowledge_preview.key_features.length - 5} more features</li>
+                            )}
+                          </ul>
+                        </div>
+                      )}
+                      
+                      {biz.knowledge_preview.goals_objectives && (
+                        <div>
+                          <h4 className="text-sm font-medium text-zinc-200 mb-2">Goals & Objectives</h4>
+                          <p className="text-sm text-zinc-300 leading-relaxed">{biz.knowledge_preview.goals_objectives}</p>
+                        </div>
+                      )}
                     </div>
-                  </div>
-                  <div className="pt-2">
+                  )}
+                  
+                  {/* Fallback to summary if no knowledge preview */}
+                  {!biz.knowledge_preview && biz.summary && (
+                    <div className="border-t border-zinc-700 pt-4">
+                      <p className="text-sm text-zinc-300 leading-relaxed">{biz.summary}</p>
+                    </div>
+                  )}
+                  
+                  <div className="pt-4 border-t border-zinc-700 sticky bottom-0 bg-zinc-900/95 backdrop-blur-sm">
                     <button
                       disabled={!canContinueFromInfo}
                       onClick={() => setStep(1)}
-                      className="rounded-2xl bg-white/10 hover:bg-white/15 backdrop-blur px-4 py-2 text-sm"
+                      className="w-full rounded-2xl bg-emerald-500/90 hover:bg-emerald-500 disabled:opacity-60 px-6 py-3 text-sm font-medium"
                     >
                       Looks good — continue
                     </button>

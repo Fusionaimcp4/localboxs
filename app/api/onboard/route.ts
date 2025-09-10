@@ -8,9 +8,30 @@ import { slugify } from '@/lib/slug';
 import { writeTextFile, readTextFileIfExists, atomicJSONUpdate } from '@/lib/fsutils';
 import { duplicateWorkflowViaWebhook } from '@/lib/n8n-webhook';
 import { createAgentBot, assignBotToInbox } from '@/lib/chatwoot_admin';
+import { promises as fs } from 'fs';
+import crypto from 'crypto';
 import path from 'path';
 
 export const runtime = "nodejs";
+
+// Generate slug with hash for uniqueness (same as inspect API)
+function generateSlugWithHash(url: string): string {
+  const hostname = new URL(url).hostname.replace(/^www\./, '');
+  const urlHash = crypto.createHash('md5').update(url).digest('hex').substring(0, 8);
+  return `${slugify(hostname)}-${urlHash}`;
+}
+
+// Check if file is fresh (within TTL)
+async function isFileFresh(filePath: string, ttlHours: number = 24): Promise<boolean> {
+  try {
+    const stats = await fs.stat(filePath);
+    const ageMs = Date.now() - stats.mtime.getTime();
+    const ttlMs = ttlHours * 60 * 60 * 1000;
+    return ageMs < ttlMs;
+  } catch {
+    return false; // File doesn't exist
+  }
+}
 
 export interface OnboardPayload {
   business_url: string;
@@ -78,29 +99,67 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Step 1: Fetch and clean website content
-    const { cleanedText } = await fetchAndClean(payload.business_url);
-
-    // Step 2: Generate knowledge base
-    const kbMarkdown = await generateKBFromWebsite(cleanedText, payload.business_url);
-
-    // Step 3: Load skeleton template
-    const skeletonPath = process.env.SKELETON_PATH || './data/templates/n8n_System_Message.md';
-    const skeletonText = await readTextFileIfExists(skeletonPath);
+    // Check for existing KB file from user preview
+    const slugWithHash = generateSlugWithHash(payload.business_url);
+    const previewSystemMessageFile = `./public/system_messages/n8n_System_Message_${slugWithHash}.md`;
+    const adminSystemMessageFile = `./public/system_messages/n8n_System_Message_${businessName}.md`;
     
-    if (!skeletonText) {
-      return NextResponse.json(
-        { error: 'Skeleton template not found' },
-        { status: 500 }
-      );
+    let finalSystemMessage: string;
+    let systemMessageFile: string;
+    let reusingPreview = false;
+
+    // Check if we have a fresh preview file to reuse
+    const hasPreviewFile = await isFileFresh(previewSystemMessageFile);
+    
+    if (hasPreviewFile && slugWithHash !== businessName) {
+      // Reuse preview file but copy it to admin naming convention
+      console.log(`Reusing preview KB for ${businessName} from ${slugWithHash}`);
+      const previewContent = await readTextFileIfExists(previewSystemMessageFile);
+      if (previewContent) {
+        finalSystemMessage = previewContent;
+        systemMessageFile = adminSystemMessageFile;
+        await writeTextFile(systemMessageFile, finalSystemMessage);
+        reusingPreview = true;
+      }
+    } else if (hasPreviewFile && slugWithHash === businessName) {
+      // Preview file has same name as admin file, just use it
+      console.log(`Reusing preview KB for ${businessName}`);
+      const previewContent = await readTextFileIfExists(previewSystemMessageFile);
+      if (previewContent) {
+        finalSystemMessage = previewContent;
+        systemMessageFile = previewSystemMessageFile;
+        reusingPreview = true;
+      }
     }
+    
+    if (!reusingPreview) {
+      // Generate new KB (original flow)
+      console.log(`Generating new KB for ${businessName}`);
+      
+      // Step 1: Fetch and clean website content
+      const { cleanedText } = await fetchAndClean(payload.business_url);
 
-    // Step 4: Merge KB into skeleton
-    const finalSystemMessage = mergeKBIntoSkeleton(skeletonText, kbMarkdown);
+      // Step 2: Generate knowledge base
+      const kbMarkdown = await generateKBFromWebsite(cleanedText, payload.business_url);
 
-    // Step 5: Write system message file
-    const systemMessageFile = `./public/system_messages/n8n_System_Message_${businessName}.md`;
-    await writeTextFile(systemMessageFile, finalSystemMessage);
+      // Step 3: Load skeleton template
+      const skeletonPath = process.env.SKELETON_PATH || './data/templates/n8n_System_Message.md';
+      const skeletonText = await readTextFileIfExists(skeletonPath);
+      
+      if (!skeletonText) {
+        return NextResponse.json(
+          { error: 'Skeleton template not found' },
+          { status: 500 }
+        );
+      }
+
+      // Step 4: Merge KB into skeleton
+      finalSystemMessage = mergeKBIntoSkeleton(skeletonText, kbMarkdown);
+
+      // Step 5: Write system message file
+      systemMessageFile = adminSystemMessageFile;
+      await writeTextFile(systemMessageFile, finalSystemMessage);
+    }
 
     // Step 6: Create demo URL and Chatwoot inbox
     // Use Next.js route structure for both local and production
@@ -230,6 +289,7 @@ export async function POST(request: NextRequest) {
           access_token: botAccessToken 
         } 
       }),
+      kb_reused: reusingPreview,
       created_at: new Date().toISOString()
     };
 
