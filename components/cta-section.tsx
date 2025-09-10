@@ -111,14 +111,14 @@ export function CTASection() {
           See a demo chat tailored to your business in under a minute.
           </p>
         </div>
-        <ContactModal>
+        <Link href="/userdemo">
           <Button
             className="px-[30px] py-2 bg-secondary text-secondary-foreground text-base font-medium leading-6 rounded-[99px] shadow-[0px_0px_0px_4px_rgba(255,255,255,0.13)] hover:bg-secondary/90 transition-all duration-200"
             size="lg"
           >
             See It in Action
           </Button>
-        </ContactModal>
+        </Link>
       </div>
     </section>
   )

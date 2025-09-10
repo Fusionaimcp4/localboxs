@@ -48,18 +48,20 @@
   "moveworks-com": {
     "slug": "moveworks-com",
     "business": "moveworks.com",
-    "url": "https://www.moveworks.com",
+    "url": "https://www.moveworks.com/",
     "system_message_file": "./public/system_messages/n8n_System_Message_moveworks.com.md",
-    "demo_url": "https://moveworks-com-demo.localhost",
+    "demo_url": "http://localhost:3000/demo/moveworks-com",
     "chatwoot": {
-      "inbox_id": 11,
-      "website_token": "vk1ekeGqS5zp9KfpEGnXx3mo"
+      "inbox_id": 23,
+      "website_token": "sbBSxz8giGw49vXDXJ3EJj6N"
     },
+    "workflow_duplication": "success",
     "agent_bot": {
-      "id": 11,
-      "access_token": "GDh8xRBEp7L9ES5t4CqSiCzj"
+      "id": 23,
+      "access_token": "bK6u6SUhVBWkEt4wPDatGJCv"
     },
-    "created_at": "2025-09-10T05:12:49.438Z"
+    "created_at": "2025-09-10T05:12:49.438Z",
+    "updated_at": "2025-09-10T20:49:41.825Z"
   },
   "bairesdev-com": {
     "slug": "bairesdev-com",
@@ -85,16 +87,22 @@
     "system_message_file": "./public/system_messages/n8n_System_Message_sost.work.md",
     "demo_url": "http://localhost:3000/demo/sost-work",
     "chatwoot": {
-      "inbox_id": 22,
-      "website_token": "BemLVstX6aR3qaZVccRfrnmb"
+      "inbox_id": 24,
+      "website_token": "EhYTXbeRSAy7xbdjaJ2KZXHS"
     },
     "workflow_duplication": "success",
     "agent_bot": {
-      "id": 22,
-      "access_token": "GvSX7dKJUxtpSHaorWBqqTjF"
+      "id": 24,
+      "access_token": "cBQT6etUfqvLjbdwC5YDvHqq"
+    },
+    "lead": {
+      "name": "yilak kidane",
+      "email": "yilakb@yahoo.com",
+      "company": "lbtil",
+      "phone": "2142353740"
     },
     "created_at": "2025-09-10T06:11:50.564Z",
-    "updated_at": "2025-09-10T19:20:30.388Z"
+    "updated_at": "2025-09-10T20:54:05.255Z"
   },
   "magiceden-us": {
     "slug": "magiceden-us",
@@ -129,5 +137,28 @@
       "access_token": "VTeaLkEPHuQeodzRHgCw13PJ"
     },
     "created_at": "2025-09-10T19:06:45.015Z"
+  },
+  "lbtil-com": {
+    "slug": "lbtil-com",
+    "business": "lbtil.com",
+    "url": "https://lbtil.com/",
+    "system_message_file": "./public/system_messages/n8n_System_Message_lbtil.com.md",
+    "demo_url": "http://localhost:3000/demo/lbtil-com",
+    "chatwoot": {
+      "inbox_id": 25,
+      "website_token": "BQjyD8PBstXqdcqjoVV8TjoD"
+    },
+    "workflow_duplication": "success",
+    "agent_bot": {
+      "id": 25,
+      "access_token": "aKGgEF4qsRsPDDn4bNwcC7zM"
+    },
+    "lead": {
+      "name": "yilak kidane",
+      "email": "yilakb@yahoo.com",
+      "company": "bti",
+      "phone": "2142353740"
+    },
+    "created_at": "2025-09-10T21:02:50.026Z"
   }
 }

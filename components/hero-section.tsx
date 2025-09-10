@@ -454,14 +454,14 @@ export function HeroSection() {
             Request a Demo
           </Button>
         </ContactModal>
-        <VideoModal videoSrc="/images/The_24_7_Support_Solution.mp4">
+        <Link href="/userdemo">
           <Button
             variant="ghost"
             className="text-secondary-foreground hover:bg-secondary/10 px-8 py-3 rounded-full font-medium text-base"
           >
-            Learn How It Works
+            See It in Action
           </Button>
-        </VideoModal>
+        </Link>
       </div>
     </section>
   )

@@ -35,9 +35,9 @@ You will receive:
   - Collaboration tools (chat, file sharing, project tracking)
   - Payment system based on authorized work
 - **Advanced:**
-  - Integrated Bitcoin Lightning Wallet for payments
-- **Integrations:**
-  - Payment gateway for Bitcoin transactions
+  - Bitcoin Lightning Wallet for freelancers
+  - Optional payment gateway for transactions
+- **Integrations:** Unknown
 
 ## Architecture & Tech Stack
 - **Frontend:** Unknown
@@ -51,52 +51,41 @@ You will receive:
 - **Typical flow:**
   1. Employers post job details.
   2. Freelancers submit proposals.
-  3. Employers review proposals and hire freelancers.
-  4. Collaboration occurs through the platform.
-  5. Payment is made upon project completion.
+  3. Employers hire freelancers and collaborate through the platform.
+  4. Payment is made upon project completion.
 - **Examples:**
-  1. An employer in the U.S. posts a job for graphic design, receives proposals, and hires a freelancer from Kenya.
-  2. A freelancer in Ethiopia offers programming services and gets hired by a client in Canada.
+  1. An employer in the U.S. posts a job for online class help, receives proposals, and hires a freelancer.
+  2. A freelancer from Ethiopia offers engineering services and gets hired by a client in Canada.
 
 ## Operations & Processes
-- **Onboarding:** Users can sign up for free and choose to join as freelancers or clients.
+- **Onboarding:** Users can sign up for free and choose to join as either a freelancer or a client.
 - **Support:** Unknown
-- **Billing:** Payments are processed through the integrated Bitcoin Lightning Wallet.
+- **Billing:** Payment is only made for work that is authorized by the employer.
 
 ## Governance & Security
-- **Auth:** User accounts with sign-in and password recovery options.
+- **Auth:** Users must sign up and log in to access the platform.
 - **Data handling:** Unknown
 - **Backups:** Unknown
 
 ## FAQs & Troubleshooting
 1. **How do I post a job?**
-   - Sign in to your account, navigate to the job posting section, and fill in the required details.
+   - Sign in to your account, navigate to the job posting section, and provide the necessary details.
    
-2. **What payment methods are accepted?**
-   - Payments are made through the Bitcoin Lightning Wallet integrated into the platform.
+2. **How do I receive payments?**
+   - Freelancers can receive payments through the integrated Bitcoin Lightning Wallet.
    
-3. **How can I communicate with freelancers?**
-   - Use the built-in chat feature on the dashboard to communicate directly with freelancers.
-
-4. **What if I forget my password?**
-   - Click on "Forgot password?" on the sign-in page and follow the instructions to reset it.
-
-5. **Is there a fee for using the platform?**
-   - Signing up is free, but there may be fees associated with transactions. Check the terms for details.
+3. **What if I forget my password?**
+   - Click on "Forgot password?" on the sign-in page to reset your password.
 
 ## Glossary
-- **Bitcoin:** A decentralized digital currency.
-- **Freelancer:** An individual who offers services on a project basis.
-- **Employer:** A client looking to hire freelancers for specific tasks.
-- **Proposal:** A submission by a freelancer detailing their qualifications and approach to a job.
-- **Collaboration tools:** Features that facilitate communication and project management.
-- **Payment gateway:** A service that processes payments for online transactions.
-- **Bitcoin Lightning Wallet:** A wallet that allows for fast Bitcoin transactions.
-- **Onboarding:** The process of integrating new users into the platform.
-- **Project tracking:** Monitoring the progress of work being done.
-- **Sign-in:** The process of logging into a user account.
-- **Job posting:** The act of listing a job opportunity for freelancers to apply.
-- **File sharing:** The ability to exchange documents and files between users.
+- **Freelancer:** An individual who offers services to clients on a project basis.
+- **Employer:** A client looking to hire freelancers for specific tasks or projects.
+- **Bitcoin:** A decentralized digital currency used for online transactions.
+- **Bitcoin Lightning Wallet:** A wallet that allows for fast and low-cost Bitcoin transactions.
+- **Proposal:** A submission by a freelancer outlining their qualifications and bid for a job.
+- **Collaboration tools:** Features that facilitate communication and project management between freelancers and employers.
+- **Payment gateway:** A service that processes payments for transactions.
+- **Onboarding:** The process of signing up and getting started on a platform.
 ```
 
 
