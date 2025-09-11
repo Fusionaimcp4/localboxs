@@ -162,21 +162,22 @@
     "system_message_file": "./public/system_messages/n8n_System_Message_sost-work-6d99d2b2.md",
     "demo_url": "http://localhost:3000/demo/sost-work-6d99d2b2",
     "chatwoot": {
-      "inbox_id": 27,
-      "website_token": "aUJdag8JsdisCAGmuWPZcqgZ"
+      "inbox_id": 35,
+      "website_token": "TknjRdDaQL9vwsyRCvd3BTcE"
     },
     "workflow_duplication": "success",
     "agent_bot": {
-      "id": 27,
-      "access_token": "fMY7V2ZEVtcesdkaM72o3PCa"
+      "id": 35,
+      "access_token": "NoTPQKVwPTUFvcpnNVtQnnwT"
     },
     "lead": {
-      "name": "solomon",
-      "email": "solomon@sost.work",
+      "name": "liya belete",
+      "email": "liyabelete2020@gmail.com",
       "company": "sost",
-      "phone": "2142353740"
+      "phone": "+12142353740"
     },
-    "created_at": "2025-09-10T23:06:25.604Z"
+    "created_at": "2025-09-10T23:06:25.604Z",
+    "updated_at": "2025-09-11T04:46:53.094Z"
   },
   "localboxs-com-00b8b779": {
     "slug": "localboxs-com-00b8b779",

@@ -53,11 +53,13 @@ type DemoResult = {
 // Helpers
 // -----------------------------
 
-const Input = ({ label, required = false, ...props }: React.InputHTMLAttributes<HTMLInputElement> & { label: string; required?: boolean }) => (
+const Input = ({ label, required = false, pattern, title, ...props }: React.InputHTMLAttributes<HTMLInputElement> & { label: string; required?: boolean; pattern?: string; title?: string }) => (
   <label className="block text-sm font-medium text-zinc-200">
     <span className="mb-1 block">{label}{required && <span className="text-red-400"> *</span>}</span>
     <input
       {...props}
+      pattern={pattern}
+      title={title}
       className={`w-full rounded-2xl bg-zinc-900/60 border border-zinc-700 focus:border-zinc-500 outline-none px-4 py-3 text-zinc-100 placeholder-zinc-500 ${props.className ?? ""}`}
     />
   </label>
@@ -134,7 +136,19 @@ export default function UserFacingDemoPage() {
 
   // Step 1: contact form
   const [lead, setLead] = useState({ name: "", email: "", company: "", phone: "", consent: false });
-  const contactValid = useMemo(() => lead.name.trim() && /.+@.+\..+/.test(lead.email) && lead.consent, [lead]);
+  const [phoneError, setPhoneError] = useState<string | null>(null);
+  
+  // E.164 phone validation
+  const isValidPhone = (phone: string) => {
+    if (!phone.trim()) return true; // Optional field
+    return /^\+[1-9]\d{9,14}$/.test(phone.trim());
+  };
+  
+  const contactValid = useMemo(() => {
+    const basicValid = lead.name.trim() && /.+@.+\..+/.test(lead.email) && lead.consent;
+    const phoneValid = isValidPhone(lead.phone);
+    return basicValid && phoneValid;
+  }, [lead]);
 
   // Step 2: demo form
   const [demo, setDemo] = useState({ businessName: "", logoUrl: "", primaryColor: "#7ee787", secondaryColor: "#f4a261" });
@@ -143,6 +157,19 @@ export default function UserFacingDemoPage() {
   const [createError, setCreateError] = useState<string | null>(null);
 
   const canContinueFromInfo = biz !== null;
+
+  // Handle phone number changes with validation
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const phone = e.target.value;
+    setLead({ ...lead, phone });
+    
+    // Clear error if phone becomes valid or empty
+    if (!phone.trim() || isValidPhone(phone)) {
+      setPhoneError(null);
+    } else {
+      setPhoneError("Please enter a valid phone number in E.164 format (e.g., +15551234567)");
+    }
+  };
 
   async function handleInspect(e: React.FormEvent) {
     e.preventDefault();
@@ -344,7 +371,17 @@ export default function UserFacingDemoPage() {
                   </div>
                   <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                     <Input label="Company" value={lead.company} onChange={e => setLead({ ...lead, company: e.target.value })} />
-                    <Input label="Phone (optional)" value={lead.phone} onChange={e => setLead({ ...lead, phone: e.target.value })} />
+                    <div>
+                      <Input 
+                        label="Phone (optional)" 
+                        placeholder="+15551234567"
+                        pattern="^\+[1-9]\d{9,14}$"
+                        title="Enter phone number in E.164 format (e.g., +15551234567)"
+                        value={lead.phone} 
+                        onChange={handlePhoneChange} 
+                      />
+                      {phoneError && <p className="mt-1 text-sm text-red-400">{phoneError}</p>}
+                    </div>
                   </div>
                   <label className="flex items-center gap-3 text-sm text-zinc-300">
                     <input type="checkbox" checked={lead.consent} onChange={e => setLead({ ...lead, consent: e.target.checked })} className="h-4 w-4 rounded border-zinc-600 bg-zinc-900" />
