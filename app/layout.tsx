@@ -35,7 +35,7 @@ html {
         <Script id="chatwoot-widget" strategy="lazyOnload">
           {`
             (function(d,t) {
-              var BASE_URL="https://chatwoot.mcp4.ai";
+              var BASE_URL="${process.env.CHATWOOT_BASE_URL || 'https://chatwoot.mcp4.ai'}";
               var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
               g.src=BASE_URL+"/packs/js/sdk.js";
               g.async = true;

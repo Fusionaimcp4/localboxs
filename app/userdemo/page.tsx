@@ -2,6 +2,7 @@
 
 import React, { useMemo, useState } from "react";
 import { motion } from "framer-motion";
+import { slugify } from "@/lib/slug";
 
 /**
  * User‑Facing Demo Page
@@ -165,6 +166,14 @@ export default function UserFacingDemoPage() {
     }
   }
 
+  async function handleContactSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!biz || !contactValid) return;
+    
+    // Simply proceed to Step 2 - lead creation will be handled during demo creation
+    setStep(2);
+  }
+
   async function handleCreateDemo(e: React.FormEvent) {
     e.preventDefault();
     if (!biz) return;
@@ -183,7 +192,7 @@ export default function UserFacingDemoPage() {
       setResult(out);
       setStep(3);
     } catch (err: any) {
-      setCreateError(err?.message || "We couldn’t create your demo just now.");
+      setCreateError(err?.message || "We couldn't create your demo just now.");
     } finally {
       setCreating(false);
     }
@@ -328,7 +337,7 @@ export default function UserFacingDemoPage() {
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
             <div className="lg:col-span-2">
               <Card title="2) Tell Us Where to Send Your Demo" subtitle="We’ll email your links and keep you updated.">
-                <form onSubmit={(e) => { e.preventDefault(); if (contactValid) setStep(2); }} className="space-y-4">
+                <form onSubmit={handleContactSubmit} className="space-y-4">
                   <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                     <Input label="Full Name" required value={lead.name} onChange={e => setLead({ ...lead, name: e.target.value })} />
                     <Input label="Work Email" required type="email" value={lead.email} onChange={e => setLead({ ...lead, email: e.target.value })} />

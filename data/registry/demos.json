@@ -87,22 +87,16 @@
     "system_message_file": "./public/system_messages/n8n_System_Message_sost.work.md",
     "demo_url": "http://localhost:3000/demo/sost-work",
     "chatwoot": {
-      "inbox_id": 24,
-      "website_token": "EhYTXbeRSAy7xbdjaJ2KZXHS"
+      "inbox_id": 26,
+      "website_token": "eT3eNpPKhVAnWicpdxBneXRf"
     },
     "workflow_duplication": "success",
     "agent_bot": {
-      "id": 24,
-      "access_token": "cBQT6etUfqvLjbdwC5YDvHqq"
-    },
-    "lead": {
-      "name": "yilak kidane",
-      "email": "yilakb@yahoo.com",
-      "company": "lbtil",
-      "phone": "2142353740"
+      "id": 26,
+      "access_token": "ZgYw7oFomT6jV4vr2JrJuu9T"
     },
     "created_at": "2025-09-10T06:11:50.564Z",
-    "updated_at": "2025-09-10T20:54:05.255Z"
+    "updated_at": "2025-09-10T23:01:21.242Z"
   },
   "magiceden-us": {
     "slug": "magiceden-us",
@@ -160,5 +154,51 @@
       "phone": "2142353740"
     },
     "created_at": "2025-09-10T21:02:50.026Z"
+  },
+  "sost-work-6d99d2b2": {
+    "slug": "sost-work-6d99d2b2",
+    "business": "sost.work",
+    "url": "https://sost.work/",
+    "system_message_file": "./public/system_messages/n8n_System_Message_sost-work-6d99d2b2.md",
+    "demo_url": "http://localhost:3000/demo/sost-work-6d99d2b2",
+    "chatwoot": {
+      "inbox_id": 27,
+      "website_token": "aUJdag8JsdisCAGmuWPZcqgZ"
+    },
+    "workflow_duplication": "success",
+    "agent_bot": {
+      "id": 27,
+      "access_token": "fMY7V2ZEVtcesdkaM72o3PCa"
+    },
+    "lead": {
+      "name": "solomon",
+      "email": "solomon@sost.work",
+      "company": "sost",
+      "phone": "2142353740"
+    },
+    "created_at": "2025-09-10T23:06:25.604Z"
+  },
+  "localboxs-com-00b8b779": {
+    "slug": "localboxs-com-00b8b779",
+    "business": "localboxs.com",
+    "url": "https://localboxs.com/",
+    "system_message_file": "./public/system_messages/n8n_System_Message_localboxs-com-00b8b779.md",
+    "demo_url": "http://localhost:3000/demo/localboxs-com-00b8b779",
+    "chatwoot": {
+      "inbox_id": 30,
+      "website_token": "nRZPzQiiLkbawDu4nhV32F1A"
+    },
+    "workflow_duplication": "success",
+    "agent_bot": {
+      "id": 30,
+      "access_token": "gy3gK1DdpvVzTKiDEtog9NeZ"
+    },
+    "lead": {
+      "name": "moringa tomata ",
+      "email": "morango@localboxs.com",
+      "company": "localboxs",
+      "phone": ""
+    },
+    "created_at": "2025-09-11T00:03:09.740Z"
   }
 }

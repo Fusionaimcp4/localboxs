@@ -34,7 +34,7 @@ async function cwGet(path: string) {
  * Returns: { id, access_token }
  */
 export async function createAgentBot(businessName: string) {
-  const outgoing_url = `https://n8n.sost.work/webhook/${businessName}`;
+  const outgoing_url = `${process.env.N8N_BASE_URL || 'https://n8n.sost.work'}/webhook/${businessName}`;
   const payload = {
     name: `${businessName} Bot`,
     description: `Bot for ${businessName} demo`,

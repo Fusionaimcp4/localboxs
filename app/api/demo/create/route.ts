@@ -165,7 +165,7 @@ export async function POST(request: NextRequest) {
     // Step 6: Create demo URL and Chatwoot inbox
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || process.env.VERCEL_URL 
       ? `https://${process.env.VERCEL_URL}` 
-      : 'http://localhost:3000';
+      : `http://${process.env.DEMO_DOMAIN || 'localhost:3000'}`;
     const demoUrl = `${baseUrl}/demo/${slug}`;
     
     const { inbox_id, website_token } = await createWebsiteInbox(businessName, demoUrl);
@@ -257,7 +257,43 @@ export async function POST(request: NextRequest) {
       return registry;
     });
 
-    // Step 11: Return success response (simplified for user-facing API)
+    // Step 11: Create/update Chatwoot contact if lead information is provided
+    if (payload.lead) {
+      try {
+        const leadPayload = {
+          lead: {
+            name: payload.lead.name,
+            email: payload.lead.email,
+            company: payload.lead.company,
+            phone: payload.lead.phone,
+            consent: payload.lead.consent
+          },
+          demo: {
+            slug,
+            business_url: payload.url,
+            demo_url: demoUrl,
+            system_message_file: systemMessageFile,
+            inbox_id: inbox_id
+          }
+        };
+
+        // Call the lead endpoint internally
+        const leadResponse = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || `http://${process.env.DEMO_DOMAIN || 'localhost:3000'}`}/api/demo/lead`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(leadPayload)
+        });
+
+        if (!leadResponse.ok) {
+          console.warn('Lead creation failed during demo creation:', await leadResponse.text());
+        }
+      } catch (leadError) {
+        console.warn('Lead creation failed during demo creation (non-blocking):', leadError);
+        // Continue with demo creation even if lead creation fails
+      }
+    }
+
+    // Step 12: Return success response (simplified for user-facing API)
     const response = {
       demo_url: demoUrl,
       system_message_file: `/system-message/n8n_System_Message_${slug}`
