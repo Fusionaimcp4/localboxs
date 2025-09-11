@@ -30,7 +30,7 @@ async function testLeadAPI() {
     name: 'Test User',
     email: `test-${Date.now()}@example.com`,
     company: 'Test Company',
-    phone: '+1234567890',
+    phone: `+1234567${Date.now().toString().slice(-4)}`,
     consent: true
   };
 
@@ -89,7 +89,7 @@ async function testDuplicateLead() {
     name: 'Duplicate Test User',
     email: `duplicate-${Date.now()}@example.com`,
     company: 'Duplicate Company',
-    phone: '+1234567890',
+    phone: `+1234567${Date.now().toString().slice(-4)}`,
     consent: true
   };
 

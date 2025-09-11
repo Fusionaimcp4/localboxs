@@ -200,5 +200,29 @@
       "phone": ""
     },
     "created_at": "2025-09-11T00:03:09.740Z"
+  },
+  "base44-com-6cfe2736": {
+    "slug": "base44-com-6cfe2736",
+    "business": "base44.com",
+    "url": "https://base44.com/",
+    "system_message_file": "./public/system_messages/n8n_System_Message_base44-com-6cfe2736.md",
+    "demo_url": "http://localhost:3000/demo/base44-com-6cfe2736",
+    "chatwoot": {
+      "inbox_id": 34,
+      "website_token": "eftwHYxR14VDReP5ewJiAmmt"
+    },
+    "workflow_duplication": "success",
+    "agent_bot": {
+      "id": 34,
+      "access_token": "u9GnQywgajqswrBd7h1DBVbG"
+    },
+    "lead": {
+      "name": "Gina Morelo",
+      "email": "gina@base44.ai",
+      "company": "base44",
+      "phone": "2145686354"
+    },
+    "created_at": "2025-09-11T03:59:04.072Z",
+    "updated_at": "2025-09-11T04:15:22.009Z"
   }
 }

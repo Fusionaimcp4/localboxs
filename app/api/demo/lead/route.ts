@@ -34,7 +34,7 @@ interface ChatwootContact {
 // Chatwoot API configuration
 const CW_BASE = process.env.CHATWOOT_BASE_URL;
 const CW_ACCOUNT_ID = process.env.CHATWOOT_ACCOUNT_ID;
-const CW_API_TOKEN = process.env.CHATWOOT_API_TOKEN;
+const CW_API_TOKEN = process.env.CHATWOOT_API_KEY;
 
 // Check if Chatwoot is configured
 const isChatwootConfigured = !!(CW_BASE && CW_ACCOUNT_ID && CW_API_TOKEN);
@@ -47,7 +47,7 @@ if (!isChatwootConfigured) {
 async function chatwootRequest(method: string, path: string, body?: any) {
   const url = `${CW_BASE}${path}`;
   const headers: Record<string, string> = {
-    'api_access_token': CW_API_TOKEN,
+    'api_access_token': CW_API_TOKEN!,
     'Content-Type': 'application/json',
   };
 
@@ -73,12 +73,15 @@ async function chatwootRequest(method: string, path: string, body?: any) {
 // Search for existing contact by email
 async function searchContactByEmail(email: string): Promise<ChatwootContact | null> {
   try {
-    // Try the search endpoint first
-    const searchResults = await chatwootRequest('GET', `/api/v1/accounts/${CW_ACCOUNT_ID}/contacts/search?q=${encodeURIComponent(email)}`);
+    // Use the contacts list endpoint since search endpoint returns 404
+    const response = await chatwootRequest('GET', `/api/v1/accounts/${CW_ACCOUNT_ID}/contacts`);
     
-    if (searchResults && searchResults.length > 0) {
+    // Handle different response structures
+    const contacts = response.payload || response || [];
+    
+    if (Array.isArray(contacts) && contacts.length > 0) {
       // Filter by exact email match
-      const exactMatch = searchResults.find((contact: any) => 
+      const exactMatch = contacts.find((contact: any) => 
         contact.email && contact.email.toLowerCase() === email.toLowerCase()
       );
       return exactMatch || null;
@@ -96,10 +99,22 @@ async function createContact(lead: LeadData, demo: DemoData): Promise<ChatwootCo
   const timestamp = new Date().toISOString();
   const identifier = `demo_${demo.slug}_${Date.now()}`;
   
+  // Validate and format phone number for E.164
+  let phoneNumber = undefined;
+  if (lead.phone && lead.phone.trim()) {
+    // Basic E.164 validation - must start with + and have 10-15 digits
+    const phone = lead.phone.trim();
+    if (/^\+[1-9]\d{9,14}$/.test(phone)) {
+      phoneNumber = phone;
+    } else {
+      console.warn(`Invalid phone number format: ${phone}. Skipping phone number.`);
+    }
+  }
+  
   const contactData = {
     name: lead.name,
     email: lead.email,
-    phone_number: lead.phone || undefined,
+    phone_number: phoneNumber,
     identifier,
     custom_attributes: {
       source: 'demo_page',
@@ -113,16 +128,29 @@ async function createContact(lead: LeadData, demo: DemoData): Promise<ChatwootCo
     }
   };
 
-  return await chatwootRequest('POST', `/api/v1/accounts/${CW_ACCOUNT_ID}/contacts`, contactData);
+  const response = await chatwootRequest('POST', `/api/v1/accounts/${CW_ACCOUNT_ID}/contacts`, contactData);
+  // Chatwoot returns contact data nested under payload.contact
+  return response.payload?.contact || response;
 }
 
 // Update existing contact
 async function updateContact(contactId: number, lead: LeadData, demo: DemoData): Promise<ChatwootContact> {
   const timestamp = new Date().toISOString();
   
+  // Validate and format phone number for E.164
+  let phoneNumber = undefined;
+  if (lead.phone && lead.phone.trim()) {
+    const phone = lead.phone.trim();
+    if (/^\+[1-9]\d{9,14}$/.test(phone)) {
+      phoneNumber = phone;
+    } else {
+      console.warn(`Invalid phone number format: ${phone}. Skipping phone number.`);
+    }
+  }
+  
   const updateData = {
     name: lead.name,
-    phone_number: lead.phone || undefined,
+    phone_number: phoneNumber,
     custom_attributes: {
       company: lead.company || '',
       demo_slug: demo.slug,
@@ -133,7 +161,9 @@ async function updateContact(contactId: number, lead: LeadData, demo: DemoData):
     }
   };
 
-  return await chatwootRequest('PUT', `/api/v1/accounts/${CW_ACCOUNT_ID}/contacts/${contactId}`, updateData);
+  const response = await chatwootRequest('PUT', `/api/v1/accounts/${CW_ACCOUNT_ID}/contacts/${contactId}`, updateData);
+  // Chatwoot returns contact data nested under payload.contact
+  return response.payload?.contact || response;
 }
 
 // Associate contact with inbox

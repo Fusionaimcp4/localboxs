@@ -50,8 +50,14 @@ export function renderDemoHTML(ctx: DemoCtx): string {
     <div class="card">
       <p>Open the chat bubble (bottom right) and ask questions about ${businessName}. The AI runs a system message tailored from your website.</p>
       <ul>
-        <li>Example: "What do you do? How do I get started?"</li>
-        <li>Example: "Do you integrate with X?"</li>
+        <li>Example: "What do you do? Can you give me a quick overview of your services?"</li>
+        <li> "How is your platform different from competitors?"</li>
+        <li> "How is your platform different from competitors?"</li>
+        <li> "What is your return policy?"</li>
+        <li> "How can I contact customer support?"</li>
+        <li> "What is your business hours?"</li>
+        <li> "What is your business address?"</li>
+        <li> "What pricing options do you offer?"</li>
       </ul>
     </div>
   </main>
