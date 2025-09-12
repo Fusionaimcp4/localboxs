@@ -225,5 +225,52 @@
     },
     "created_at": "2025-09-11T03:59:04.072Z",
     "updated_at": "2025-09-11T04:15:22.009Z"
+  },
+  "sost-work-492bf510": {
+    "slug": "sost-work-492bf510",
+    "business": "sost.work",
+    "url": "https://sost.work",
+    "system_message_file": "./public/system_messages/n8n_System_Message_sost-work-492bf510.md",
+    "demo_url": "http://localhost:3000/demo/sost-work-492bf510",
+    "chatwoot": {
+      "inbox_id": 43,
+      "website_token": "cMdapq8dME96exA7E1RL6Upi"
+    },
+    "workflow_duplication": "success",
+    "agent_bot": {
+      "id": 43,
+      "access_token": "rCieHdBwdbUyx8kJi4gE6txU"
+    },
+    "lead": {
+      "name": "solomon behailu ",
+      "email": "solomon@sost.work",
+      "company": "sost",
+      "phone": "+1555555555"
+    },
+    "created_at": "2025-09-12T05:25:26.694Z",
+    "updated_at": "2025-09-12T05:48:33.716Z"
+  },
+  "lbtil-com-0999b63b": {
+    "slug": "lbtil-com-0999b63b",
+    "business": "lbtil.com",
+    "url": "https://lbtil.com",
+    "system_message_file": "./public/system_messages/n8n_System_Message_lbtil-com-0999b63b.md",
+    "demo_url": "http://localhost:3000/demo/lbtil-com-0999b63b",
+    "chatwoot": {
+      "inbox_id": 44,
+      "website_token": "C7mJmyu8LeZUNMpovBr3P4vk"
+    },
+    "workflow_duplication": "success",
+    "agent_bot": {
+      "id": 44,
+      "access_token": "wt2LiWsMEbp1r8weP4neEc3k"
+    },
+    "lead": {
+      "name": "makeda amare",
+      "email": "makeda@lbtil.com",
+      "company": "lbtilla",
+      "phone": "+1552565425"
+    },
+    "created_at": "2025-09-12T06:10:32.276Z"
   }
 }

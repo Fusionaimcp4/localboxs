@@ -7,9 +7,20 @@ import { Toaster } from '@/components/ui/toaster'
 import Script from 'next/script'
 
 export const metadata: Metadata = {
-  title: 'vonxe- Unlimited Agents, Self-Hosted AI Support',
+  title: 'LocalBoxs - Unlimited Agents, Self-Hosted AI Support',
   description:
-    'vonxe replaces Intercom/Zendesk with a self-hosted AI-first support system. Unlimited agents, unlimited AI resolutions, one-time setup, you own your data.',
+    'LocalBoxs replaces Intercom/Zendesk with a self-hosted AI-first support system. Unlimited agents, unlimited AI resolutions, one-time setup, you own your data.',
+  icons: {
+    icon: '/logos/boxlogo32x32.ico',
+    shortcut: '/logos/boxlogo48x48.ico',
+    apple: '/logos/boxlogo512x512.png',
+  },
+  openGraph: {
+    title: 'LocalBoxs - Unlimited Agents, Self-Hosted AI Support',
+    description: 'LocalBoxs replaces Intercom/Zendesk with a self-hosted AI-first support system. Unlimited agents, unlimited AI resolutions, one-time setup, you own your data.',
+    images: ['/logos/boxlogo512x512.png'],
+  },
+  manifest: '/manifest.json',
 }
 
 export default function RootLayout({

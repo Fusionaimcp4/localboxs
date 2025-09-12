@@ -111,19 +111,20 @@ async function createContact(lead: LeadData, demo: DemoData): Promise<ChatwootCo
     }
   }
   
-  // Extract business domain for bio field (same as inbox name)
-  const businessDomain = new URL(demo.business_url).hostname;
+  // Extract business name (same logic as inbox/bot creation)
+  const businessName = new URL(demo.business_url).hostname.replace(/^www\./, '');
   
   const contactData = {
     name: lead.name,
     email: lead.email,
     phone_number: phoneNumber,
-    bio: businessDomain,
     identifier,
+    additional_attributes: {
+      company: businessName, // Use the same business name as inbox/bot creation
+    },
     custom_attributes: {
       source: 'demo_page',
       consent: lead.consent || false,
-      company: lead.company || '',
       demo_slug: demo.slug,
       business_url: demo.business_url,
       demo_url: demo.demo_url || '',
@@ -152,15 +153,16 @@ async function updateContact(contactId: number, lead: LeadData, demo: DemoData):
     }
   }
   
-  // Extract business domain for bio field (same as inbox name)
-  const businessDomain = new URL(demo.business_url).hostname;
+  // Extract business name (same logic as inbox/bot creation)
+  const businessName = new URL(demo.business_url).hostname.replace(/^www\./, '');
   
   const updateData = {
     name: lead.name,
     phone_number: phoneNumber,
-    bio: businessDomain,
+    additional_attributes: {
+      company: businessName, // Use the same business name as inbox/bot creation
+    },
     custom_attributes: {
-      company: lead.company || '',
       demo_slug: demo.slug,
       business_url: demo.business_url,
       demo_url: demo.demo_url || '',

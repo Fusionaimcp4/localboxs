@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { Menu } from "lucide-react"
 import Link from "next/link" // Import Link for client-side navigation
+import Image from "next/image"
 import { ContactModal } from "./contact-modal"
 
 export function Header() {
@@ -29,7 +30,19 @@ export function Header() {
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         <div className="flex items-center gap-6">
           <div className="flex items-center gap-3">
-            <span className="text-foreground text-xl font-semibold">vonxe</span>
+            <Link href="/" className="flex items-center gap-2">
+            <span className="text-foreground text-xl font-semibold flex items-center gap-1">
+  LocalBox
+  <Image
+    src="/logos/boxlogo512x512.png"
+    alt="LocalBoxs Logo"
+    width={20}
+    height={20}
+    className="inline-block align-middle"
+  />
+  s
+</span>
+            </Link>
           </div>
           <nav className="hidden md:flex items-center gap-2">
             {navItems.map((item) => (

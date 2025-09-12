@@ -25,14 +25,14 @@ You will receive:
 
 ## Project Overview
 - **One-liner:** SOST is a Bitcoin-powered marketplace connecting global talent with employers.
-- **Goals & objectives:** To provide freelancers a platform to earn Bitcoin by trading their skills and to facilitate easy collaboration between freelancers and employers.
-- **Unique value prop:** Empowering freelancers to participate in the Bitcoin economy through a dedicated marketplace.
+- **Goals & objectives:** To empower freelancers to earn Bitcoin by trading their skills and to facilitate easy collaboration between freelancers and employers.
+- **Unique value prop:** Offers a Bitcoin Lightning Wallet for freelancers, enabling them to receive payments and make purchases seamlessly within the Bitcoin economy.
 
 ## Key Features & Functionality
 - **Core:**
   - Job posting for employers
   - Proposal submissions from freelancers
-  - In-platform collaboration tools (chat, file sharing, project tracking)
+  - Collaboration tools (chat, file sharing, project tracking)
   - Payment system based on authorized work
 - **Advanced:**
   - Integrated Bitcoin Lightning Wallet for transactions
@@ -48,19 +48,19 @@ You will receive:
 
 ## User Journey
 - **Typical flow:**
-  1. Employers post job details.
-  2. Freelancers submit proposals.
+  1. Employers post a job with detailed requirements.
+  2. Freelancers submit proposals based on the job listing.
   3. Employers review proposals and hire freelancers.
-  4. Collaboration occurs through the platform.
-  5. Payment is made upon project completion.
+  4. Collaboration occurs through the platform's dashboard.
+  5. Payment is made only for authorized work.
 - **Examples:**
-  1. An employer in the U.S. posts a job for graphic design, receives proposals, and hires a freelancer from India.
-  2. A freelancer in Ethiopia offers programming services and gets hired by a client in Canada.
+  1. An employer in the U.S. posts a job for online class help, receives proposals, and hires a freelancer.
+  2. A freelancer in Ethiopia offers engineering services and gets hired by a client from Canada.
 
 ## Operations & Processes
-- **Onboarding:** Users can sign up for free and choose to join as freelancers or clients.
+- **Onboarding:** Users can sign up for free to access the marketplace.
 - **Support:** Unknown
-- **Billing:** Payments are made through the Bitcoin Lightning Wallet, only for authorized work.
+- **Billing:** Payments are made through the Bitcoin Lightning Wallet for authorized work only.
 
 ## Governance & Security
 - **Auth:** User accounts with sign-in and password recovery options.
@@ -69,22 +69,22 @@ You will receive:
 
 ## FAQs & Troubleshooting
 1. **How do I post a job?**
-   - Sign in, click on "Post a job," and provide the necessary details.
+   - Sign in to your account, navigate to the job posting section, and provide the necessary details.
    
 2. **How do I receive payments?**
-   - Set up your Bitcoin Lightning Wallet to receive payments for completed work.
+   - Payments are made through the Bitcoin Lightning Wallet linked to your freelancer account.
    
 3. **What if I forget my password?**
-   - Click on "Forgot password?" on the sign-in page to reset it.
+   - Click on "Forgot password?" on the sign-in page and follow the instructions to reset it.
 
 ## Glossary
 - **Bitcoin:** A decentralized digital currency.
-- **Freelancer:** An individual offering services on a contract basis.
-- **Employer:** A client seeking to hire freelancers for projects.
-- **Job Posting:** The act of listing a job opportunity for freelancers.
-- **Proposal:** A submission by a freelancer to offer their services for a job.
-- **Collaboration Tools:** Features that facilitate communication and project management.
-- **Bitcoin Lightning Wallet:** A wallet that allows for fast Bitcoin transactions.
+- **Freelancer:** An individual who offers services to clients on a project basis.
+- **Employer:** A client looking to hire freelancers for specific tasks or projects.
+- **Job Posting:** The process of listing a job opportunity for freelancers.
+- **Proposal:** A submission by a freelancer outlining their qualifications and approach to a job.
+- **Collaboration Tools:** Features that facilitate communication and project management between freelancers and employers.
+- **Bitcoin Lightning Wallet:** A digital wallet that allows for fast and low-cost Bitcoin transactions.
 - **Authorized Work:** Work that has been approved by the employer for payment.
 ```
 

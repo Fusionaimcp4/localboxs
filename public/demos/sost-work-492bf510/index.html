@@ -1,0 +1,52 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>sost.work • AI Support Demo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    :root{ --primary: #7ee787; --secondary: #f4a261; }
+    body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;margin:0;background:#0b1220;color:#e5e7eb}
+    header{padding:48px 24px;text-align:center;background:linear-gradient(180deg,var(--secondary),#0b1220)}
+    h1{margin:0;font-size:36px}
+    .tag{display:inline-block;margin-top:12px;padding:6px 10px;border-radius:999px;background:var(--primary);color:#0b1220;font-weight:600}
+    main{max-width:900px;margin:40px auto;padding:0 24px}
+    .card{background:#0f172a;border:1px solid #1f2937;border-radius:16px;padding:20px}
+    .logo{height:56px;margin:16px auto 8px;display:block}
+  </style>
+</head>
+<body>
+  <header>
+    
+    <h1>sost.work — AI Support Demo</h1>
+    <div class="tag">Powered by your business-specific system message</div>
+  </header>
+  <main>
+    <div class="card">
+      <p>Open the chat bubble (bottom right) and ask questions about sost.work. The AI runs a system message tailored from your website.</p>
+      <ul>
+        <li>Example: "What do you do? Can you give me a quick overview of your services?"</li>
+        <li> "How is your platform different from competitors?"</li>
+        <li> "How is your platform different from competitors?"</li>
+        <li> "What is your return policy?"</li>
+        <li> "How can I contact customer support?"</li>
+        <li> "What is your business hours?"</li>
+        <li> "What is your business address?"</li>
+        <li> "What pricing options do you offer?"</li>
+      </ul>
+    </div>
+  </main>
+
+  <script>
+    (function(d,t) {
+      var BASE_URL="https://chatwoot.mcp4.ai";
+      var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+      g.src=BASE_URL+"/packs/js/sdk.js"; s.parentNode.insertBefore(g,s);
+      g.onload=function(){
+        window.chatwootSDK.run({ websiteToken: "cMdapq8dME96exA7E1RL6Upi", baseUrl: BASE_URL });
+        window.$chatwoot && window.$chatwoot.setCustomAttributes({ business: "sost.work", slug: "sost-work-492bf510" });
+      }
+    })(document,"script");
+  </script>
+</body>
+</html>

@@ -1,6 +1,6 @@
-# LocalBox
+# LocalBoxs
 
-LocalBox is a self-hosted AI-first customer support platform that ensures customers are always acknowledged while cutting operational costs. Unlike legacy vendors, you pay once for setup, own your data, and scale with unlimited agents and unlimited AI resolutions.
+LocalBoxs is a self-hosted AI-first customer support platform that ensures customers are always acknowledged while cutting operational costs. Unlike legacy vendors, you pay once for setup, own your data, and scale with unlimited agents and unlimited AI resolutions.
 
 ## Features
 
@@ -153,4 +153,4 @@ ts-node scripts/onboard-business.ts --url https://example.com
 
 ## License
 
-This project is private and proprietary to LocalBox/Fusion AI.
+This project is private and proprietary to LocalBoxs/Fusion AI.
