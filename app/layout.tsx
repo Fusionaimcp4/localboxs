@@ -7,9 +7,9 @@ import { Toaster } from '@/components/ui/toaster'
 import Script from 'next/script'
 
 export const metadata: Metadata = {
-  title: 'LocalBox - Unlimited Agents, Self-Hosted AI Support',
+  title: 'vonxe- Unlimited Agents, Self-Hosted AI Support',
   description:
-    'LocalBox replaces Intercom/Zendesk with a self-hosted AI-first support system. Unlimited agents, unlimited AI resolutions, one-time setup, you own your data.',
+    'vonxe replaces Intercom/Zendesk with a self-hosted AI-first support system. Unlimited agents, unlimited AI resolutions, one-time setup, you own your data.',
 }
 
 export default function RootLayout({

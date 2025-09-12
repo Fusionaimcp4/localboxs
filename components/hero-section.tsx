@@ -449,19 +449,21 @@ export function HeroSection() {
       </div>
 
       <div className="relative z-10 flex flex-col sm:flex-row items-center gap-4">
-        <ContactModal>
-          <Button className="bg-secondary text-secondary-foreground hover:bg-secondary/90 px-8 py-3 rounded-full font-medium text-base shadow-lg ring-1 ring-white/10">
-            Request a Demo
-          </Button>
-        </ContactModal>
-        <Link href="/userdemo">
+      <Link href="/userdemo">
           <Button
             variant="ghost"
-            className="text-secondary-foreground hover:bg-secondary/10 px-8 py-3 rounded-full font-medium text-base"
+            className="bg-secondary text-secondary-foreground hover:bg-secondary/90 px-8 py-3 rounded-full font-medium text-base shadow-lg ring-1 ring-white/10"
           >
             See It in Action
           </Button>
         </Link>
+        <ContactModal>
+          <Button className="text-secondary-foreground hover:bg-secondary/10 px-8 py-3 rounded-full font-medium text-base">
+            Request a Demo
+          </Button>
+          
+        </ContactModal>
+       
       </div>
     </section>
   )

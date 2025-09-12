@@ -64,32 +64,50 @@ const AiCodeReviews: React.FC = () => {
               margin: 0,
             }}
           >
-            <p style={{ margin: 0, whiteSpace: "pre-wrap", fontWeight: 400 }}>switch (type) {"{"}</p>
-            <p style={{ margin: 0, whiteSpace: "pre-wrap", fontWeight: 400 }}> case 'success':</p>
-            <p style={{ margin: 0, whiteSpace: "pre-wrap", fontWeight: 400 }}> return {"{"}</p>
+            <p style={{ margin: 0, whiteSpace: "pre-wrap", fontWeight: 400 }}>How It Works</p>
+            <p style={{ margin: 0, whiteSpace: "pre-wrap", fontWeight: 400 }}></p>
+
+            <p style={{ margin: 0, whiteSpace: "pre-wrap", fontWeight: 400 }}>1. Customer Sends a Message</p>
+            <p style={{ margin: 0, whiteSpace: "pre-wrap", fontWeight: 400 }}>User starts a chat on your website.</p>
+            <p style={{ margin: 0, whiteSpace: "pre-wrap", fontWeight: 400 }}></p>
+            <p style={{ margin: 0, whiteSpace: "pre-wrap", fontWeight: 400 }}>Conversation instantly enters the system.</p>
+            <p style={{ margin: 0, whiteSpace: "pre-wrap", fontWeight: 400 }}></p>
+
+            <p style={{ margin: 0, whiteSpace: "pre-wrap", fontWeight: 400 }}>2. Main AI Agent (95% Accuracy)</p>
+            <p style={{ margin: 0, whiteSpace: "pre-wrap", fontWeight: 400 }}>Knows your platform inside and out.</p>
+            <p style={{ margin: 0, whiteSpace: "pre-wrap", fontWeight: 400 }}></p>
             <p style={{ margin: 0, whiteSpace: "pre-wrap", fontWeight: 400 }}>
-              {"          border: theme === 'dark' ? 'border-[rgba(34,197,94,0.4)]' : 'border-green-200',"}
+              Can be trained with any information you want shared.
             </p>
-            <p style={{ margin: 0, whiteSpace: "pre-wrap", fontWeight: 400 }}> icon: (</p>
+            <p style={{ margin: 0, whiteSpace: "pre-wrap", fontWeight: 400 }}></p>
             <p style={{ margin: 0, whiteSpace: "pre-wrap", fontWeight: 400 }}>
-              {'            <svg className={\'baseIconClasses\'} fill="none" viewBox="0 0 14 14">'}
+              Handles 95% of questions accurately, instantly.
             </p>
-            <p style={{ margin: 0, whiteSpace: "pre-wrap", fontWeight: 400 }}> &lt;path</p>
+            <p style={{ margin: 0, whiteSpace: "pre-wrap", fontWeight: 400 }}></p>
             <p style={{ margin: 0, whiteSpace: "pre-wrap", fontWeight: 400 }}>
-              {'                d="M3.85156 7.875L6.47656 10.5L10.8516 3.5"'}
+              Escalates to a human team when needed.
+            </p>
+            <p style={{ margin: 0, whiteSpace: "pre-wrap", fontWeight: 400 }}></p>
+
+            <p style={{ margin: 0, whiteSpace: "pre-wrap", fontWeight: 400 }}>3. Automatic Team Assignment</p>
+            <p style={{ margin: 0, whiteSpace: "pre-wrap", fontWeight: 400 }}>
+              Conversation is routed to the right team:
             </p>
             <p style={{ margin: 0, whiteSpace: "pre-wrap", fontWeight: 400 }}>
-              {'                stroke="var(--ai-primary-color)"'}
+              Customer Support — general inquiries.
             </p>
             <p style={{ margin: 0, whiteSpace: "pre-wrap", fontWeight: 400 }}>
-              {'                strokeLinecap="round"'}
+              Sales &amp; Partnerships — leads, investors, enterprise.
             </p>
             <p style={{ margin: 0, whiteSpace: "pre-wrap", fontWeight: 400 }}>
-              {'                strokeLinejoin="round"'}
+              Technical Support / DevOps — onboarding &amp; integrations.
             </p>
-            <p style={{ margin: 0, whiteSpace: "pre-wrap", fontWeight: 400 }}>{'                strokeWidth="1.5"'}</p>
-            <p style={{ margin: 0, whiteSpace: "pre-wrap", fontWeight: 400 }}> /&gt;</p>
-            <p style={{ margin: 0, whiteSpace: "pre-wrap", fontWeight: 400 }}> &lt;/svg&gt;</p>
+            <p style={{ margin: 0, whiteSpace: "pre-wrap", fontWeight: 400 }}>
+              Billing &amp; Accounts — payments, refunds, invoices.
+            </p>
+            <p style={{ margin: 0, whiteSpace: "pre-wrap", fontWeight: 400 }}>
+              Product Feedback &amp; Community — feature requests &amp; bug reports.
+            </p>
           </div>
         </div>
       </div>
@@ -158,31 +176,33 @@ const AiCodeReviews: React.FC = () => {
               margin: 0,
             }}
           >
-            <p style={{ margin: 0, whiteSpace: "pre-wrap", fontWeight: 400 }}>switch (type) {"{"}</p>
-            <p style={{ margin: 0, whiteSpace: "pre-wrap", fontWeight: 400 }}> case 'success':</p>
-            <p style={{ margin: 0, whiteSpace: "pre-wrap", fontWeight: 400 }}> return {"{"}</p>
+            <p style={{ margin: 0, whiteSpace: "pre-wrap", fontWeight: 400 }}>4. Human Takes Over</p>
             <p style={{ margin: 0, whiteSpace: "pre-wrap", fontWeight: 400 }}>
-              {"          border: theme === 'dark' ? 'border-[rgba(34,197,94,0.4)]' : 'border-green-200',"}
+              Agent sees full conversation history.
             </p>
-            <p style={{ margin: 0, whiteSpace: "pre-wrap", fontWeight: 400 }}> icon: (</p>
+            <p style={{ margin: 0, whiteSpace: "pre-wrap", fontWeight: 400 }}></p>
             <p style={{ margin: 0, whiteSpace: "pre-wrap", fontWeight: 400 }}>
-              {'            <svg className={\'baseIconClasses\'} fill="none" viewBox="0 0 14 14">'}
+              Customer gets a smooth handoff without repeating themselves.
             </p>
-            <p style={{ margin: 0, whiteSpace: "pre-wrap", fontWeight: 400 }}> &lt;path</p>
+            <p style={{ margin: 0, whiteSpace: "pre-wrap", fontWeight: 400 }}></p>
+
+            <p style={{ margin: 0, whiteSpace: "pre-wrap", fontWeight: 400 }}>5. Holding AI Agent</p>
             <p style={{ margin: 0, whiteSpace: "pre-wrap", fontWeight: 400 }}>
-              {'                d="M3.85156 7.875L6.47656 10.5L10.8516 3.5"'}
-            </p>
-            <p style={{ margin: 0, whiteSpace: "pre-wrap", fontWeight: 400 }}>{'                stroke="#22C55E"'}</p>
-            <p style={{ margin: 0, whiteSpace: "pre-wrap", fontWeight: 400 }}>
-              {'                strokeLinecap="round"'}
+              If a human doesn&apos;t reply on time, the Holding AI politely reassures the customer:
             </p>
             <p style={{ margin: 0, whiteSpace: "pre-wrap", fontWeight: 400 }}>
-              {'                strokeLinejoin="round"'}
+              &quot;We haven&apos;t forgotten you — someone will be with you shortly.&quot;
             </p>
-            <p style={{ margin: 0, whiteSpace: "pre-wrap", fontWeight: 400 }}>{'                strokeWidth="1.5"'}</p>
-            <p style={{ margin: 0, whiteSpace: "pre-wrap", fontWeight: 400 }}> /&gt;</p>
-            <p style={{ margin: 0, whiteSpace: "pre-wrap", fontWeight: 400 }}> &lt;/svg&gt;</p>
+            <p style={{ margin: 0, whiteSpace: "pre-wrap", fontWeight: 400 }}></p>
+            <p style={{ margin: 0, whiteSpace: "pre-wrap", fontWeight: 400 }}>
+              Prevents frustration and builds trust.
+            </p>
+            <p style={{ margin: 0, whiteSpace: "pre-wrap", fontWeight: 400 }}></p>
+            <p style={{ margin: 0, whiteSpace: "pre-wrap", fontWeight: 400 }}>
+              Optional: notifies agents or supervisors in the background if a conversation goes unattended.
+            </p>
           </div>
+
           <button
             style={{
               position: "absolute",
@@ -216,15 +236,7 @@ const AiCodeReviews: React.FC = () => {
                 fontWeight: 500,
               }}
             >
-              Apply changes
-            </span>
-            <span
-              style={{
-                fontFamily: "'SF Pro', -apple-system, BlinkMacSystemFont, system-ui, sans-serif",
-                fontWeight: 500,
-              }}
-            >
-              ⌘Y
+              Urgent
             </span>
           </button>
         </div>

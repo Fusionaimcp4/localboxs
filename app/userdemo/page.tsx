@@ -3,6 +3,7 @@
 import React, { useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { slugify } from "@/lib/slug";
+import { normalizeUrl } from "@/lib/url";
 
 /**
  * User‑Facing Demo Page
@@ -177,7 +178,9 @@ export default function UserFacingDemoPage() {
     setInfoError(null);
     setBiz(null);
     try {
-      const data = await fetchBusinessInfo(targetUrl);
+      // Normalize the URL before making the API call
+      const normalizedUrl = normalizeUrl(targetUrl);
+      const data = await fetchBusinessInfo(normalizedUrl);
       setBiz(data);
       setDemo(d => ({
         ...d,

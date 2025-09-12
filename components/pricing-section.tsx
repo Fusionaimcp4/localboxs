@@ -22,7 +22,7 @@ export function PricingSection() {
           <CardHeader>
             <CardTitle>Estimate your setup cost</CardTitle>
             <CardDescription>
-              Get an estimated one-time cost for LocalBox—based on your team size, expected resolution
+              Get an estimated one-time cost—based on your team size, expected resolution
               volume, and more.
             </CardDescription>
           </CardHeader>

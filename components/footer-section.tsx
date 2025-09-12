@@ -8,10 +8,10 @@ export function FooterSection() {
       {/* Left Section: Logo, Description, Social Links */}
       <div className="flex flex-col justify-start items-start gap-8 p-4 md:p-8">
         <div className="flex gap-3 items-stretch justify-center">
-          <div className="text-center text-foreground text-xl font-semibold leading-4">LocalBox</div>
+          <div className="text-center text-foreground text-xl font-semibold leading-4">vonxe</div>
         </div>
         <p className="text-foreground/90 text-sm font-medium leading-[18px] text-left">
-          AI-first customer support without per-seat or per-resolution fees
+          AI-support without per-seat or per-resolution fees
         </p>
         <div className="flex justify-start items-start gap-3">
           <a href="#" aria-label="Twitter" className="w-4 h-4 flex items-center justify-center">

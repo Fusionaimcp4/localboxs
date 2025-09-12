@@ -26,18 +26,17 @@ You will receive:
 ## Project Overview
 - **One-liner:** SOST is a Bitcoin-powered marketplace connecting global talent with employers.
 - **Goals & objectives:** To provide freelancers a platform to earn Bitcoin by trading their skills and to facilitate easy collaboration between freelancers and employers.
-- **Unique value prop:** Empowering freelancers to participate in the Bitcoin economy with integrated payment solutions.
+- **Unique value prop:** Empowering freelancers to participate in the Bitcoin economy through a dedicated marketplace.
 
 ## Key Features & Functionality
 - **Core:**
   - Job posting for employers
   - Proposal submissions from freelancers
-  - Collaboration tools (chat, file sharing, project tracking)
+  - In-platform collaboration tools (chat, file sharing, project tracking)
   - Payment system based on authorized work
 - **Advanced:**
-  - Integrated Bitcoin Lightning Wallet for payments
-- **Integrations:**
-  - Payment gateway for Bitcoin transactions
+  - Integrated Bitcoin Lightning Wallet for transactions
+- **Integrations:** Unknown
 
 ## Architecture & Tech Stack
 - **Frontend:** Unknown
@@ -49,19 +48,19 @@ You will receive:
 
 ## User Journey
 - **Typical flow:**
-  1. Employers post jobs with detailed requirements.
+  1. Employers post job details.
   2. Freelancers submit proposals.
   3. Employers review proposals and hire freelancers.
-  4. Collaboration occurs through the platform's tools.
+  4. Collaboration occurs through the platform.
   5. Payment is made upon project completion.
 - **Examples:**
-  1. A client posts a graphic design job, receives proposals, hires a freelancer, and pays using Bitcoin.
-  2. A freelancer offers SEO services, gets hired, collaborates with the client, and receives payment in Bitcoin.
+  1. An employer in the U.S. posts a job for graphic design, receives proposals, and hires a freelancer from India.
+  2. A freelancer in Ethiopia offers programming services and gets hired by a client in Canada.
 
 ## Operations & Processes
 - **Onboarding:** Users can sign up for free and choose to join as freelancers or clients.
 - **Support:** Unknown
-- **Billing:** Payment is only made for authorized work through the platform.
+- **Billing:** Payments are made through the Bitcoin Lightning Wallet, only for authorized work.
 
 ## Governance & Security
 - **Auth:** User accounts with sign-in and password recovery options.
@@ -73,20 +72,20 @@ You will receive:
    - Sign in, click on "Post a job," and provide the necessary details.
    
 2. **How do I receive payments?**
-   - Payments can be received through the integrated Bitcoin Lightning Wallet.
+   - Set up your Bitcoin Lightning Wallet to receive payments for completed work.
    
 3. **What if I forget my password?**
    - Click on "Forgot password?" on the sign-in page to reset it.
 
 ## Glossary
-- **Freelancer:** An individual offering services on a project basis.
-- **Employer:** A client seeking to hire freelancers for specific tasks.
-- **Bitcoin:** A decentralized digital currency used for transactions.
-- **Bitcoin Lightning Wallet:** A wallet that facilitates fast Bitcoin transactions.
-- **Proposal:** A submission by a freelancer detailing their qualifications and approach to a job.
-- **Collaboration tools:** Features that enable communication and project management between freelancers and employers.
-- **Payment gateway:** A service that processes payments for transactions.
-- **Onboarding:** The process of signing up and getting started on the platform.
+- **Bitcoin:** A decentralized digital currency.
+- **Freelancer:** An individual offering services on a contract basis.
+- **Employer:** A client seeking to hire freelancers for projects.
+- **Job Posting:** The act of listing a job opportunity for freelancers.
+- **Proposal:** A submission by a freelancer to offer their services for a job.
+- **Collaboration Tools:** Features that facilitate communication and project management.
+- **Bitcoin Lightning Wallet:** A wallet that allows for fast Bitcoin transactions.
+- **Authorized Work:** Work that has been approved by the employer for payment.
 ```
 
 
