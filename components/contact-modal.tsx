@@ -15,11 +15,11 @@ export function ContactModal({ children }: { children: React.ReactNode }) {
   return (
     <Dialog>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
-          <DialogTitle>Request a Demo</DialogTitle>
+          <DialogTitle>Request an Implementation Plan</DialogTitle>
           <DialogDescription>
-            Fill out the form below and we&apos;ll get back to you as soon as possible.
+          We know you need a support chat;Tell us what you want the chatbot to handle; we will prepare a tailored setup and walk you through the best way to get started.
           </DialogDescription>
         </DialogHeader>
         <ContactForm />

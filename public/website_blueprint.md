@@ -46,7 +46,7 @@ pages:
     hero_h1: "Customer support that never leaves users waiting"
     subhead: "Unlimited AI + unlimited agents, one-time setup, and full data ownership."
     bullets: ["No per-agent billing","No per-resolution fees","Own your data, unlimited scale"]
-    ctas: [{label: "Request a Demo", href: "/contact"},{label: "Learn How It Works", href: "/how-it-works"}]
+    ctas: [{label: "Request Implementation Plan", href: "/contact"},{label: "Learn How It Works", href: "/how-it-works"}]
     social_proof: "Trusted by early adopters replacing Intercom & Zendesk at 1/10th cost"
   features:
     heading: "Why Choose LocalBox"

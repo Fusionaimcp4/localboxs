@@ -459,9 +459,8 @@ export function HeroSection() {
         </Link>
         <ContactModal>
           <Button className="text-secondary-foreground hover:bg-secondary/10 px-8 py-3 rounded-full font-medium text-base">
-            Request a Demo
+            Request Implementation Plan
           </Button>
-          
         </ContactModal>
        
       </div>

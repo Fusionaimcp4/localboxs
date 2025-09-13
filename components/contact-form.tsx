@@ -20,9 +20,10 @@ import { useToast } from "@/components/ui/use-toast"
 const formSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters." }),
   email: z.string().email({ message: "Please enter a valid email address." }),
-  company: z.string().optional(),
+  company: z.string().min(1, { message: "Company is required." }),
   website: z.string().url({ message: "Please enter a valid URL." }).optional().or(z.literal("")),
   useCase: z.string().optional(),
+  teamSize: z.string().optional(),
   notes: z.string().optional(),
 })
 
@@ -36,6 +37,7 @@ export function ContactForm() {
       company: "",
       website: "",
       useCase: "",
+      teamSize: "",
       notes: "",
     },
   })
@@ -52,8 +54,8 @@ export function ContactForm() {
 
     if (response.ok) {
       toast({
-        title: "Message sent!",
-        description: "We've received your request and will get back to you shortly.",
+        title: "Implementation plan requested!",
+        description: "We've received your request and will prepare a tailored setup plan for you.",
       })
       form.reset()
     } else {
@@ -99,7 +101,7 @@ export function ContactForm() {
           name="company"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Company</FormLabel>
+              <FormLabel>Company *</FormLabel>
               <FormControl>
                 <Input placeholder="Your Company" {...field} />
               </FormControl>
@@ -125,9 +127,22 @@ export function ContactForm() {
           name="useCase"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Use Case</FormLabel>
+              <FormLabel>Primary Use Case</FormLabel>
               <FormControl>
-                <Input placeholder="e.g., SaaS, E-commerce" {...field} />
+                <Input placeholder="e.g., SaaS, E-commerce, Customer Support" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="teamSize"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Team Size or Support Volume</FormLabel>
+              <FormControl>
+                <Input placeholder="e.g., 10 team members, 1000 tickets/month" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -140,14 +155,14 @@ export function ContactForm() {
             <FormItem>
               <FormLabel>Notes</FormLabel>
               <FormControl>
-                <Textarea placeholder="Any additional information..." {...field} />
+                <Textarea placeholder="Any additional context, integrations, or requirements..." {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
         <Button type="submit" className="w-full">
-          Submit
+          Request My Implementation Plan
         </Button>
       </form>
     </Form>

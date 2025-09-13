@@ -60,7 +60,7 @@ export function Header() {
         <div className="flex items-center gap-4">
           <ContactModal>
             <Button className="hidden md:block bg-secondary text-secondary-foreground hover:bg-secondary/90 px-6 py-2 rounded-full font-medium shadow-sm">
-              Request a Demo
+              Request Implementation Plan
             </Button>
           </ContactModal>
           <Sheet>
@@ -87,7 +87,7 @@ export function Header() {
                 ))}
                 <ContactModal>
                   <Button className="w-full mt-4 bg-secondary text-secondary-foreground hover:bg-secondary/90 px-6 py-2 rounded-full font-medium shadow-sm">
-                    Request a Demo
+                    Request Implementation Plan
                   </Button>
                 </ContactModal>
               </nav>
