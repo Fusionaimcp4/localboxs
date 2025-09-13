@@ -17,12 +17,16 @@ export function Header() {
   ]
 
   const handleScroll = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-    e.preventDefault()
-    const targetId = href.substring(1) // Remove '#' from href
-    const targetElement = document.getElementById(targetId)
-    if (targetElement) {
-      targetElement.scrollIntoView({ behavior: "smooth" })
+    // Only handle anchor links (starting with #)
+    if (href.startsWith('#')) {
+      e.preventDefault()
+      const targetId = href.substring(1) // Remove '#' from href
+      const targetElement = document.getElementById(targetId)
+      if (targetElement) {
+        targetElement.scrollIntoView({ behavior: "smooth" })
+      }
     }
+    // For page links (like /integration-process), let Next.js handle navigation
   }
 
   return (

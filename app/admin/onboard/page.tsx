@@ -94,7 +94,7 @@ export default function OnboardPage() {
         <div className="text-center space-y-4">
           <h1 className="text-4xl font-bold">Business Demo Onboarding</h1>
           <p className="text-muted-foreground text-lg">
-            Create AI-powered demo sites with custom knowledge bases
+            Create AI-powered demo customer support chatbot with your platform knowledge base.
           </p>
         </div>
 

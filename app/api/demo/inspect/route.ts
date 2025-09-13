@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { fetchAndClean } from '@/lib/scrape';
 import { generateKBFromWebsite } from '@/lib/llm';
-import { mergeKBIntoSkeleton } from '@/lib/merge';
+import { mergeKBIntoSkeleton, injectWebsiteLinksSection, CanonicalUrl } from '@/lib/merge';
 import { slugify } from '@/lib/slug';
 import { writeTextFile, readTextFileIfExists } from '@/lib/fsutils';
 import { promises as fs } from 'fs';
@@ -13,6 +13,7 @@ interface InspectRequest {
   url: string;
   generateKB?: boolean;
   force?: boolean;
+  canonicalUrls?: CanonicalUrl[];
 }
 
 interface KnowledgePreview {
@@ -307,8 +308,15 @@ export async function POST(request: NextRequest) {
         
         const finalSystemMessage = mergeKBIntoSkeleton(skeletonText, kbMarkdown);
         
+        // Inject Website links section
+        const systemMessageWithLinks = injectWebsiteLinksSection(
+          finalSystemMessage, 
+          payload.url, 
+          payload.canonicalUrls || []
+        );
+        
         // Save the system message file
-        await writeTextFile(systemMessageFile, finalSystemMessage);
+        await writeTextFile(systemMessageFile, systemMessageWithLinks);
         
         // Parse knowledge base sections
         knowledgePreview = parseKnowledgeBase(finalSystemMessage);
@@ -321,7 +329,17 @@ export async function POST(request: NextRequest) {
         console.log(`Reusing existing KB for ${businessName}`);
         const existingContent = await readTextFileIfExists(systemMessageFile);
         if (existingContent) {
-          knowledgePreview = parseKnowledgeBase(existingContent);
+          // Always inject/update Website links section (even for cached files)
+          const systemMessageWithLinks = injectWebsiteLinksSection(
+            existingContent, 
+            payload.url, 
+            payload.canonicalUrls || []
+          );
+          
+          // Update the file with website links
+          await writeTextFile(systemMessageFile, systemMessageWithLinks);
+          
+          knowledgePreview = parseKnowledgeBase(systemMessageWithLinks);
           const stats = await fs.stat(systemMessageFile);
           generatedAt = stats.mtime.toISOString();
           fromCache = true;

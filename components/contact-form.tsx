@@ -43,7 +43,7 @@ export function ContactForm() {
   })
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    const response = await fetch("https://formspree.io/f/xvgbdedj", {
+    const response = await fetch("https://formspree.io/f/xpwrloly", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { fetchAndClean } from '@/lib/scrape';
 import { generateKBFromWebsite } from '@/lib/llm';
-import { mergeKBIntoSkeleton } from '@/lib/merge';
+import { mergeKBIntoSkeleton, injectWebsiteLinksSection, CanonicalUrl } from '@/lib/merge';
 import { createWebsiteInbox } from '@/lib/chatwoot';
 import { renderDemoHTML } from '@/lib/renderDemo';
 import { slugify } from '@/lib/slug';
@@ -39,6 +39,7 @@ interface CreateDemoPayload {
   logoUrl?: string;
   primaryColor?: string;
   secondaryColor?: string;
+  canonicalUrls?: CanonicalUrl[];
   lead?: {
     name: string;
     email: string;
@@ -157,8 +158,19 @@ export async function POST(request: NextRequest) {
       // Step 4: Merge KB into skeleton
       finalSystemMessage = mergeKBIntoSkeleton(skeletonText, kbMarkdown);
 
-      // Step 5: Write system message file
+      // Step 5: Set system message file path
       systemMessageFile = previewSystemMessageFile; // Use hashed naming
+    }
+    
+    // Always inject/update Website links section (for both new and reused files)
+    if (finalSystemMessage) {
+      finalSystemMessage = injectWebsiteLinksSection(
+        finalSystemMessage, 
+        payload.url, 
+        payload.canonicalUrls || []
+      );
+      
+      // Write the updated system message file
       await writeTextFile(systemMessageFile, finalSystemMessage);
     }
 

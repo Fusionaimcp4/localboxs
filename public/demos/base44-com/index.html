@@ -1,36 +1,11 @@
-export interface DemoCtx {
-  businessName: string;
-  slug: string;
-  primary?: string;
-  secondary?: string;
-  logoUrl?: string;
-  chatwootBaseUrl: string;
-  websiteToken: string;
-}
-
-export function renderDemoHTML(ctx: DemoCtx): string {
-  const {
-    businessName,
-    slug,
-    primary = '#7ee787',
-    secondary = '#f4a261',
-    logoUrl,
-    chatwootBaseUrl,
-    websiteToken,
-  } = ctx;
-
-  const logoBlock = logoUrl
-    ? `<img class="logo" src="${logoUrl}" alt="${businessName} Logo" />`
-    : '';
-
-  const template = `<!doctype html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>${businessName} • AI Support Demo</title>
+  <title>base44.com • AI Support Demo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
-    :root{ --primary:${primary}; --secondary:${secondary}; }
+    :root{ --primary:#0ea5e9; --secondary:#38bdf8; }
     *{box-sizing:border-box}
     body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;margin:0;background:linear-gradient(to bottom, #09090b, #18181b);color:#f4f4f5}
     a{color:inherit;text-decoration:none}
@@ -71,12 +46,12 @@ export function renderDemoHTML(ctx: DemoCtx): string {
 </head>
 <body>
   <header>
-    ${logoBlock}
-    <h1>${businessName} — AI Support Demo</h1>
+    
+    <h1>base44.com — AI Support Demo</h1>
     <div class="tag">Powered by LocalBox • Self-hosted AI Support</div>
   </header>
 
-  <main class="container" aria-label="Demo content for ${businessName}">
+  <main class="container" aria-label="Demo content for base44.com">
     <!-- Explainer -->
     <section class="card" aria-labelledby="what-is-this">
       <h2 id="what-is-this" style="margin:0 0 8px;font-size:18px;">What you’re looking at</h2>
@@ -102,7 +77,7 @@ export function renderDemoHTML(ctx: DemoCtx): string {
     <section style="margin-top:16px;" class="card" aria-labelledby="try-prompts">
       <h2 id="try-prompts" style="margin:0 0 10px;font-size:18px;">Try these prompts</h2>
       <ul class="prompts grid grid-2" style="padding-left:18px;">
-        <li>"What does ${businessName} do? Give me a 20-second overview."</li>
+        <li>"What does base44.com do? Give me a 20-second overview."</li>
         <li>"How is your platform different from competitors?"</li>
         <li>"What are your pricing and refund options?"</li>
         <li>"Can you connect me with Sales about partnerships?"</li>
@@ -137,19 +112,16 @@ export function renderDemoHTML(ctx: DemoCtx): string {
 
   <script>
     (function(d,t) {
-      var BASE_URL="${chatwootBaseUrl}";
+      var BASE_URL="https://chatwoot.mcp4.ai";
       var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
       g.src=BASE_URL+"/packs/js/sdk.js"; s.parentNode.insertBefore(g,s);
       g.onload=function(){
-        window.chatwootSDK.run({ websiteToken: "${websiteToken}", baseUrl: BASE_URL });
+        window.chatwootSDK.run({ websiteToken: "gwjawjG5eyGHgWHJH9avEnk1", baseUrl: BASE_URL });
         if (window.$chatwoot && window.$chatwoot.setCustomAttributes) {
-          window.$chatwoot.setCustomAttributes({ business: "${businessName}", slug: "${slug}" });
+          window.$chatwoot.setCustomAttributes({ business: "base44.com", slug: "base44-com" });
         }
       }
     })(document,"script");
   </script>
 </body>
-</html>`;
-
-  return template;
-}
+</html>

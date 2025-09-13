@@ -48,20 +48,20 @@
   "moveworks-com": {
     "slug": "moveworks-com",
     "business": "moveworks.com",
-    "url": "https://www.moveworks.com/",
+    "url": "https://www.moveworks.com",
     "system_message_file": "./public/system_messages/n8n_System_Message_moveworks.com.md",
     "demo_url": "http://localhost:3000/demo/moveworks-com",
     "chatwoot": {
-      "inbox_id": 23,
-      "website_token": "sbBSxz8giGw49vXDXJ3EJj6N"
+      "inbox_id": 56,
+      "website_token": "cJnWejsSLyupFiFGEfby4Khy"
     },
     "workflow_duplication": "success",
     "agent_bot": {
-      "id": 23,
-      "access_token": "bK6u6SUhVBWkEt4wPDatGJCv"
+      "id": 56,
+      "access_token": "Rxuvjn2bvPYSVn7qdRA2MMfr"
     },
     "created_at": "2025-09-10T05:12:49.438Z",
-    "updated_at": "2025-09-10T20:49:41.825Z"
+    "updated_at": "2025-09-13T21:24:03.201Z"
   },
   "bairesdev-com": {
     "slug": "bairesdev-com",
@@ -87,16 +87,16 @@
     "system_message_file": "./public/system_messages/n8n_System_Message_sost.work.md",
     "demo_url": "http://localhost:3000/demo/sost-work",
     "chatwoot": {
-      "inbox_id": 26,
-      "website_token": "eT3eNpPKhVAnWicpdxBneXRf"
+      "inbox_id": 53,
+      "website_token": "KtwpGyjJbgxRmjfKGgKsbFfn"
     },
     "workflow_duplication": "success",
     "agent_bot": {
-      "id": 26,
-      "access_token": "ZgYw7oFomT6jV4vr2JrJuu9T"
+      "id": 53,
+      "access_token": "jtGmeVbWHMB1EVobYRaJjJsu"
     },
     "created_at": "2025-09-10T06:11:50.564Z",
-    "updated_at": "2025-09-10T23:01:21.242Z"
+    "updated_at": "2025-09-13T19:44:02.255Z"
   },
   "magiceden-us": {
     "slug": "magiceden-us",
@@ -122,15 +122,16 @@
     "system_message_file": "./public/system_messages/n8n_System_Message_unosquare.com.md",
     "demo_url": "http://localhost:3000/demo/unosquare-com",
     "chatwoot": {
-      "inbox_id": 21,
-      "website_token": "xHeiDRkkrpiiHQGWUZh69c6r"
+      "inbox_id": 57,
+      "website_token": "3w3bqZM3wqKJ9vg9dkGjpb9d"
     },
     "workflow_duplication": "success",
     "agent_bot": {
-      "id": 21,
-      "access_token": "VTeaLkEPHuQeodzRHgCw13PJ"
+      "id": 57,
+      "access_token": "5Jy8WVLnhQWKdXyv1cLcyKhd"
     },
-    "created_at": "2025-09-10T19:06:45.015Z"
+    "created_at": "2025-09-10T19:06:45.015Z",
+    "updated_at": "2025-09-13T21:49:43.495Z"
   },
   "lbtil-com": {
     "slug": "lbtil-com",
@@ -233,22 +234,22 @@
     "system_message_file": "./public/system_messages/n8n_System_Message_sost-work-492bf510.md",
     "demo_url": "http://localhost:3000/demo/sost-work-492bf510",
     "chatwoot": {
-      "inbox_id": 43,
-      "website_token": "cMdapq8dME96exA7E1RL6Upi"
+      "inbox_id": 55,
+      "website_token": "dawbZsR9a72LPDrDDGjaYqiu"
     },
     "workflow_duplication": "success",
     "agent_bot": {
-      "id": 43,
-      "access_token": "rCieHdBwdbUyx8kJi4gE6txU"
+      "id": 55,
+      "access_token": "qk8pVjhKfKSLLiT2NCzevxut"
     },
     "lead": {
-      "name": "solomon behailu ",
-      "email": "solomon@sost.work",
-      "company": "sost",
-      "phone": "+1555555555"
+      "name": "test",
+      "email": "test@test.com",
+      "company": "",
+      "phone": ""
     },
     "created_at": "2025-09-12T05:25:26.694Z",
-    "updated_at": "2025-09-12T05:48:33.716Z"
+    "updated_at": "2025-09-13T20:42:04.724Z"
   },
   "lbtil-com-0999b63b": {
     "slug": "lbtil-com-0999b63b",
@@ -272,5 +273,62 @@
       "phone": "+1552565425"
     },
     "created_at": "2025-09-12T06:10:32.276Z"
+  },
+  "accenture-com": {
+    "slug": "accenture-com",
+    "business": "accenture.com",
+    "url": "https://www.accenture.com/",
+    "system_message_file": "./public/system_messages/n8n_System_Message_accenture.com.md",
+    "demo_url": "http://localhost:3000/demo/accenture-com",
+    "chatwoot": {
+      "inbox_id": 50,
+      "website_token": "vgPJ5ypKiZwyNiwh9vVPYyJn"
+    },
+    "workflow_duplication": "success",
+    "agent_bot": {
+      "id": 50,
+      "access_token": "GJAERSuuTPKpDa5y6PjAnKjv"
+    },
+    "created_at": "2025-09-13T19:18:51.444Z"
+  },
+  "togal-ai-d9af3954": {
+    "slug": "togal-ai-d9af3954",
+    "business": "Togal.AI",
+    "url": "https://togal.ai",
+    "system_message_file": "./public/system_messages/n8n_System_Message_togal-ai-d9af3954.md",
+    "demo_url": "http://localhost:3000/demo/togal-ai-d9af3954",
+    "chatwoot": {
+      "inbox_id": 51,
+      "website_token": "Dw3ZEKqCod9x6SzEd7vfjcjb"
+    },
+    "workflow_duplication": "success",
+    "agent_bot": {
+      "id": 51,
+      "access_token": "zdoHdcHTWJyS3fPFbKG7dpkY"
+    },
+    "lead": {
+      "name": "Test User",
+      "email": "test-1757791539804@example.com",
+      "company": "Test Company",
+      "phone": "+15551234567"
+    },
+    "created_at": "2025-09-13T19:25:55.829Z"
+  },
+  "base44-com": {
+    "slug": "base44-com",
+    "business": "base44.com",
+    "url": "https://base44.com",
+    "system_message_file": "./public/system_messages/n8n_System_Message_base44.com.md",
+    "demo_url": "http://localhost:3000/demo/base44-com",
+    "chatwoot": {
+      "inbox_id": 58,
+      "website_token": "gwjawjG5eyGHgWHJH9avEnk1"
+    },
+    "workflow_duplication": "success",
+    "agent_bot": {
+      "id": 58,
+      "access_token": "mtM7NkLzpJV9PazD7Kt1vriN"
+    },
+    "created_at": "2025-09-13T23:03:57.146Z"
   }
 }

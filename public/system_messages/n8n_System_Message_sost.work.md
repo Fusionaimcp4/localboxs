@@ -24,7 +24,7 @@ You will receive:
 
 ## Website links (canonical)
 
-Primary site: https://sost.work
+Primary site: https://sost.work/
 
 When answering:
 - If the answer references something that exists on the website, include a Markdown link on first mention.
@@ -32,12 +32,6 @@ When answering:
 - Give a short 1–2 sentence summary, then add a "Read more" line with the URL.
 - If no exact page exists, say so briefly and link the closest relevant page.
 
-### Canonical URLs
-- (none provided)
-
-### Output style
-- Keep links in Markdown: `[anchor text](https://YOUR-DOMAIN.com/...)`
-- End with: `🔗 Read more: <URL>`
 ### Canonical URLs
 - (none provided)
 
@@ -53,14 +47,14 @@ When answering:
 
 ## Key Features & Functionality
 - **Core:**
-  - Job posting for employers
-  - Proposal submissions from freelancers
-  - Collaboration tools (chat, file sharing, project tracking)
-  - Payment system based on authorized work
+  - Job posting by employers.
+  - Proposal submissions by freelancers.
+  - Collaboration tools including chat and file sharing.
+  - Payment system based on work authorization.
 - **Advanced:**
-  - Integrated Bitcoin Lightning Wallet for payments
+  - Integrated Bitcoin Lightning Wallet for transactions.
 - **Integrations:**
-  - Optional payment gateway for Bitcoin transactions
+  - Optional payment gateway for receiving payments and making purchases with Bitcoin.
 
 ## Architecture & Tech Stack
 - **Frontend:** Unknown
@@ -72,54 +66,43 @@ When answering:
 
 ## User Journey
 - **Typical flow:**
-  1. Employers post job listings detailing their needs.
-  2. Freelancers submit proposals for the jobs.
-  3. Employers review proposals and hire freelancers.
-  4. Collaboration occurs through the platform's tools.
-  5. Payment is made via the Bitcoin Lightning Wallet upon project completion.
+  1. Employers post job details.
+  2. Freelancers submit proposals.
+  3. Employers hire freelancers and collaborate through the platform.
+  4. Payment is made upon work authorization.
 - **Examples:**
-  1. An employer in the U.S. posts a job for online class help, receives proposals, and hires a freelancer.
-  2. A freelancer in Ethiopia offers engineering services and gets hired by a client from Canada.
+  - A freelancer offers graphic design services and receives a job proposal from an employer.
+  - An employer posts a software development job and hires a freelancer after reviewing proposals.
 
 ## Operations & Processes
-- **Onboarding:** Users can sign up for free and choose to join as either freelancers or clients.
+- **Onboarding:** Users can sign up for free and create profiles as freelancers or clients.
 - **Support:** Unknown
-- **Billing:** Payments are made through the Bitcoin Lightning Wallet, only for authorized work.
+- **Billing:** Payment is only processed for work that has been authorized by the employer.
 
 ## Governance & Security
-- **Auth:** Users must sign up and log in to access the platform.
+- **Auth:** User accounts with sign-in and password recovery options.
 - **Data handling:** Unknown
 - **Backups:** Unknown
 
 ## FAQs & Troubleshooting
 1. **How do I post a job?**
-   - Sign in, navigate to the job posting section, and fill in the required details.
+   - Sign in to your account, navigate to the job posting section, and provide the necessary details.
    
-2. **What payment methods are accepted?**
-   - Payments are made using the Bitcoin Lightning Wallet integrated into the platform.
+2. **How do I receive payments?**
+   - Set up your Bitcoin Lightning Wallet in your account settings to receive payments.
    
-3. **How do I reset my password?**
-   - Click on "Forgot password?" on the sign-in page and follow the instructions.
-
-4. **Can I collaborate with freelancers from different countries?**
-   - Yes, the platform supports global talent and employers.
-
-5. **What if I have issues with a freelancer?**
-   - Contact support for assistance (details unknown).
+3. **What if I forget my password?**
+   - Click on "Forgot password?" on the sign-in page and follow the instructions to reset it.
 
 ## Glossary
 - **Bitcoin:** A decentralized digital currency.
-- **Freelancer:** An individual who offers services on a flexible basis.
-- **Employer:** A person or organization that hires freelancers for projects.
-- **Job Listing:** A post created by employers detailing the work they need done.
-- **Proposal:** A submission by freelancers outlining their qualifications and approach to a job.
-- **Bitcoin Lightning Wallet:** A digital wallet for fast Bitcoin transactions.
-- **Collaboration Tools:** Features that facilitate communication and project management.
-- **Payment Gateway:** A service that processes payments for online transactions.
-- **Onboarding:** The process of integrating new users into the platform.
-- **Support:** Assistance provided to users for issues or inquiries.
-- **Data Handling:** The management of user data and privacy.
-- **Backups:** Copies of data stored for recovery purposes.
+- **Freelancer:** An individual who offers services to clients on a project basis.
+- **Employer:** A client looking to hire freelancers for specific tasks or projects.
+- **Job Posting:** The process of listing a job opportunity for freelancers.
+- **Proposal:** A submission by a freelancer detailing their qualifications and approach to a job.
+- **Collaboration Tools:** Features that facilitate communication and project management between freelancers and employers.
+- **Payment Gateway:** A service that processes payments for transactions.
+- **Bitcoin Lightning Wallet:** A digital wallet that allows for fast Bitcoin transactions.
 ```
 
 

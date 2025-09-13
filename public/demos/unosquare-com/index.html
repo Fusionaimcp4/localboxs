@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>unosquare.com • AI Support Demo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    :root{ --primary:#0de732; --secondary:#f83a3a; }
+    *{box-sizing:border-box}
+    body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;margin:0;background:#0b1220;color:#e5e7eb}
+    a{color:inherit;text-decoration:none}
+    header{
+      padding:56px 24px 72px;
+      text-align:center;
+      background:
+        radial-gradient(60% 60% at 50% 0%, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0) 60%),
+        linear-gradient(180deg,var(--secondary),#0b1220 70%);
+    }
+    .container{max-width:1000px;margin:0 auto;padding:0 24px}
+    h1{margin:0;font-size:34px;letter-spacing:-0.01em}
+    .tag{display:inline-block;margin-top:12px;padding:6px 12px;border-radius:999px;background:var(--primary);color:#052e16;font-weight:600}
+    .logo{height:56px;margin:0 auto 14px;display:block;filter:drop-shadow(0 6px 24px rgba(0,0,0,0.35))}
+    main{max-width:1000px;margin:-44px auto 56px;padding:0 24px}
+    .card{background:#0f172a;border:1px solid #1f2937;border-radius:16px;padding:20px}
+    .muted{color:#9ca3af}
+    .grid{display:grid;gap:12px}
+    @media(min-width:680px){ .grid-3{grid-template-columns:repeat(3,1fr)} .grid-2{grid-template-columns:repeat(2,1fr)} }
+    .feature{border:1px solid #1f2937;border-radius:14px;padding:14px}
+    .feature h3{margin:0 0 6px;font-size:15px}
+    .feature p{margin:0;font-size:14px;color:#a1a1aa}
+    .steps li, .prompts li{margin:8px 0}
+    .steps li{border:1px solid #1f2937;border-radius:12px;padding:10px}
+    .pill{display:inline-block;border:1px solid rgba(255,255,255,0.08);border-radius:999px;padding:2px 10px;font-size:12px;color:#cbd5e1}
+    .promo{display:flex;flex-direction:column;gap:10px}
+    @media(min-width:760px){ .promo{flex-direction:row;align-items:center;justify-content:space-between} }
+    .btn{display:inline-flex;align-items:center;justify-content:center;border-radius:10px;padding:10px 14px;font-weight:600;font-size:14px}
+    .btn-outline{border:1px solid var(--primary)}
+    .btn-solid{background:var(--primary);color:#052e16;border:1px solid var(--primary)}
+    .note{font-size:12px;color:#9ca3af}
+  </style>
+</head>
+<body>
+  <header>
+    
+    <h1>unosquare.com — AI Support Demo</h1>
+    <div class="tag">Powered by your business-specific system message</div>
+  </header>
+
+  <main class="container" aria-label="Demo content for unosquare.com">
+    <!-- Explainer -->
+    <section class="card" aria-labelledby="what-is-this">
+      <h2 id="what-is-this" style="margin:0 0 8px;font-size:18px;">What you’re looking at</h2>
+      <p class="muted" style="margin:0 0 8px;">
+        This page is the <em>live demo shell</em>. The <strong>logo</strong>, <strong>brand name</strong>,
+        and <strong>colors</strong> are injected dynamically from your settings. The chat bubble in the bottom-right
+        runs your <em>business-specific</em> system message.
+      </p>
+      <div style="margin-top:8px;">
+        <span class="pill">Self-host friendly</span>
+        <span class="pill" style="margin-left:6px;">Team routing</span>
+        <span class="pill" style="margin-left:6px;">Human handoff</span>
+      </div>
+    </section>
+
+    <!-- Features -->
+    <section style="margin-top:16px;">
+      <div class="grid grid-3">
+        <div class="feature"><h3>Instant answers</h3><p>Handles 90–95% of FAQs with a tone and facts tailored to your site.</p></div>
+        <div class="feature"><h3>Smart routing</h3><p>Auto-assigns conversations to Support, Sales, Billing, or Tech when needed.</p></div>
+        <div class="feature"><h3>Human handoff</h3><p>Agents see full history; the holding AI keeps users updated if humans are busy.</p></div>
+        <div class="feature"><h3>Lead capture</h3><p>Collects name/email, tags intent, and enriches context for your CRM.</p></div>
+        <div class="feature"><h3>Configurable guardrails</h3><p>Confidence thresholds, escalation timeouts, knowledge sources, and tone.</p></div>
+        <div class="feature"><h3>Own your data</h3><p>Self-host option for compliance and control over chat transcripts & analytics.</p></div>
+      </div>
+    </section>
+
+    <!-- Sample prompts -->
+    <section style="margin-top:16px;" class="card" aria-labelledby="try-prompts">
+      <h2 id="try-prompts" style="margin:0 0 10px;font-size:18px;">Try these prompts</h2>
+      <ul class="prompts grid grid-2" style="padding-left:18px;">
+        <li>"What does unosquare.com do? Give me a 20-second overview."</li>
+        <li>"How is your platform different from competitors?"</li>
+        <li>"What are your pricing and refund options?"</li>
+        <li>"Can you connect me with Sales about partnerships?"</li>
+        <li>"Do you have an API and documentation?"</li>
+        <li>"What are your business hours and support channels?"</li>
+      </ul>
+    </section>
+
+    <!-- Promo strip -->
+    <section style="margin-top:16px;" class="card promo" aria-label="Call to action">
+      <p class="muted" style="margin:0;">
+        Want this on your site? We deploy the full stack (AI + team routing + CRM hooks) in days.
+      </p>
+      <div>
+        <a href="" class="btn btn-outline">See integration steps</a>
+        <br>
+        <a href="#" class="btn btn-solid" style="margin-left:8px;">Create my implemantation</a>
+      </div>
+    </section>
+
+    <p class="note" style="margin-top:12px;">
+      Privacy note: This demo uses only the knowledge sources configured for your business.
+      Unclear queries are escalated—no guesswork.
+    </p>
+  </main>
+
+  <script>
+    (function(d,t) {
+      var BASE_URL="https://chatwoot.mcp4.ai";
+      var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+      g.src=BASE_URL+"/packs/js/sdk.js"; s.parentNode.insertBefore(g,s);
+      g.onload=function(){
+        window.chatwootSDK.run({ websiteToken: "3w3bqZM3wqKJ9vg9dkGjpb9d", baseUrl: BASE_URL });
+        if (window.$chatwoot && window.$chatwoot.setCustomAttributes) {
+          window.$chatwoot.setCustomAttributes({ business: "unosquare.com", slug: "unosquare-com" });
+        }
+      }
+    })(document,"script");
+  </script>
+</body>
+</html>

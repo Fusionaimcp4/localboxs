@@ -97,7 +97,11 @@ async function fetchBusinessInfo(url: string): Promise<BusinessInfo> {
   const res = await fetch("/api/demo/inspect", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ url, generateKB: true }),
+    body: JSON.stringify({ 
+      url, 
+      generateKB: true,
+      canonicalUrls: [] // Empty array - will show primary site only
+    }),
   });
   if (!res.ok) throw new Error("Unable to fetch business info");
   return res.json();
@@ -421,8 +425,42 @@ export default function UserFacingDemoPage() {
                   </div>
                   <Input label="Logo URL (optional)" placeholder={biz.logoUrl || "https://…"} value={demo.logoUrl} onChange={e => setDemo({ ...demo, logoUrl: e.target.value })} />
                   <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                    <Input label="Primary Color" placeholder="#7ee787" value={demo.primaryColor} onChange={e => setDemo({ ...demo, primaryColor: e.target.value })} />
-                    <Input label="Secondary Color" placeholder="#f4a261" value={demo.secondaryColor} onChange={e => setDemo({ ...demo, secondaryColor: e.target.value })} />
+                    <div>
+                      <label className="block text-sm font-medium text-zinc-200 mb-1">Primary Color</label>
+                      <div className="flex gap-2">
+                        <input
+                          type="color"
+                          value={demo.primaryColor}
+                          onChange={e => setDemo({ ...demo, primaryColor: e.target.value })}
+                          className="w-16 h-10 p-1 rounded-2xl bg-zinc-900/60 border border-zinc-700 focus:border-zinc-500 outline-none cursor-pointer"
+                        />
+                        <input
+                          type="text"
+                          value={demo.primaryColor}
+                          onChange={e => setDemo({ ...demo, primaryColor: e.target.value })}
+                          placeholder="#7ee787"
+                          className="flex-1 rounded-2xl bg-zinc-900/60 border border-zinc-700 focus:border-zinc-500 outline-none px-4 py-3 text-zinc-100 placeholder-zinc-500"
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-zinc-200 mb-1">Secondary Color</label>
+                      <div className="flex gap-2">
+                        <input
+                          type="color"
+                          value={demo.secondaryColor}
+                          onChange={e => setDemo({ ...demo, secondaryColor: e.target.value })}
+                          className="w-16 h-10 p-1 rounded-2xl bg-zinc-900/60 border border-zinc-700 focus:border-zinc-500 outline-none cursor-pointer"
+                        />
+                        <input
+                          type="text"
+                          value={demo.secondaryColor}
+                          onChange={e => setDemo({ ...demo, secondaryColor: e.target.value })}
+                          placeholder="#f4a261"
+                          className="flex-1 rounded-2xl bg-zinc-900/60 border border-zinc-700 focus:border-zinc-500 outline-none px-4 py-3 text-zinc-100 placeholder-zinc-500"
+                        />
+                      </div>
+                    </div>
                   </div>
                   <button disabled={creating} className="w-full rounded-2xl bg-emerald-500/90 hover:bg-emerald-500 disabled:opacity-60 px-4 py-3 font-medium">
                     {creating ? "Creating your demo…" : "Create My Demo"}

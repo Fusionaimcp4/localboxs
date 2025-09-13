@@ -24,7 +24,7 @@ You will receive:
 
 ## Website links (canonical)
 
-Primary site: https://sost.work
+Primary site: https://www.moveworks.com
 
 When answering:
 - If the answer references something that exists on the website, include a Markdown link on first mention.
@@ -38,29 +38,22 @@ When answering:
 ### Output style
 - Keep links in Markdown: `[anchor text](https://YOUR-DOMAIN.com/...)`
 - End with: `🔗 Read more: <URL>`
-### Canonical URLs
-- (none provided)
-
-### Output style
-- Keep links in Markdown: `[anchor text](https://YOUR-DOMAIN.com/...)`
-- End with: `🔗 Read more: <URL>`
 # Business Knowledge Base
 
 ## Project Overview
-- **One-liner:** SOST is a Bitcoin-powered marketplace connecting global talent with employers.
-- **Goals & objectives:** To provide freelancers a platform to earn Bitcoin by trading their skills and to facilitate easy collaboration between freelancers and employers.
-- **Unique value prop:** Empowering freelancers to participate in the Bitcoin economy with integrated payment solutions.
+- **One-liner:** Moveworks provides an agentic AI assistant designed to empower enterprise workforces.
+- **Goals & objectives:** To automate tasks, enhance productivity, and streamline employee experiences across various business functions.
+- **Unique value prop:** A comprehensive AI platform that integrates seamlessly with existing enterprise systems, enabling organizations to deploy AI agents quickly and efficiently.
 
 ## Key Features & Functionality
 - **Core:**
-  - Job posting for employers
-  - Proposal submissions from freelancers
-  - Collaboration tools (chat, file sharing, project tracking)
-  - Payment system based on authorized work
+  - AI Assistant for task automation and information retrieval.
+  - Enterprise Search powered by a superior Reasoning Engine.
 - **Advanced:**
-  - Integrated Bitcoin Lightning Wallet for payments
+  - AI Agent Marketplace for discovering and deploying pre-built AI solutions.
+  - Agent Studio for building customizable AI agents with a low-code interface.
 - **Integrations:**
-  - Optional payment gateway for Bitcoin transactions
+  - Supports integrations with ServiceNow, Microsoft Teams, Slack, Google Drive, Workday, Okta, and Zendesk.
 
 ## Architecture & Tech Stack
 - **Frontend:** Unknown
@@ -71,55 +64,40 @@ When answering:
 - **Deployment:** Unknown
 
 ## User Journey
-- **Typical flow:**
-  1. Employers post job listings detailing their needs.
-  2. Freelancers submit proposals for the jobs.
-  3. Employers review proposals and hire freelancers.
-  4. Collaboration occurs through the platform's tools.
-  5. Payment is made via the Bitcoin Lightning Wallet upon project completion.
+- **Typical flow:** Users interact with the AI Assistant to find information or automate tasks, which are executed across integrated systems.
 - **Examples:**
-  1. An employer in the U.S. posts a job for online class help, receives proposals, and hires a freelancer.
-  2. A freelancer in Ethiopia offers engineering services and gets hired by a client from Canada.
+  1. An employee uses the AI Assistant to reset a password, which is completed in seconds.
+  2. A manager retrieves the status of a purchase order through the AI Assistant, receiving instant updates.
 
 ## Operations & Processes
-- **Onboarding:** Users can sign up for free and choose to join as either freelancers or clients.
-- **Support:** Unknown
-- **Billing:** Payments are made through the Bitcoin Lightning Wallet, only for authorized work.
+- **Onboarding:** Users can quickly set up and configure AI agents through the Agent Studio and AI Agent Marketplace.
+- **Support:** Comprehensive support resources including help docs and community forums.
+- **Billing:** Unknown
 
 ## Governance & Security
-- **Auth:** Users must sign up and log in to access the platform.
-- **Data handling:** Unknown
+- **Auth:** Unknown
+- **Data handling:** AI security, data privacy, and compliance with industry standards.
 - **Backups:** Unknown
 
 ## FAQs & Troubleshooting
-1. **How do I post a job?**
-   - Sign in, navigate to the job posting section, and fill in the required details.
+1. **Q:** How do I reset my password using the AI Assistant?
+   - **A:** Simply ask the AI Assistant to reset your password, and follow the prompts.
    
-2. **What payment methods are accepted?**
-   - Payments are made using the Bitcoin Lightning Wallet integrated into the platform.
+2. **Q:** Can I integrate Moveworks with my existing tools?
+   - **A:** Yes, Moveworks supports multiple integrations with popular enterprise applications.
    
-3. **How do I reset my password?**
-   - Click on "Forgot password?" on the sign-in page and follow the instructions.
-
-4. **Can I collaborate with freelancers from different countries?**
-   - Yes, the platform supports global talent and employers.
-
-5. **What if I have issues with a freelancer?**
-   - Contact support for assistance (details unknown).
+3. **Q:** What if I encounter an issue with the AI Assistant?
+   - **A:** Refer to the help docs or contact support through the community forum.
 
 ## Glossary
-- **Bitcoin:** A decentralized digital currency.
-- **Freelancer:** An individual who offers services on a flexible basis.
-- **Employer:** A person or organization that hires freelancers for projects.
-- **Job Listing:** A post created by employers detailing the work they need done.
-- **Proposal:** A submission by freelancers outlining their qualifications and approach to a job.
-- **Bitcoin Lightning Wallet:** A digital wallet for fast Bitcoin transactions.
-- **Collaboration Tools:** Features that facilitate communication and project management.
-- **Payment Gateway:** A service that processes payments for online transactions.
-- **Onboarding:** The process of integrating new users into the platform.
-- **Support:** Assistance provided to users for issues or inquiries.
-- **Data Handling:** The management of user data and privacy.
-- **Backups:** Copies of data stored for recovery purposes.
+- **Agentic AI:** A type of AI that autonomously performs tasks and makes decisions.
+- **AI Assistant:** A virtual assistant powered by AI to help users with various tasks.
+- **Enterprise Search:** A feature that allows users to find information across multiple systems.
+- **AI Agent Marketplace:** A platform for discovering and deploying pre-built AI agents.
+- **Agent Studio:** A tool for building and customizing AI agents.
+- **Integrations:** Connections with other software applications to enhance functionality.
+- **Productivity Boost:** Features designed to enhance efficiency and reduce busywork.
+- **Reasoning Engine:** The underlying technology that powers the AI's decision-making capabilities.
 ```
 
 
