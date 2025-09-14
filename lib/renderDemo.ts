@@ -73,7 +73,7 @@ export function renderDemoHTML(ctx: DemoCtx): string {
   <header>
     ${logoBlock}
     <h1>${businessName} — AI Support Demo</h1>
-    <div class="tag">Powered by LocalBox • Self-hosted AI Support</div>
+    <div class="tag">Powered by LocalBoxes • AI Support with ${businessName} Knowledge Base</div>
   </header>
 
   <main class="container" aria-label="Demo content for ${businessName}">
@@ -98,19 +98,6 @@ export function renderDemoHTML(ctx: DemoCtx): string {
       </div>
     </section>
 
-    <!-- Sample prompts -->
-    <section style="margin-top:16px;" class="card" aria-labelledby="try-prompts">
-      <h2 id="try-prompts" style="margin:0 0 10px;font-size:18px;">Try these prompts</h2>
-      <ul class="prompts grid grid-2" style="padding-left:18px;">
-        <li>"What does ${businessName} do? Give me a 20-second overview."</li>
-        <li>"How is your platform different from competitors?"</li>
-        <li>"What are your pricing and refund options?"</li>
-        <li>"Can you connect me with Sales about partnerships?"</li>
-        <li>"Do you have an API and documentation?"</li>
-        <li>"What are your business hours and support channels?"</li>
-      </ul>
-    </section>
-
     <!-- Promo strip -->
     <section style="margin-top:24px;" class="card promo" aria-label="Call to action">
       <div>
@@ -123,10 +110,23 @@ export function renderDemoHTML(ctx: DemoCtx): string {
         <a href="https://localboxs.com/integration-process" class="btn btn-outline" target="_blank" rel="noopener noreferrer">
           See integration steps
         </a>
-        <a href="https://localboxs.com/contact" class="btn btn-solid" target="_blank" rel="noopener noreferrer">
-          Start my implementation
+        <a href="https://localboxs.com/cost-savings" class="btn btn-solid" target="_blank" rel="noopener noreferrer">
+          See cost-savings
         </a>
       </div>
+    </section>
+
+     <!-- Sample prompts -->
+    <section style="margin-top:16px;" class="card" aria-labelledby="try-prompts">
+      <h2 id="try-prompts" style="margin:0 0 10px;font-size:18px;">Try these prompts</h2>
+      <ul class="prompts grid grid-2" style="padding-left:18px;">
+        <li>"What does ${businessName} do? Give me a 20-second overview."</li>
+        <li>"How is your platform different from competitors?"</li>
+        <li>"What are your pricing and refund options?"</li>
+        <li>"Can you connect me with Sales about partnerships?"</li>
+        <li>"Do you have an API and documentation?"</li>
+        <li>"What are your business hours and support channels?"</li>
+      </ul>
     </section>
 
     <p class="note" style="margin-top:12px;">

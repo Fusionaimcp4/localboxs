@@ -10,7 +10,7 @@ const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || `http://${process.env.DEMO_
 interface TestLead {
   name: string;
   email: string;
-  company?: string;
+  company: string;
   phone?: string;
   consent?: boolean;
 }
@@ -146,7 +146,8 @@ async function testInvalidData() {
   const invalidPayloads = [
     { lead: { name: 'Test' }, demo: { slug: 'test' } }, // Missing email
     { lead: { email: 'test@example.com' }, demo: { slug: 'test' } }, // Missing name
-    { lead: { name: 'Test', email: 'test@example.com' }, demo: {} }, // Missing demo data
+    { lead: { name: 'Test', email: 'test@example.com' }, demo: { slug: 'test' } }, // Missing company
+    { lead: { name: 'Test', email: 'test@example.com', company: 'Test Company' }, demo: {} }, // Missing demo data
   ];
 
   for (let i = 0; i < invalidPayloads.length; i++) {

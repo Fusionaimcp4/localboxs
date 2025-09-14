@@ -114,7 +114,7 @@ async function createDemo(payload: {
   primaryColor?: string;
   secondaryColor?: string;
   // Optional: pass through contact to associate lead -> demo
-  lead?: { name: string; email: string; company?: string; phone?: string; consent?: boolean };
+  lead?: { name: string; email: string; company: string; phone?: string; consent?: boolean };
 }): Promise<DemoResult> {
   // Replace with your server action that orchestrates Chatwoot + n8n + KB
   const res = await fetch("/api/demo/create", {
@@ -150,7 +150,7 @@ export default function UserFacingDemoPage() {
   };
   
   const contactValid = useMemo(() => {
-    const basicValid = lead.name.trim() && /.+@.+\..+/.test(lead.email) && lead.consent;
+    const basicValid = lead.name.trim() && /.+@.+\..+/.test(lead.email) && lead.company.trim() && lead.consent;
     const phoneValid = isValidPhone(lead.phone);
     return basicValid && phoneValid;
   }, [lead]);

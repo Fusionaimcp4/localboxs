@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from 'next/server';
 interface LeadData {
   name: string;
   email: string;
-  company?: string;
+  company: string;
   phone?: string;
   consent?: boolean;
 }
@@ -111,16 +111,14 @@ async function createContact(lead: LeadData, demo: DemoData): Promise<ChatwootCo
     }
   }
   
-  // Extract business name (same logic as inbox/bot creation)
-  const businessName = new URL(demo.business_url).hostname.replace(/^www\./, '');
-  
   const contactData = {
     name: lead.name,
     email: lead.email,
     phone_number: phoneNumber,
     identifier,
     additional_attributes: {
-      company: businessName, // Use the same business name as inbox/bot creation
+      type: "company",
+      name: lead.company, // Use company name from form input
     },
     custom_attributes: {
       source: 'demo_page',
@@ -153,14 +151,12 @@ async function updateContact(contactId: number, lead: LeadData, demo: DemoData):
     }
   }
   
-  // Extract business name (same logic as inbox/bot creation)
-  const businessName = new URL(demo.business_url).hostname.replace(/^www\./, '');
-  
   const updateData = {
     name: lead.name,
     phone_number: phoneNumber,
     additional_attributes: {
-      company: businessName, // Use the same business name as inbox/bot creation
+      type: "company",
+      name: lead.company, // Use company name from form input
     },
     custom_attributes: {
       demo_slug: demo.slug,
@@ -201,9 +197,9 @@ export async function POST(request: NextRequest) {
     const { lead, demo } = body;
 
     // Validate required fields
-    if (!lead.email || !lead.name) {
+    if (!lead.email || !lead.name || !lead.company) {
       return NextResponse.json(
-        { error: 'Email and name are required' },
+        { error: 'Email, name, and company are required' },
         { status: 400 }
       );
     }

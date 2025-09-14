@@ -16,10 +16,13 @@ async function testContactCreation() {
     email: `test-${Date.now()}@example.com`,
     phone_number: `+1234567${Date.now().toString().slice(-4)}`,
     identifier: `demo_test_${Date.now()}`,
+    additional_attributes: {
+      type: "company",
+      name: 'Test Company',
+    },
     custom_attributes: {
       source: 'demo_page',
       consent: true,
-      company: 'Test Company',
       demo_slug: 'test-company',
       business_url: 'https://example.com',
       demo_url: 'https://demo.example.com',
