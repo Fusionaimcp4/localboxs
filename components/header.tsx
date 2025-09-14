@@ -12,8 +12,10 @@ import { ContactModal } from "./contact-modal"
 export function Header() {
   const navItems = [
     { name: "Platform", href: "#features-section" },
-    { name: "Solutions", href: "#shared-inbox-section" }, // You may want to update this href
+    { name: "Solutions", href: "#shared-inbox-section" },
     { name: "Pricing", href: "#pricing-section" },
+    //{ name: "Cost & Savings", href: "/cost-savings" },
+    //{ name: "Integration", href: "/integration-process" },
   ]
 
   const handleScroll = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {

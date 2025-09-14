@@ -3,6 +3,8 @@
 import React from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { ContactModal } from "@/components/contact-modal";
 
 export default function IntegrationProcessPage() {
   const steps = [
@@ -150,24 +152,20 @@ export default function IntegrationProcessPage() {
         >
           <div className="bg-gradient-to-r from-emerald-500/10 to-emerald-600/10 rounded-3xl border border-emerald-500/20 p-12">
             <h2 className="text-3xl font-bold mb-4">
-              Ready to integrate AI-powered support into your business?
+              Ready to integrate AI-powered support into your website?
             </h2>
             <p className="text-xl text-zinc-400 mb-8 max-w-2xl mx-auto">
               Let's get started today and transform your customer support experience.
             </p>
-            <Link
-              href="/contact"
-              className="inline-flex items-center gap-2 rounded-2xl bg-emerald-500 hover:bg-emerald-600 text-white font-semibold px-8 py-4 transition-colors duration-200"
-            >
-              Contact Us
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-              </svg>
-            </Link>
-            <p className="text-sm text-zinc-500 mt-4">
-              Request an Implementation Plan
-            </p>
-          </div>
+            <ContactModal>
+              <Button className="inline-flex items-center gap-2 rounded-2xl bg-emerald-500 hover:bg-emerald-600 text-white font-semibold px-8 py-4 transition-colors duration-200">
+                Request an Implementation Plan
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+              </Button>
+            </ContactModal>
+            </div>
         </motion.div>
       </div>
     </div>

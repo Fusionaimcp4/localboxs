@@ -36,12 +36,7 @@ export function SharedInboxSection() {
             ))}
           </div>
           <p className="text-muted-foreground">+ 8 other channels</p>
-          <Button 
-  size="lg" 
-  className="bg-[#6FFCD9] hover:bg-[#5fe6c6] text-black"
->
-See all messaging channels
-</Button>
+          
         </div>
 
         {/* Right Column: Video */}

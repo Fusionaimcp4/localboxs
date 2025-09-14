@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { ContactModal } from "./contact-modal"
+import Link from "next/link"
 
 export function PricingSection() {
   return (
@@ -27,11 +27,11 @@ export function PricingSection() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <ContactModal>
+            <Link href="/cost-savings">
               <Button variant="link" className="p-0">
                 Calculate costs
               </Button>
-            </ContactModal>
+            </Link>
           </CardContent>
         </Card>
         <Card className="flex-1 w-full">
@@ -43,11 +43,11 @@ export function PricingSection() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <ContactModal>
+            <Link href="/cost-savings">
               <Button variant="link" className="p-0">
                 Calculate savings
               </Button>
-            </ContactModal>
+            </Link>
           </CardContent>
         </Card>
       </div>
