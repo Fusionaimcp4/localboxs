@@ -490,7 +490,7 @@ export default function UserFacingDemoPage() {
                 <Card title="Your Demo Is Ready!" subtitle="Share these links with your team.">
                   <div className="space-y-4">
                     <div>
-                      <div className="text-sm text-zinc-400">Demo Site</div>
+                      <div className="text-sm text-zinc-400">Demo Page with Knowledge Base Support Chat</div>
                       <a href={result.demo_url} target="_blank" className="mt-1 inline-flex items-center gap-2 rounded-xl bg-white/5 px-4 py-2 text-emerald-300 hover:bg-white/10">{result.demo_url}</a>
                     </div>
                     {/* <div>
