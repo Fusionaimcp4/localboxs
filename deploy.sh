@@ -63,7 +63,7 @@ print_status "Pulling latest changes from repository..."
 git pull origin main
 
 print_status "Installing dependencies..."
-npm ci --production
+npm install --production
 
 print_status "Running type check..."
 npm run type-check || print_warning "Type check failed, continuing with deployment..."

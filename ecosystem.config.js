@@ -51,7 +51,7 @@ module.exports = {
       repo: "https://github.com/localboxs/localboxs.git",
       path: "/opt/localboxs-site",
       "pre-deploy-local": "",
-      "post-deploy": "npm ci --production && npm run build && pm2 reload ecosystem.config.js --env production",
+      "post-deploy": "npm install --production && npm run build && pm2 reload ecosystem.config.js --env production",
       "pre-setup": ""
     }
   }

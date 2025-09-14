@@ -49,7 +49,7 @@ NEXT_TELEMETRY_DISABLED=1
 
 ```bash
 # Install dependencies
-npm ci --production
+npm install --production
 
 # Build the application
 npm run build
