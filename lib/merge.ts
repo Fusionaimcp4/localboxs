@@ -66,10 +66,11 @@ function createWebsiteLinksSection(websiteUrl: string, canonicalUrls: CanonicalU
 Primary site: ${primarySite}
 
 When answering:
-- If the answer references something that exists on the website, include a Markdown link on first mention.
+- Provide a clear and complete answer directly in the chat.
+- If the user explicitly asks for a link, or if the answer relies on a specific page/resource, then include a Markdown link on first mention.
 - Use only the canonical URLs listed below (do not invent slugs).
-- Give a short 1–2 sentence summary, then add a "Read more" line with the URL.
-- If no exact page exists, say so briefly and link the closest relevant page.
+- If no exact page exists, say so briefly and (optionally) provide the closest relevant page.
+- Do not automatically add "Read more" lines unless the user asks for further resources.
 
 ### Canonical URLs
 ${canonicalUrlsMd}

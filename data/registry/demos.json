@@ -87,16 +87,16 @@
     "system_message_file": "./public/system_messages/n8n_System_Message_sost.work.md",
     "demo_url": "http://localhost:3000/demo/sost-work",
     "chatwoot": {
-      "inbox_id": 53,
-      "website_token": "KtwpGyjJbgxRmjfKGgKsbFfn"
+      "inbox_id": 69,
+      "website_token": "XRtDK7DgHVpiGqP5mmst4spS"
     },
     "workflow_duplication": "success",
     "agent_bot": {
-      "id": 53,
-      "access_token": "jtGmeVbWHMB1EVobYRaJjJsu"
+      "id": 69,
+      "access_token": "rJ4t1Ctu6cdfZ2c5TDga2AkE"
     },
     "created_at": "2025-09-10T06:11:50.564Z",
-    "updated_at": "2025-09-13T19:44:02.255Z"
+    "updated_at": "2025-09-16T01:11:05.895Z"
   },
   "magiceden-us": {
     "slug": "magiceden-us",
@@ -331,5 +331,22 @@
       "access_token": "mtM7NkLzpJV9PazD7Kt1vriN"
     },
     "created_at": "2025-09-13T23:03:57.146Z"
+  },
+  "ayatrealestate-com": {
+    "slug": "ayatrealestate-com",
+    "business": "ayatrealestate.com",
+    "url": "https://ayatrealestate.com",
+    "system_message_file": "./public/system_messages/n8n_System_Message_ayatrealestate.com.md",
+    "demo_url": "http://localhost:3000/demo/ayatrealestate-com",
+    "chatwoot": {
+      "inbox_id": 70,
+      "website_token": "ntZrEC53tea36j4fE1dRzEYe"
+    },
+    "workflow_duplication": "success",
+    "agent_bot": {
+      "id": 70,
+      "access_token": "Z7gurmuC5QtfeadhMqgyCE2H"
+    },
+    "created_at": "2025-09-16T01:16:40.981Z"
   }
 }
