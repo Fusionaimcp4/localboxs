@@ -14,39 +14,39 @@ export type Testimonial = {
 export const NEW_TESTIMONIALS: Testimonial[] = [
   {
     quote:
-      "Switching to EngageDesk Support was a revelation. Our support costs dropped by 70% in the first quarter, and we're no longer bleeding money on per-seat licenses.",
-    name: "Maya Chen",
-    company: "Zephyr Analytics",
-    title: "Head of Engineering",
-    avatar: "/avatars/maya-chen.jpg",
-    alt: "Portrait of Maya Chen",
+      "We reduced response time from 4 hours to 2 minutes. Customer satisfaction jumped 40%. Our team can finally focus on complex issues instead of answering the same questions repeatedly.",
+    name: "Sarah M.",
+    company: "Addis Ababa Tech",
+    title: "Operations Manager",
+    avatar: "/avatars/sarah-m.jpg",
+    alt: "Portrait of Sarah M.",
   },
   {
     quote:
-      "The Holding AI is brilliant. Our customers never feel ignored, even during peak hours. It's completely eliminated the 'silent wait' problem we had with our old provider.",
-    name: "Ibrahim Khalid",
-    company: "OrbitPay",
-    title: "Platform Lead",
-    avatar: "/avatars/ibrahim-khalid.jpg",
-    alt: "Portrait of Ibrahim Khalid",
+      "Finally stopped paying per agent. Added 5 team members without increasing costs. The WhatsApp integration alone increased our sales by 25%. Customers love the instant responses.",
+    name: "Ahmed K.",
+    company: "Ethiopian Logistics",
+    title: "Support Director",
+    avatar: "/avatars/ahmed-k.jpg",
+    alt: "Portrait of Ahmed K.",
   },
   {
     quote:
-      "Finally, we own our customer data. Self-hosting gives us the control and security we need, without being locked into a vendor's ecosystem.",
-    name: "Sofia Almeida",
-    company: "Trailhead Robotics",
-    title: "Software Manager",
-    avatar: "/avatars/sofia-almeida.jpg",
-    alt: "Portrait of Sofia Almeida",
+      "WhatsApp integration alone increased our sales by 25%. Customers love the instant responses. We're handling 3x more conversations with the same team size.",
+    name: "Meseret T.",
+    company: "East Africa Commerce",
+    title: "Sales Manager",
+    avatar: "/avatars/meseret-t.jpg",
+    alt: "Portrait of Meseret T.",
   },
   {
     quote:
-      "Onboarding new support agents used to take weeks. Now, with the AI handling most initial queries, they can focus on high-value interactions from day one.",
-    name: "Jules Laurent",
-    company: "Cinder Studio",
-    title: "CTO",
-    avatar: "/avatars/jules-laurent.jpg",
-    alt: "Portrait of Jules Laurent",
+      "The AI handles 90% of our customer questions instantly. Our team only deals with complex issues now. Response time went from hours to seconds.",
+    name: "Dawit A.",
+    company: "Nile Bank",
+    title: "Customer Service Head",
+    avatar: "/avatars/dawit-a.jpg",
+    alt: "Portrait of Dawit A.",
   },
   {
     quote:
@@ -68,7 +68,7 @@ export const NEW_TESTIMONIALS: Testimonial[] = [
   },
   {
     quote:
-      "Our customer satisfaction scores have jumped 20 points since we implemented Fusion. The AI is fast, accurate, and lets our human agents focus on the really tough problems.",
+      "Our customer satisfaction scores have jumped 20 points since we implemented LocalBoxs. The AI is fast, accurate, and lets our human agents focus on the really tough problems.",
     name: "Vera Kowalski",
     company: "Bluepeak Logistics",
     title: "SRE Lead",

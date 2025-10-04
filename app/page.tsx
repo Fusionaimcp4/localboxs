@@ -1,9 +1,13 @@
 import { HeroSection } from "@/components/hero-section"
 import { DashboardPreview } from "@/components/dashboard-preview"
 import { SocialProof } from "@/components/social-proof"
+import { ValuePropositionSection } from "@/components/value-proposition-section"
 import { BentoSection } from "@/components/bento-section"
+import { FeaturesGrid } from "@/components/features-grid"
+import { ComparisonPanel } from "@/components/comparison-panel"
 import { LargeTestimonial } from "@/components/large-testimonial"
 import { PricingSection } from "@/components/pricing-section"
+import { SecurityOwnershipSection } from "@/components/security-ownership-section"
 import { TestimonialGridSection } from "@/components/testimonial-grid-section"
 import { FAQSection } from "@/components/faq-section"
 import { CTASection } from "@/components/cta-section"
@@ -27,11 +31,17 @@ export default function LandingPage() {
         <AnimatedSection className="relative z-10 max-w-[1320px] mx-auto px-6 mt-[411px] md:mt-[400px]" delay={0.1}>
           <SocialProof />
         </AnimatedSection>
-        <AnimatedSection id="features-section" className="relative z-10 max-w-[1320px] mx-auto mt-16" delay={0.2}>
+        <AnimatedSection className="relative z-10 max-w-[1320px] mx-auto" delay={0.2}>
+          <ValuePropositionSection />
+        </AnimatedSection>
+        <AnimatedSection id="features-section" className="relative z-10 max-w-[1320px] mx-auto" delay={0.2}>
           <BentoSection />
         </AnimatedSection>
-        <AnimatedSection className="relative z-10 max-w-[1320px] mx-auto mt-8 md:mt-16" delay={0.2}>
-          <CTASection />
+        <AnimatedSection className="relative z-10 max-w-[1320px] mx-auto" delay={0.2}>
+          <FeaturesGrid />
+        </AnimatedSection>
+        <AnimatedSection className="relative z-10 max-w-[1320px] mx-auto" delay={0.2}>
+          <ComparisonPanel />
         </AnimatedSection>
         <AnimatedSection className="relative z-10 max-w-[1320px] mx-auto mt-8 md:mt-16" delay={0.2}>
           <LargeTestimonial />
@@ -42,6 +52,9 @@ export default function LandingPage() {
           delay={0.2}
         >
           <PricingSection />
+        </AnimatedSection>
+        <AnimatedSection className="relative z-10 max-w-[1320px] mx-auto mt-8 md:mt-16" delay={0.2}>
+          <SecurityOwnershipSection />
         </AnimatedSection>
         <AnimatedSection
           id="shared-inbox-section"
@@ -59,6 +72,9 @@ export default function LandingPage() {
         </AnimatedSection>
         <AnimatedSection id="faq-section" className="relative z-10 max-w-[1320px] mx-auto mt-8 md:mt-16" delay={0.2}>
           <FAQSection />
+        </AnimatedSection>
+        <AnimatedSection className="relative z-10 max-w-[1320px] mx-auto mt-8 md:mt-16" delay={0.2}>
+          <CTASection />
         </AnimatedSection>
         <AnimatedSection className="relative z-10 max-w-[1320px] mx-auto mt-8 md:mt-16" delay={0.2}>
           <FooterSection />

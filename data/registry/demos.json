@@ -234,22 +234,22 @@
     "system_message_file": "./public/system_messages/n8n_System_Message_sost-work-492bf510.md",
     "demo_url": "http://localhost:3000/demo/sost-work-492bf510",
     "chatwoot": {
-      "inbox_id": 59,
-      "website_token": "vj2KuLrKK8G4AMx3TakdhxVr"
+      "inbox_id": 75,
+      "website_token": "1fE3fNFw3S7ZSMirNounJsAs"
     },
     "workflow_duplication": "success",
     "agent_bot": {
-      "id": 59,
-      "access_token": "G6wFJK1a9ntBMGRpLpshFCf9"
+      "id": 75,
+      "access_token": "U5hgskjwWw58tTRccgdJ99mV"
     },
     "lead": {
-      "name": "behailu kidane",
-      "email": "solomon@sost.work",
+      "name": "Behailu solomon",
+      "email": "yilakb@sost.work",
       "company": "sost",
-      "phone": "+1252325252"
+      "phone": "+12142353741"
     },
     "created_at": "2025-09-12T05:25:26.694Z",
-    "updated_at": "2025-09-14T01:45:55.879Z"
+    "updated_at": "2025-09-16T15:20:18.647Z"
   },
   "lbtil-com-0999b63b": {
     "slug": "lbtil-com-0999b63b",
@@ -348,5 +348,57 @@
       "access_token": "Z7gurmuC5QtfeadhMqgyCE2H"
     },
     "created_at": "2025-09-16T01:16:40.981Z"
+  },
+  "ayate3000": {
+    "slug": "ayate3000",
+    "business": "ayate3000",
+    "url": "https://ayatrealestate.com/",
+    "system_message_file": "./public/system_messages/n8n_System_Message_ayate3000.md",
+    "demo_url": "http://localhost:3000/demo/ayate3000",
+    "chatwoot": {
+      "inbox_id": 74,
+      "website_token": "Zch1FhYCRcrLvr8PMmKoLXym"
+    },
+    "workflow_duplication": "success",
+    "agent_bot": {
+      "id": 74,
+      "access_token": "DXLNa21THayA8FQXSY1s13Hb"
+    },
+    "created_at": "2025-09-16T13:35:03.674Z"
+  },
+  "bittensor": {
+    "slug": "bittensor",
+    "business": "bittensor",
+    "url": "https://bittensor.com/about",
+    "system_message_file": "./public/system_messages/n8n_System_Message_bittensor.md",
+    "demo_url": "http://localhost:3000/demo/bittensor",
+    "chatwoot": {
+      "inbox_id": 76,
+      "website_token": "1oqvnYYFNtTmGxdWPcYyu1wv"
+    },
+    "workflow_duplication": "success",
+    "agent_bot": {
+      "id": 76,
+      "access_token": "KDo2GJcZD7NvewrgsfrEf1Pc"
+    },
+    "created_at": "2025-09-16T15:23:39.059Z"
+  },
+  "sostwork": {
+    "slug": "sostwork",
+    "business": "sostwork",
+    "url": "https://sost.work/",
+    "system_message_file": "./public/system_messages/n8n_System_Message_sostwork.md",
+    "demo_url": "http://localhost:3000/demo/sostwork",
+    "chatwoot": {
+      "inbox_id": 79,
+      "website_token": "TCzYi4w8DjNF4DmkdpxDHKbN"
+    },
+    "workflow_duplication": "success",
+    "agent_bot": {
+      "id": 79,
+      "access_token": "PHBRQ9x5uTN3rpbNbGkA2Rnw"
+    },
+    "created_at": "2025-09-16T15:46:39.160Z",
+    "updated_at": "2025-09-16T15:55:22.883Z"
   }
 }

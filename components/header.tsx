@@ -12,10 +12,9 @@ import { ContactModal } from "./contact-modal"
 export function Header() {
   const navItems = [
     { name: "Platform", href: "#features-section" },
-    { name: "Solutions", href: "#shared-inbox-section" },
+    { name: "Features", href: "#features-section" },
     { name: "Pricing", href: "#pricing-section" },
-    //{ name: "Cost & Savings", href: "/cost-savings" },
-    //{ name: "Integration", href: "/integration-process" },
+    { name: "Compare", href: "#comparison-section" },
   ]
 
   const handleScroll = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
@@ -66,7 +65,7 @@ export function Header() {
         <div className="flex items-center gap-4">
           <ContactModal>
             <Button className="hidden md:block bg-secondary text-secondary-foreground hover:bg-secondary/90 px-6 py-2 rounded-full font-medium shadow-sm">
-              Request Implementation Plan
+              Request a Demo
             </Button>
           </ContactModal>
           <Sheet>
@@ -93,7 +92,7 @@ export function Header() {
                 ))}
                 <ContactModal>
                   <Button className="w-full mt-4 bg-secondary text-secondary-foreground hover:bg-secondary/90 px-6 py-2 rounded-full font-medium shadow-sm">
-                    Request Implementation Plan
+                    Request a Demo
                   </Button>
                 </ContactModal>
               </nav>

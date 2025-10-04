@@ -20,11 +20,10 @@ You will receive:
 
 ## Knowledge Base
 
-```markdown
 
 ## Website links (canonical)
 
-Primary site: https://sost.work/
+Primary site: https://ayatrealestate.com/
 
 When answering:
 - Provide a clear and complete answer directly in the chat.
@@ -42,75 +41,58 @@ When answering:
 # Business Knowledge Base
 
 ## Project Overview
-- **One-liner:** SOST is a Bitcoin-powered marketplace connecting global talent with employers.
-- **Goals & objectives:** To provide freelancers a platform to earn Bitcoin by trading their skills and to facilitate easy collaboration between freelancers and employers.
-- **Unique value prop:** Integration of a Bitcoin Lightning Wallet for seamless payments and participation in the Bitcoin economy.
+- **One-liner:** Unknown
+- **Goals & objectives:** Unknown
+- **Unique value prop:** Unknown
 
 ## Key Features & Functionality
-- **Core:**
-  - Job posting by employers.
-  - Proposal submissions by freelancers.
-  - Collaboration tools including chat and file sharing.
-- **Advanced:**
-  - Bitcoin Lightning Wallet for payments.
-  - Tracking project progress from a centralized dashboard.
-- **Integrations:** Unknown.
+- **Core:** Unknown
+- **Advanced:** Unknown
+- **Integrations:** Unknown
 
 ## Architecture & Tech Stack
-- **Frontend:** Unknown.
-- **Backend:** Unknown.
-- **DB:** Unknown.
-- **Hosting:** Unknown.
-- **APIs:** Unknown.
-- **Deployment:** Unknown.
+- **Frontend:** Unknown
+- **Backend:** Unknown
+- **DB:** Unknown
+- **Hosting:** Unknown
+- **APIs:** Unknown
+- **Deployment:** Unknown
 
 ## User Journey
-- **Typical flow:**
-  1. Employers post a job detailing their requirements.
-  2. Freelancers submit proposals based on the job listing.
-  3. Employers review proposals and hire freelancers.
-  4. Collaboration occurs through the platform's dashboard.
-  5. Payment is made via the Bitcoin Lightning Wallet upon project completion.
-- **Examples:**
-  1. A client in the U.S. posts a job for online class help, receives proposals, and hires a freelancer.
-  2. A freelancer in Ethiopia offers engineering services and gets hired by a client in Canada.
+- **Typical flow:** Unknown
+- **2–3 Examples:** Unknown
 
 ## Operations & Processes
-- **Onboarding:** Users can sign up for free and choose to join as either a freelancer or a client.
-- **Support:** Unknown.
-- **Billing:** Payments are processed through the Bitcoin Lightning Wallet, only for authorized work.
+- **Onboarding:** Unknown
+- **Support:** Unknown
+- **Billing:** Unknown
 
 ## Governance & Security
-- **Auth:** User accounts require sign-up and login.
-- **Data handling:** Unknown.
-- **Backups:** Unknown.
+- **Auth:** Unknown
+- **Data handling:** Unknown
+- **Backups:** Unknown
 
 ## FAQs & Troubleshooting
-1. **How do I post a job?**
-   - Sign in to your account, navigate to the job posting section, and fill in the required details.
-   
-2. **What is the Bitcoin Lightning Wallet?**
-   - It is a wallet provided to freelancers for receiving payments and making purchases using Bitcoin.
-   
-3. **How do I communicate with freelancers?**
-   - Use the chat feature available on the project dashboard to communicate directly.
-
-4. **What if I forget my password?**
-   - Click on "Forgot password?" on the sign-in page to reset your password.
-
-5. **Is it free to sign up?**
-   - Yes, signing up is free for both freelancers and clients.
+- **Q1:** Unknown  
+  **A:** Unknown  
+- **Q2:** Unknown  
+  **A:** Unknown  
+- **Q3:** Unknown  
+  **A:** Unknown  
 
 ## Glossary
-- **Bitcoin:** A decentralized digital currency.
-- **Freelancer:** An individual who offers services to clients on a project basis.
-- **Employer:** A client looking to hire freelancers for specific tasks.
-- **Job Posting:** The process of listing a job opportunity for freelancers.
-- **Proposal:** A submission by a freelancer detailing how they can fulfill a job requirement.
-- **Collaboration Tools:** Features that facilitate communication and project management.
-- **Bitcoin Lightning Wallet:** A wallet that allows for fast and low-cost Bitcoin transactions.
-- **Dashboard:** A user interface that provides an overview of projects and communications.
-```
+- **Term 1:** Unknown
+- **Term 2:** Unknown
+- **Term 3:** Unknown
+- **Term 4:** Unknown
+- **Term 5:** Unknown
+- **Term 6:** Unknown
+- **Term 7:** Unknown
+- **Term 8:** Unknown
+- **Term 9:** Unknown
+- **Term 10:** Unknown
+- **Term 11:** Unknown
+- **Term 12:** Unknown
 
 
 # AI to Human Escalation Rules

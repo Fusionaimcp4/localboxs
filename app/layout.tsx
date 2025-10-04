@@ -7,17 +7,17 @@ import { Toaster } from '@/components/ui/toaster'
 import Script from 'next/script'
 
 export const metadata: Metadata = {
-  title: 'LocalBoxs - Unlimited Agents, Self-Hosted AI Support',
+  title: 'LocalBoxs - All-in-One Conversations Platform | AI-First Customer Support',
   description:
-    'LocalBoxs replaces Intercom/Zendesk with a self-hosted AI-first support system. Unlimited agents, unlimited AI resolutions, one-time setup, you own your data.',
+    'Phone, SMS, WhatsApp, Email, Web Chat. AI answers 95% instantly. No per-seat or per-resolution fees. Self-hosted or managed. Your data, your control.',
   icons: {
     icon: '/logos/boxlogo32x32.ico',
     shortcut: '/logos/boxlogo48x48.ico',
     apple: '/logos/boxlogo512x512.png',
   },
   openGraph: {
-    title: 'LocalBoxs - Unlimited Agents, Self-Hosted AI Support',
-    description: 'LocalBoxs replaces Intercom/Zendesk with a self-hosted AI-first support system. Unlimited agents, unlimited AI resolutions, one-time setup, you own your data.',
+    title: 'LocalBoxs - All-in-One Conversations Platform | AI-First Customer Support',
+    description: 'Phone, SMS, WhatsApp, Email, Web Chat. AI answers 95% instantly. No per-seat or per-resolution fees. Self-hosted or managed. Your data, your control.',
     images: ['/logos/boxlogo512x512.png'],
   },
   manifest: '/manifest.json',

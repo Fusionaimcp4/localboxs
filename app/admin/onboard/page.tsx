@@ -1,12 +1,12 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Loader2, ExternalLink, FileText } from 'lucide-react';
+import { Loader2, ExternalLink, FileText, Lock } from 'lucide-react';
 
 interface OnboardResponse {
   slug: string;
@@ -35,6 +35,13 @@ interface OnboardResponse {
 }
 
 export default function OnboardPage() {
+  // Authentication state
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [loginData, setLoginData] = useState({ username: '', password: '' });
+  const [loginError, setLoginError] = useState<string | null>(null);
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
+
+  // Main form state
   const [formData, setFormData] = useState({
     business_url: '',
     business_name: '',
@@ -46,6 +53,14 @@ export default function OnboardPage() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<OnboardResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  // Check for existing auth on mount
+  useEffect(() => {
+    const authStatus = sessionStorage.getItem('admin-authenticated');
+    if (authStatus === 'true') {
+      setIsAuthenticated(true);
+    }
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -84,18 +99,127 @@ export default function OnboardPage() {
     }
   };
 
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoggingIn(true);
+    setLoginError(null);
+
+    try {
+      const response = await fetch('/api/admin/auth', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(loginData),
+      });
+
+      if (response.ok) {
+        setIsAuthenticated(true);
+        sessionStorage.setItem('admin-authenticated', 'true');
+        setLoginData({ username: '', password: '' });
+      } else {
+        const data = await response.json();
+        setLoginError(data.error || 'Invalid credentials');
+      }
+    } catch (err) {
+      setLoginError('Authentication failed. Please try again.');
+    } finally {
+      setIsLoggingIn(false);
+    }
+  };
+
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    sessionStorage.removeItem('admin-authenticated');
+    setResult(null);
+    setError(null);
+  };
+
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
+
+  const handleLoginInputChange = (field: string, value: string) => {
+    setLoginData(prev => ({ ...prev, [field]: value }));
+  };
+
+  // If not authenticated, show login form
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center p-8">
+        <Card className="w-full max-w-md">
+          <CardHeader className="text-center">
+            <div className="mx-auto bg-primary/10 w-12 h-12 rounded-full flex items-center justify-center mb-4">
+              <Lock className="w-6 h-6 text-primary" />
+            </div>
+            <CardTitle>Admin Access Required</CardTitle>
+            <CardDescription>
+              Please enter your credentials to access the admin panel
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleLogin} className="space-y-4">
+              <div>
+                <Label htmlFor="username">Username</Label>
+                <Input
+                  id="username"
+                  type="text"
+                  value={loginData.username}
+                  onChange={(e) => handleLoginInputChange('username', e.target.value)}
+                  placeholder="Enter username"
+                  required
+                  className="mt-1"
+                />
+              </div>
+              <div>
+                <Label htmlFor="password">Password</Label>
+                <Input
+                  id="password"
+                  type="password"
+                  value={loginData.password}
+                  onChange={(e) => handleLoginInputChange('password', e.target.value)}
+                  placeholder="Enter password"
+                  required
+                  className="mt-1"
+                />
+              </div>
+              {loginError && (
+                <Alert variant="destructive">
+                  <AlertDescription>{loginError}</AlertDescription>
+                </Alert>
+              )}
+              <Button type="submit" disabled={isLoggingIn} className="w-full">
+                {isLoggingIn ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Logging in...
+                  </>
+                ) : (
+                  'Login'
+                )}
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background p-8">
       <div className="max-w-4xl mx-auto space-y-8">
         <div className="text-center space-y-4">
-          <h1 className="text-4xl font-bold">Business Demo Onboarding</h1>
-          <p className="text-muted-foreground text-lg">
-            Create AI-powered demo customer support chatbot with your platform knowledge base.
-          </p>
+          <div className="flex justify-between items-center">
+            <div className="flex-1">
+              <h1 className="text-4xl font-bold">Business Demo Onboarding</h1>
+              <p className="text-muted-foreground text-lg">
+                Create AI-powered demo customer support chatbot with your platform knowledge base.
+              </p>
+            </div>
+            <Button variant="outline" onClick={handleLogout}>
+              Logout
+            </Button>
+          </div>
         </div>
 
         <Card>

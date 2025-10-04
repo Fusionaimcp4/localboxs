@@ -45,18 +45,18 @@ const BentoCard = ({
 export function BentoSection() {
   const pillars = [
     {
-      title: "Unlimited Usage",
-      benefit: "Add unlimited agents and handle unlimited AI conversations without extra cost.",
+      title: "Answer Faster",
+      benefit: "Auto-reply, ticketing, scheduled follow-ups and call-backs.",
       Component: AiCodeReviews,
     },
     {
-      title: "Self-Hosted Control",
-      benefit: "You own your customer data and run on your infrastructure.",
+      title: "All Channels in One Desk",
+      benefit: "Phone, SMS, WhatsApp, web chat, email, social.",
       Component: RealtimeCodingPreviews,
     },
     {
-      title: "Holding AI Agent",
-      benefit: "Prevents silence by acknowledging customers if humans delay.",
+      title: "Own & Scale Without Penalties",
+      benefit: "Unlimited agents & AI, predictable costs, no lock-in.",
       Component: OneClickIntegrationsIllustration,
     },
   ]
@@ -71,10 +71,10 @@ export function BentoSection() {
         <div className="self-stretch py-8 md:py-14 flex flex-col justify-center items-center gap-2 z-10">
           <div className="flex flex-col justify-start items-center gap-4">
             <h2 className="w-full max-w-[655px] text-center text-foreground text-4xl md:text-6xl font-semibold leading-tight md:leading-[66px]">
-              AI + Hybrid Support
+              Three Pillars of Success
             </h2>
             <p className="w-full max-w-[600px] text-center text-muted-foreground text-lg md:text-xl font-medium leading-relaxed">
-            complete customer service solution.
+              Everything you need to handle customer conversations professionally.
             </p>
           </div>
         </div>
