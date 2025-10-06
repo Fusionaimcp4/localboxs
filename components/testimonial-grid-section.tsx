@@ -1,14 +1,16 @@
 import Image from "next/image"
-import { SECTION_HEADING, SECTION_SUBHEAD, NEW_TESTIMONIALS } from "@/data/testimonials"
+import { SECTION_HEADING, SECTION_SUBHEAD, NEW_TESTIMONIALS, type Testimonial } from "@/data/testimonials"
 
-const testimonials = NEW_TESTIMONIALS.map((testimonial, index) => {
+type TestimonialWithType = Testimonial & { type: string }
+
+const testimonials: TestimonialWithType[] = NEW_TESTIMONIALS.map((testimonial, index) => {
   let type = "small-dark"
   if (index === 0) type = "large-teal"
   if (index === 6) type = "large-light" // The 7th testimonial
   return { ...testimonial, type }
 })
 
-const TestimonialCard = ({ quote, name, company, title, avatar, alt, type }) => {
+const TestimonialCard = ({ quote, name, company, title, avatar, alt, type }: TestimonialWithType) => {
   const isLargeCard = type.startsWith("large")
   const avatarSize = isLargeCard ? 48 : 36
   const avatarBorderRadius = isLargeCard ? "rounded-[41px]" : "rounded-[30.75px]"
@@ -60,7 +62,7 @@ const TestimonialCard = ({ quote, name, company, title, avatar, alt, type }) => 
       <div className={`relative z-10 font-normal break-words ${quoteClasses}`}>{quote}</div>
       <div className="relative z-10 flex justify-start items-center gap-3">
         <Image
-          src={"/placeholder-user.jpg"}
+          src={avatar || "/placeholder-user.jpg"}
           alt={alt || `${name} avatar`}
           width={avatarSize}
           height={avatarSize}

@@ -107,7 +107,7 @@ export function ComparisonPanel() {
           <div className="text-center p-6 bg-primary/5 rounded-xl">
           <div className="relative w-80 h-60 rounded-lg overflow-hidden shadow-lg">
               <Image
-                src="/images/localboxs3.jpg"
+                src="/images/localboxs3.png"
                 alt="LocalBoxs platform - Multi-channel customer support interface"
                 fill
                 className="object-cover"
@@ -121,7 +121,7 @@ export function ComparisonPanel() {
           <div className="text-center p-6 bg-secondary/10 rounded-xl">
           <div className="relative w-80 h-60 rounded-lg overflow-hidden shadow-lg">
               <Image
-                src="/images/localboxs1.jpg"
+                src="/images/localboxs1.png"
                 alt="LocalBoxs platform - Multi-channel customer support interface"
                 fill
                 className="object-cover"
@@ -135,7 +135,7 @@ export function ComparisonPanel() {
           <div className="text-center p-6 bg-muted/20 rounded-xl">
           <div className="relative w-80 h-60 rounded-lg overflow-hidden shadow-lg">
               <Image
-                src="/images/localboxs2.jpg"
+                src="/images/localboxs2.png"
                 alt="LocalBoxs platform - Multi-channel customer support interface"
                 fill
                 className="object-cover"

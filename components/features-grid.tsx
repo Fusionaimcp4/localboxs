@@ -22,8 +22,8 @@ export function FeaturesGrid() {
     },
     {
       icon: MessageSquare,
-      title: "WhatsApp & SMS",
-      description: "Business WhatsApp integration",
+      title: "WhatsApp,Telegram,SMS",
+      description: "Business WhatsApp,Telegram,SMS integration",
       benefits: ["SMS campaigns and responses", "Two-way messaging", "Media sharing"]
     },
     
