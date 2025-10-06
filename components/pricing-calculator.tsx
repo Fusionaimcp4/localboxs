@@ -14,6 +14,30 @@ export function PricingCalculator() {
   const [conversations, setConversations] = useState(1000)
   const [currentProvider, setCurrentProvider] = useState("intercom")
 
+  // EthioTelecom pricing comparison block (static data in ETB)
+  const ethioTelecomPricing = {
+    monthlyFee: 2078.65, // ETB per agent per month
+    setupFees: {
+      multiChannelAgentBundle: 535764.94,
+      addOnModule: 247859.04,
+      ivrOnboarding: 366918.45,
+      smsOnboarding: 309261.68,
+      chatbotSetup: 2118438.92,
+      additionalChatbotChannel: 710842.60
+    }
+  }
+
+  const formatETB = (amount: number) => {
+    return new Intl.NumberFormat('en-ET', { 
+      style: 'currency', 
+      currency: 'ETB',
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    }).format(amount)
+  }
+
+  const totalSetupCost = Object.values(ethioTelecomPricing.setupFees).reduce((sum, cost) => sum + cost, 0)
+
   const calculateSavings = () => {
     let currentCost = 0
     let localboxsCost = 0
@@ -113,6 +137,7 @@ export function PricingCalculator() {
                     <SelectItem value="intercom">Intercom</SelectItem>
                     <SelectItem value="zendesk">Zendesk</SelectItem>
                     <SelectItem value="freshdesk">Freshdesk</SelectItem>
+                    {/* <SelectItem value="ethiotelecom">EthioTelecom</SelectItem> */}
                     <SelectItem value="other">Other</SelectItem>
                   </SelectContent>
                 </Select>
@@ -187,6 +212,104 @@ export function PricingCalculator() {
             </CardContent>
           </Card>
         </div>
+
+        {/* EthioTelecom Pricing Comparison - Only show when EthioTelecom is selected */}
+        {currentProvider === "ethiotelecom" && (
+          <div className="mt-8">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Calculator className="w-5 h-5 text-secondary" />
+                  EthioTelecom Pricing (ETB)
+                </CardTitle>
+                <CardDescription>
+                  Official EthioTelecom contact center solution pricing in Ethiopian Birr
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                {/* Monthly Fee */}
+                <div className="bg-secondary/10 rounded-lg p-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-muted-foreground">Monthly Fee</p>
+                      <p className="text-2xl font-bold text-secondary">
+                        {formatETB(ethioTelecomPricing.monthlyFee)}
+                      </p>
+                      <p className="text-xs text-muted-foreground">per agent per month</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-sm text-muted-foreground">Case Management</p>
+                      <p className="text-sm text-muted-foreground">Ticketing System</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Setup Fees */}
+                <div className="space-y-4">
+                  <h4 className="text-lg font-semibold text-foreground">One-Time Setup Fees</h4>
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div className="space-y-3">
+                      <div className="flex justify-between items-center p-3 bg-muted/30 rounded-lg">
+                        <span className="text-sm text-muted-foreground">Multi-Channel Agent Bundle</span>
+                        <span className="font-medium">{formatETB(ethioTelecomPricing.setupFees.multiChannelAgentBundle)}</span>
+                      </div>
+                      <div className="flex justify-between items-center p-3 bg-muted/30 rounded-lg">
+                        <span className="text-sm text-muted-foreground">Each Add-On Module</span>
+                        <span className="font-medium">{formatETB(ethioTelecomPricing.setupFees.addOnModule)}</span>
+                      </div>
+                      <div className="flex justify-between items-center p-3 bg-muted/30 rounded-lg">
+                        <span className="text-sm text-muted-foreground">IVR Onboarding Fee</span>
+                        <span className="font-medium">{formatETB(ethioTelecomPricing.setupFees.ivrOnboarding)}</span>
+                      </div>
+                    </div>
+                    <div className="space-y-3">
+                      <div className="flex justify-between items-center p-3 bg-muted/30 rounded-lg">
+                        <span className="text-sm text-muted-foreground">SMS Onboarding Fee</span>
+                        <span className="font-medium">{formatETB(ethioTelecomPricing.setupFees.smsOnboarding)}</span>
+                      </div>
+                      <div className="flex justify-between items-center p-3 bg-muted/30 rounded-lg">
+                        <span className="text-sm text-muted-foreground">Chatbot Setup Fee</span>
+                        <span className="font-medium">{formatETB(ethioTelecomPricing.setupFees.chatbotSetup)}</span>
+                      </div>
+                      <div className="flex justify-between items-center p-3 bg-muted/30 rounded-lg">
+                        <span className="text-sm text-muted-foreground">Additional Chatbot Channel</span>
+                        <span className="font-medium">{formatETB(ethioTelecomPricing.setupFees.additionalChatbotChannel)}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Total Setup Cost */}
+                <div className="bg-secondary/10 rounded-lg p-6 text-center">
+                  <div className="text-3xl font-bold text-secondary mb-2">
+                    {formatETB(totalSetupCost)}
+                  </div>
+                  <p className="text-lg font-semibold text-foreground mb-1">
+                    Total Estimated Setup Cost
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    One-time implementation fees
+                  </p>
+                </div>
+
+                {/* Footer Note */}
+                <div className="text-center space-y-2">
+                  <p className="text-sm text-muted-foreground">
+                    EthioTelecom pricing shown in Ethiopian Birr (ETB). No automatic currency conversion applied.
+                  </p>
+                  <a 
+                    href="https://www.ethiotelecom.et/contact-center-solution/" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-sm text-primary hover:underline"
+                  >
+                    View official EthioTelecom pricing →
+                  </a>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
 
         {/* Benefits Summary */}
         <div className="mt-16 grid md:grid-cols-3 gap-8">
