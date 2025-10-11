@@ -400,5 +400,397 @@
     },
     "created_at": "2025-09-16T15:46:39.160Z",
     "updated_at": "2025-09-16T15:55:22.883Z"
+  },
+  "fin": {
+    "slug": "fin",
+    "business": "fin",
+    "url": "https://fin.ai/",
+    "system_message_file": "./public/system_messages/n8n_System_Message_fin.md",
+    "demo_url": "https://undefined/demo/fin",
+    "chatwoot": {
+      "inbox_id": 91,
+      "website_token": "c1EqTTcXXrcaL4YT2UHwBAD5"
+    },
+    "workflow_duplication": "success",
+    "agent_bot": {
+      "id": 89,
+      "access_token": "TigEF5vB2dGqtsv79sN522fB"
+    },
+    "created_at": "2025-10-08T20:47:55.070Z"
+  },
+  "enkopasummit-com-9512a089": {
+    "slug": "enkopasummit-com-9512a089",
+    "business": "enkopasummit.com",
+    "url": "https://enkopasummit.com/",
+    "system_message_file": "./public/system_messages/n8n_System_Message_enkopasummit-com-9512a089.md",
+    "demo_url": "https://undefined/demo/enkopasummit-com-9512a089",
+    "chatwoot": {
+      "inbox_id": 92,
+      "website_token": "wPxLQ5AoHi2ZH93uLfz9ULDM"
+    },
+    "workflow_duplication": "success",
+    "agent_bot": {
+      "id": 90,
+      "access_token": "QMqpXkpsYYmwxReGbKVZ16zd"
+    },
+    "lead": {
+      "name": "test one ",
+      "email": "yilakb@yahg.com",
+      "company": "enkopasummit",
+      "phone": "+2323252548"
+    },
+    "created_at": "2025-10-08T21:13:32.953Z"
+  },
+  "plex-tv-5a608c21": {
+    "slug": "plex-tv-5a608c21",
+    "business": "plex.tv",
+    "url": "https://www.plex.tv/",
+    "system_message_file": "./public/system_messages/n8n_System_Message_plex-tv-5a608c21.md",
+    "demo_url": "http://localhost:3000/demo/plex-tv-5a608c21",
+    "chatwoot": {
+      "inbox_id": 93,
+      "website_token": "xxgQvmWwLJE9dP3eLqJxgfgB"
+    },
+    "workflow_duplication": "success",
+    "agent_bot": {
+      "id": 91,
+      "access_token": "939MNDPB2ogqJHV6J5Goiev9"
+    },
+    "lead": {
+      "name": "yilak kidane",
+      "email": "yilakb@yahoo.com",
+      "company": "pixl",
+      "phone": "+12142353740"
+    },
+    "created_at": "2025-10-08T21:34:52.043Z"
+  },
+  "solana-com-ccb24a2c": {
+    "slug": "solana-com-ccb24a2c",
+    "business": "solana.com",
+    "url": "https://solana.com/",
+    "system_message_file": "./public/system_messages/n8n_System_Message_solana-com-ccb24a2c.md",
+    "demo_url": "http://localhost:3000/demo/solana-com-ccb24a2c",
+    "chatwoot": {
+      "inbox_id": 94,
+      "website_token": "9iRGhh43c6AZPWAwCN2iGz3m"
+    },
+    "workflow_duplication": "success",
+    "agent_bot": {
+      "id": 92,
+      "access_token": "Tjvs4sBPH4HR9EjQdeoE8MFj"
+    },
+    "lead": {
+      "name": "test",
+      "email": "yilakb@yah.com",
+      "company": "solana",
+      "phone": "+12142353740"
+    },
+    "created_at": "2025-10-08T21:49:05.532Z"
+  },
+  "fin-ai-8da80263": {
+    "slug": "fin-ai-8da80263",
+    "business": "fin.ai",
+    "url": "https://fin.ai/",
+    "system_message_file": "./public/system_messages/n8n_System_Message_fin-ai-8da80263.md",
+    "demo_url": "http://localhost:3000/demo/fin-ai-8da80263",
+    "chatwoot": {
+      "inbox_id": 95,
+      "website_token": "W9BzecjUnFGhog6mvaJvc6QT"
+    },
+    "workflow_duplication": "success",
+    "agent_bot": {
+      "id": 93,
+      "access_token": "SgmTdKNMDmoNfKMXaPATRLQa"
+    },
+    "lead": {
+      "name": "yilak kidane",
+      "email": "yilakb@yah.com",
+      "company": "fin",
+      "phone": "+12142353740"
+    },
+    "created_at": "2025-10-08T22:00:27.705Z"
+  },
+  "sososososo": {
+    "slug": "sososososo",
+    "business": "sososososo",
+    "url": "https://www.stacks.co/",
+    "system_message_file": "./public/system_messages/n8n_System_Message_sososososo.md",
+    "demo_url": "https://undefined/demo/sososososo",
+    "chatwoot": {
+      "inbox_id": 96,
+      "website_token": "SwZWN8cYp57urSuESd1mjqJi"
+    },
+    "workflow_duplication": "success",
+    "agent_bot": {
+      "id": 94,
+      "access_token": "PfMLUU5KbNXULDfFvSfsSFGK"
+    },
+    "created_at": "2025-10-08T23:31:36.311Z"
+  },
+  "stacks": {
+    "slug": "stacks",
+    "business": "stacks",
+    "url": "https://www.stacks.co/",
+    "system_message_file": "./public/system_messages/n8n_System_Message_stacks.md",
+    "demo_url": "https://undefined/demo/stacks",
+    "chatwoot": {
+      "inbox_id": 97,
+      "website_token": "hLi18YvyYbdoBrfrpVgPTNgB"
+    },
+    "workflow_duplication": "success",
+    "agent_bot": {
+      "id": 95,
+      "access_token": "dLP9M7vtkHaBqgWj3SQaZ9id"
+    },
+    "created_at": "2025-10-08T23:52:57.528Z"
+  },
+  "stacks-co-55b3a990": {
+    "slug": "stacks-co-55b3a990",
+    "business": "stacks.co",
+    "url": "https://www.stacks.co/",
+    "system_message_file": "./public/system_messages/n8n_System_Message_stacks-co-55b3a990.md",
+    "demo_url": "http://localhost:3000/demo/stacks-co-55b3a990",
+    "chatwoot": {
+      "inbox_id": 100,
+      "website_token": "gqSn9C9WHFyuoBoZGkEdQsp1"
+    },
+    "workflow_duplication": "success",
+    "agent_bot": {
+      "id": 98,
+      "access_token": "ZEZNm2nETScKmtnUe4jfMVPr"
+    },
+    "lead": {
+      "name": "sfdgsd",
+      "email": "ag@df.com",
+      "company": "fv",
+      "phone": ""
+    },
+    "created_at": "2025-10-09T00:06:42.453Z",
+    "updated_at": "2025-10-09T00:25:04.819Z"
+  },
+  "blocksurvey-io-b93c034d": {
+    "slug": "blocksurvey-io-b93c034d",
+    "business": "blocksurvey.io",
+    "url": "https://blocksurvey.io/",
+    "system_message_file": "./public/system_messages/n8n_System_Message_blocksurvey-io-b93c034d.md",
+    "demo_url": "http://localhost:3000/demo/blocksurvey-io-b93c034d",
+    "chatwoot": {
+      "inbox_id": 101,
+      "website_token": "xPov5JLmsPZy1GL3mK58GcKg"
+    },
+    "workflow_duplication": "success",
+    "agent_bot": {
+      "id": 99,
+      "access_token": "3dvpMoFhKQn85LhyH3teTiBQ"
+    },
+    "lead": {
+      "name": "gh",
+      "email": "hg@fg.com",
+      "company": "sd",
+      "phone": ""
+    },
+    "created_at": "2025-10-09T00:35:06.504Z"
+  },
+  "google-com-99999ebc": {
+    "slug": "google-com-99999ebc",
+    "business": "Google",
+    "url": "https://google.com",
+    "system_message_file": "./public/system_messages/n8n_System_Message_google-com-99999ebc.md",
+    "demo_url": "http://localhost:3000/demo/google-com-99999ebc",
+    "chatwoot": {
+      "inbox_id": 102,
+      "website_token": "m2DYAxDJJxtXkZdYWffd9dTm"
+    },
+    "workflow_duplication": "success",
+    "agent_bot": {
+      "id": 100,
+      "access_token": "dasZXoRUJGdBVAKEUjSCrUhq"
+    },
+    "created_at": "2025-10-09T00:46:21.272Z"
+  },
+  "lunarcrush-com-666387a4": {
+    "slug": "lunarcrush-com-666387a4",
+    "business": "lunarcrush.com",
+    "url": "https://lunarcrush.com/",
+    "system_message_file": "./public/system_messages/n8n_System_Message_lunarcrush-com-666387a4.md",
+    "demo_url": "http://localhost:3000/demo/lunarcrush-com-666387a4",
+    "chatwoot": {
+      "inbox_id": 104,
+      "website_token": "VbNNMzVPh33RWt9tyVLUggNi"
+    },
+    "workflow_duplication": "success",
+    "agent_bot": {
+      "id": 102,
+      "access_token": "3AzBow3sv9v6RQLQ5LfMvfKH"
+    },
+    "lead": {
+      "name": "yilak kidane",
+      "email": "yilakb@yah.com",
+      "company": "hg",
+      "phone": "+12142353740"
+    },
+    "created_at": "2025-10-09T00:51:26.406Z",
+    "updated_at": "2025-10-09T00:51:47.599Z"
+  },
+  "velar-com-913d244b": {
+    "slug": "velar-com-913d244b",
+    "business": "velar.com",
+    "url": "https://velar.com/",
+    "system_message_file": "./public/system_messages/n8n_System_Message_velar-com-913d244b.md",
+    "demo_url": "http://localhost:3000/demo/velar-com-913d244b",
+    "chatwoot": {
+      "inbox_id": 105,
+      "website_token": "ydDwV8Rmn8b1YyyTCs47bhgR"
+    },
+    "workflow_duplication": "success",
+    "agent_bot": {
+      "id": 103,
+      "access_token": "SZkaEitXHVi3z41zDUFtEWsw"
+    },
+    "lead": {
+      "name": "yilak kidane",
+      "email": "yilakb@yah.com",
+      "company": "xxx",
+      "phone": "+2142353740"
+    },
+    "created_at": "2025-10-09T01:03:42.903Z"
+  },
+  "sigle-io-7b4d2912": {
+    "slug": "sigle-io-7b4d2912",
+    "business": "sigle.io",
+    "url": "https://www.sigle.io/",
+    "system_message_file": "./public/system_messages/n8n_System_Message_sigle-io-7b4d2912.md",
+    "demo_url": "http://localhost:3000/demo/sigle-io-7b4d2912",
+    "chatwoot": {
+      "inbox_id": 106,
+      "website_token": "2gib8iuSFzSaZqsRzxdsibGY"
+    },
+    "workflow_duplication": "success",
+    "agent_bot": {
+      "id": 104,
+      "access_token": "YW3FtGuwiCMUUTSR9QZVLH2R"
+    },
+    "lead": {
+      "name": "yilak kidane",
+      "email": "yilakb@yahoo.com",
+      "company": "xxx2",
+      "phone": "+12142353740"
+    },
+    "created_at": "2025-10-09T01:11:15.670Z"
+  },
+  "giftrealestate-com-et-c4caa20e": {
+    "slug": "giftrealestate-com-et-c4caa20e",
+    "business": "giftrealestate.com.et",
+    "url": "https://giftrealestate.com.et/",
+    "system_message_file": "./public/system_messages/n8n_System_Message_giftrealestate-com-et-c4caa20e.md",
+    "demo_url": "http://localhost:3000/demo/giftrealestate-com-et-c4caa20e",
+    "chatwoot": {
+      "inbox_id": 107,
+      "website_token": "3j8x2b8kg7S8KFgkENRmf9zz"
+    },
+    "workflow_duplication": "success",
+    "agent_bot": {
+      "id": 105,
+      "access_token": "BNLuN69ZsxhwLbs34vPcazxB"
+    },
+    "lead": {
+      "name": "yilak kidane",
+      "email": "yilakb@yah.com",
+      "company": "giftrealestate",
+      "phone": "+12142353740"
+    },
+    "created_at": "2025-10-09T17:49:06.168Z"
+  },
+  "help-tawk-to-d509714a": {
+    "slug": "help-tawk-to-d509714a",
+    "business": "help.tawk.to",
+    "url": "https://help.tawk.to/",
+    "system_message_file": "./public/system_messages/n8n_System_Message_help-tawk-to-d509714a.md",
+    "demo_url": "http://localhost:3000/demo/help-tawk-to-d509714a",
+    "chatwoot": {
+      "inbox_id": 108,
+      "website_token": "RFiQT4daPpiGzAZiN5jTg1jj"
+    },
+    "workflow_duplication": "success",
+    "agent_bot": {
+      "id": 106,
+      "access_token": "Q7VJNWtU9EHanmzNSSEwdvHL"
+    },
+    "lead": {
+      "name": "yilak kidane",
+      "email": "yilakb@yaho.com",
+      "company": "helptawk",
+      "phone": "+2142353740"
+    },
+    "created_at": "2025-10-09T17:58:28.950Z"
+  },
+  "ovid-realestates-com-73f6445c": {
+    "slug": "ovid-realestates-com-73f6445c",
+    "business": "ovid-realestates.com",
+    "url": "https://ovid-realestates.com/",
+    "system_message_file": "./public/system_messages/n8n_System_Message_ovid-realestates-com-73f6445c.md",
+    "demo_url": "http://localhost:3000/demo/ovid-realestates-com-73f6445c",
+    "chatwoot": {
+      "inbox_id": 109,
+      "website_token": "tYENc1ZTkhPGphvutcL2DRCJ"
+    },
+    "workflow_duplication": "success",
+    "agent_bot": {
+      "id": 107,
+      "access_token": "4NMQTLmaecGqoWCxiYZMhPd4"
+    },
+    "lead": {
+      "name": "kuma",
+      "email": "yilakb@yahllo.com",
+      "company": "kuma",
+      "phone": ""
+    },
+    "created_at": "2025-10-09T18:13:26.919Z"
+  },
+  "noahrealestateplc-com-94d74006": {
+    "slug": "noahrealestateplc-com-94d74006",
+    "business": "noahrealestateplc.com",
+    "url": "https://noahrealestateplc.com/",
+    "system_message_file": "./public/system_messages/n8n_System_Message_noahrealestateplc-com-94d74006.md",
+    "demo_url": "http://localhost:3000/demo/noahrealestateplc-com-94d74006",
+    "chatwoot": {
+      "inbox_id": 110,
+      "website_token": "sL5Lj8t3mRfi9Zx8qKxoGrF1"
+    },
+    "workflow_duplication": "success",
+    "agent_bot": {
+      "id": 108,
+      "access_token": "2xydyQApfuyPH2S2XdBLvtgu"
+    },
+    "lead": {
+      "name": "yilak kidane",
+      "email": "yilakb@yhoo.com",
+      "company": "noahrealestateplc",
+      "phone": "+12142353258"
+    },
+    "created_at": "2025-10-09T18:36:20.782Z"
+  },
+  "eastafricanholding-com-29458521": {
+    "slug": "eastafricanholding-com-29458521",
+    "business": "eastafricanholding.com",
+    "url": "https://www.eastafricanholding.com/",
+    "system_message_file": "./public/system_messages/n8n_System_Message_eastafricanholding-com-29458521.md",
+    "demo_url": "http://localhost:3000/demo/eastafricanholding-com-29458521",
+    "chatwoot": {
+      "inbox_id": 111,
+      "website_token": "WMmpQ2g5fUWbHNPxGcX3tibR"
+    },
+    "workflow_duplication": "success",
+    "agent_bot": {
+      "id": 109,
+      "access_token": "3yxDs5pQquVQ5nEzqx4fruc5"
+    },
+    "lead": {
+      "name": "yilak kidane",
+      "email": "yilakb@yahoo.com",
+      "company": "eastafricanholding",
+      "phone": "+5555553740"
+    },
+    "created_at": "2025-10-09T19:26:33.482Z"
   }
 }

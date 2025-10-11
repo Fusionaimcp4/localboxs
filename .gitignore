@@ -95,3 +95,4 @@ dist
 
 # Temporary files
 temp/
+/lib/generated/prisma

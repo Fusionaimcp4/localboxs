@@ -11,6 +11,9 @@ import { createAgentBot, assignBotToInbox } from '@/lib/chatwoot_admin';
 import { promises as fs } from 'fs';
 import crypto from 'crypto';
 import path from 'path';
+import { prisma } from '@/lib/prisma';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
 
 export const runtime = "nodejs";
 
@@ -78,6 +81,17 @@ interface DemoRegistry {
 
 export async function POST(request: NextRequest) {
   try {
+    // Get the current user session
+    const session = await getServerSession(authOptions);
+    
+    if (!session?.user?.id) {
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      );
+    }
+
+    const userId = session.user.id;
     const payload: CreateDemoPayload = await request.json();
     
     // Validate input
@@ -175,9 +189,8 @@ export async function POST(request: NextRequest) {
     }
 
     // Step 6: Create demo URL and Chatwoot inbox
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || process.env.VERCEL_URL 
-      ? `https://${process.env.VERCEL_URL}` 
-      : `http://${process.env.DEMO_DOMAIN || 'localhost:3000'}`;
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 
+      (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : `http://${process.env.DEMO_DOMAIN || 'localhost:3000'}`);
     const demoUrl = `${baseUrl}/demo/${slug}`;
     
     const { inbox_id, website_token } = await createWebsiteInbox(businessName, demoUrl);
@@ -199,7 +212,63 @@ export async function POST(request: NextRequest) {
     const demoIndexPath = path.join(demoRoot, slug, 'index.html');
     await writeTextFile(demoIndexPath, demoHTML);
 
-    // Step 9: Setup Chatwoot bot and trigger n8n workflow duplication
+    // Step 9: Save demo to database FIRST (before n8n webhook)
+    let demo;
+    try {
+      demo = await prisma.demo.create({
+        data: {
+          userId,
+          slug,
+          businessName,
+          businessUrl: payload.url,
+          demoUrl,
+          systemMessageFile: `/system-message/n8n_System_Message_${slug}`,
+          chatwootInboxId: inbox_id,
+          chatwootWebsiteToken: website_token,
+          primaryColor: payload.primaryColor || '#7ee787',
+          secondaryColor: payload.secondaryColor || '#f4a261',
+          logoUrl: payload.logoUrl
+        }
+      });
+
+      // Create associated workflow record
+      await prisma.workflow.create({
+        data: {
+          userId,
+          demoId: demo.id,
+          n8nWorkflowId: null, // Will be updated by n8n workflow duplicator
+          status: 'ACTIVE',
+          configuration: {
+            aiModel: 'gpt-4o-mini',
+            confidenceThreshold: 0.8,
+            escalationRules: [],
+            externalIntegrations: []
+          }
+        }
+      });
+
+      // Create system message record
+      await prisma.systemMessage.create({
+        data: {
+          demoId: demo.id,
+          content: finalSystemMessage,
+          version: 1,
+          isActive: true
+        }
+      });
+
+      console.log(`✅ Demo saved to database: ${demo.id}`);
+    } catch (dbError) {
+      console.error('❌ Failed to save demo to database:', dbError);
+      console.error('❌ Database error details:', {
+        message: dbError instanceof Error ? dbError.message : 'Unknown error',
+        code: (dbError as any)?.code,
+        meta: (dbError as any)?.meta
+      });
+      // Continue with demo creation even if database save fails
+    }
+
+    // Step 10: Setup Chatwoot bot and trigger n8n workflow duplication
     let botId: number | string | undefined;
     let botAccessToken: string | undefined;
     let workflowDuplicationResult: { success: boolean; error?: string } | undefined;
@@ -216,6 +285,23 @@ export async function POST(request: NextRequest) {
         await assignBotToInbox(inbox_id, botId);
       } catch (assignError) {
         console.warn(`Bot assignment failed:`, assignError);
+      }
+
+      // Update workflow with bot information
+      if (demo) {
+        await prisma.workflow.updateMany({
+          where: { demoId: demo.id },
+          data: {
+            configuration: {
+              aiModel: 'gpt-4o-mini',
+              confidenceThreshold: 0.8,
+              escalationRules: [],
+              externalIntegrations: [],
+              chatwootAgentBotId: botId || null,
+              chatwootAgentBotAccessToken: botAccessToken || null
+            }
+          }
+        });
       }
 
       // Trigger n8n workflow duplication
@@ -305,7 +391,9 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Step 12: Return success response (simplified for user-facing API)
+    // Database save already completed in Step 9
+
+    // Step 13: Return success response (simplified for user-facing API)
     const response = {
       demo_url: demoUrl,
       system_message_file: `/system-message/n8n_System_Message_${slug}`

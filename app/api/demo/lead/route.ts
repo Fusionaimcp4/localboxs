@@ -131,9 +131,22 @@ async function createContact(lead: LeadData, demo: DemoData): Promise<ChatwootCo
     }
   };
 
-  const response = await chatwootRequest('POST', `/api/v1/accounts/${CW_ACCOUNT_ID}/contacts`, contactData);
-  // Chatwoot returns contact data nested under payload.contact
-  return response.payload?.contact || response;
+  try {
+    const response = await chatwootRequest('POST', `/api/v1/accounts/${CW_ACCOUNT_ID}/contacts`, contactData);
+    // Chatwoot returns contact data nested under payload.contact
+    return response.payload?.contact || response;
+  } catch (error) {
+    // If phone number is already taken, try creating without phone number
+    if (error instanceof Error && error.message.includes('Phone number has already been taken')) {
+      console.warn(`Phone number ${phoneNumber} already exists, creating contact without phone number`);
+      const contactDataWithoutPhone = { ...contactData };
+      delete contactDataWithoutPhone.phone_number;
+      
+      const response = await chatwootRequest('POST', `/api/v1/accounts/${CW_ACCOUNT_ID}/contacts`, contactDataWithoutPhone);
+      return response.payload?.contact || response;
+    }
+    throw error;
+  }
 }
 
 // Update existing contact
@@ -167,9 +180,22 @@ async function updateContact(contactId: number, lead: LeadData, demo: DemoData):
     }
   };
 
-  const response = await chatwootRequest('PUT', `/api/v1/accounts/${CW_ACCOUNT_ID}/contacts/${contactId}`, updateData);
-  // Chatwoot returns contact data nested under payload.contact
-  return response.payload?.contact || response;
+  try {
+    const response = await chatwootRequest('PUT', `/api/v1/accounts/${CW_ACCOUNT_ID}/contacts/${contactId}`, updateData);
+    // Chatwoot returns contact data nested under payload.contact
+    return response.payload?.contact || response;
+  } catch (error) {
+    // If phone number is already taken, try updating without phone number
+    if (error instanceof Error && error.message.includes('Phone number has already been taken')) {
+      console.warn(`Phone number ${phoneNumber} already exists, updating contact without phone number`);
+      const updateDataWithoutPhone = { ...updateData };
+      delete updateDataWithoutPhone.phone_number;
+      
+      const response = await chatwootRequest('PUT', `/api/v1/accounts/${CW_ACCOUNT_ID}/contacts/${contactId}`, updateDataWithoutPhone);
+      return response.payload?.contact || response;
+    }
+    throw error;
+  }
 }
 
 // Associate contact with inbox

@@ -5,6 +5,7 @@ import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 import { Toaster } from '@/components/ui/toaster'
 import Script from 'next/script'
+import AuthProvider from '@/components/auth-provider'
 
 export const metadata: Metadata = {
   title: 'LocalBoxs - All-in-One Conversations Platform | AI-First Customer Support',
@@ -40,24 +41,37 @@ html {
         `}</style>
       </head>
       <body>
-        {children}
+        <AuthProvider>
+          {children}
+        </AuthProvider>
         <Toaster />
         <Analytics />
+        {/* Chatwoot widget - deferred loading for better performance */}
         <Script id="chatwoot-widget" strategy="lazyOnload">
           {`
-            (function(d,t) {
+            // Defer Chatwoot loading until browser is idle
+            function initChatwoot() {
               var BASE_URL="${process.env.CHATWOOT_BASE_URL || 'https://chatwoot.mcp4.ai'}";
-              var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+              var g=document.createElement('script'),s=document.getElementsByTagName('script')[0];
               g.src=BASE_URL+"/packs/js/sdk.js";
               g.async = true;
               s.parentNode.insertBefore(g,s);
               g.onload=function(){
-                window.chatwootSDK.run({
-                  websiteToken: 'NJzYTHcT7937oMjf8Kjng6UQ',
-                  baseUrl: BASE_URL
-                })
+                if (window.chatwootSDK) {
+                  window.chatwootSDK.run({
+                    websiteToken: 'NJzYTHcT7937oMjf8Kjng6UQ',
+                    baseUrl: BASE_URL
+                  });
+                }
               }
-            })(document,"script");
+            }
+            
+            // Load when browser is idle or after 3 seconds
+            if ('requestIdleCallback' in window) {
+              requestIdleCallback(initChatwoot, { timeout: 3000 });
+            } else {
+              setTimeout(initChatwoot, 3000);
+            }
           `}
         </Script>
       </body>

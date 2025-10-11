@@ -1,0 +1,221 @@
+// LocalBox Database Schema
+// Comprehensive schema for user management, demo creation, and workflow control
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// User Management
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String
+  company   String?
+  password  String?  // For credentials provider
+  role      UserRole @default(USER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // NextAuth relations
+  accounts Account[]
+  sessions Session[]
+
+  // Relations
+  demos     Demo[]
+  workflows Workflow[] @relation("WorkflowUser")
+  apiKeys   ApiKey[]
+
+  @@map("users")
+}
+
+enum UserRole {
+  USER
+  ADMIN
+  SUPER_ADMIN
+}
+
+// Demo Management
+model Demo {
+  id                String   @id @default(cuid())
+  userId            String
+  slug              String   @unique
+  businessName      String
+  businessUrl       String
+  systemMessageFile String
+  demoUrl           String
+  primaryColor      String?
+  secondaryColor    String?
+  logoUrl           String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  // Chatwoot Integration
+  chatwootInboxId    Int?
+  chatwootWebsiteToken String?
+
+  // Relations
+  user           User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  workflows      Workflow[]
+  contacts       Contact[]
+  systemMessages SystemMessage[]
+
+  @@map("demos")
+}
+
+// Workflow Management
+model Workflow {
+  id          String        @id @default(cuid())
+  demoId      String
+  userId      String
+  n8nWorkflowId String?
+  status      WorkflowStatus @default(INACTIVE)
+  configuration Json?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  // Relations
+  demo Demo @relation(fields: [demoId], references: [id], onDelete: Cascade)
+  user User @relation("WorkflowUser", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("workflows")
+}
+
+enum WorkflowStatus {
+  ACTIVE
+  INACTIVE
+  ERROR
+  PENDING
+}
+
+// Contact Management
+model Contact {
+  id        String   @id @default(cuid())
+  demoId    String
+  name      String
+  email     String
+  company   String?
+  phone     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  demo Demo @relation(fields: [demoId], references: [id], onDelete: Cascade)
+
+  @@map("contacts")
+}
+
+// AI Model Management
+model ApiKey {
+  id          String   @id @default(cuid())
+  userId      String
+  provider    String   // openai, anthropic, google, etc.
+  model       String
+  apiKey      String   // encrypted
+  isActive    Boolean  @default(true)
+  usageStats  Json?    // { totalRequests, totalTokens, cost }
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("api_keys")
+}
+
+// System Message Management
+model SystemMessage {
+  id          String   @id @default(cuid())
+  demoId      String   @unique
+  content     String
+  sections    Json?    // structured sections
+  version     Int      @default(1)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  demo        Demo     @relation(fields: [demoId], references: [id], onDelete: Cascade)
+
+  @@map("system_messages")
+}
+
+// Integration Management
+model Integration {
+  id            String   @id @default(cuid())
+  userId        String
+  name          String
+  type          IntegrationType
+  configuration Json
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@map("integrations")
+}
+
+enum IntegrationType {
+  CALENDAR
+  DATABASE
+  API
+  WEBHOOK
+  CRM
+}
+
+// Analytics and Monitoring
+model Analytics {
+  id          String   @id @default(cuid())
+  demoId      String?
+  userId      String?
+  eventType   String
+  eventData   Json?
+  timestamp   DateTime @default(now())
+
+  @@map("analytics")
+}
+
+// NextAuth.js required tables
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+

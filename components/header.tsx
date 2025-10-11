@@ -8,13 +8,18 @@ import { Menu } from "lucide-react"
 import Link from "next/link" // Import Link for client-side navigation
 import Image from "next/image"
 import { ContactModal } from "./contact-modal"
+import { useSession, signOut } from "next-auth/react"
 
 export function Header() {
+  const { data: session, status } = useSession()
+  
   const navItems = [
     { name: "Platform", href: "#features-section" },
     { name: "Features", href: "#features-section" },
     { name: "Pricing", href: "#pricing-section" },
-    { name: "Compare", href: "#comparison-section" },
+   
+    { name: "Integration", href: "/integration-process" },
+    { name: "Cost & Savings", href: "/cost-savings" },
   ]
 
   const handleScroll = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
@@ -63,11 +68,39 @@ export function Header() {
           </nav>
         </div>
         <div className="flex items-center gap-4">
-          <ContactModal>
-            <Button className="hidden md:block bg-secondary text-secondary-foreground hover:bg-secondary/90 px-6 py-2 rounded-full font-medium shadow-sm">
-              Request a Demo
-            </Button>
-          </ContactModal>
+          {status === "loading" ? (
+            <div className="w-8 h-8 border-2 border-zinc-500/30 border-t-zinc-500 rounded-full animate-spin"></div>
+          ) : session ? (
+            <div className="flex items-center gap-3">
+              <span className="text-sm text-zinc-400">Welcome, {session.user?.name}</span>
+              <Link href="/dashboard">
+                <Button className="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-full font-medium">
+                  Dashboard
+                </Button>
+              </Link>
+              <Button 
+                onClick={() => signOut()}
+                variant="outline"
+                className="px-4 py-2 rounded-full font-medium"
+              >
+                Sign Out
+              </Button>
+            </div>
+          ) : (
+            <div className="flex items-center gap-3">
+              <Link href="/auth/signin">
+                <Button variant="outline" className="px-4 py-2 rounded-full font-medium">
+                  Sign In
+                </Button>
+              </Link>
+              <Link href="/auth/signup">
+                <Button className="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-full font-medium">
+                  Sign Up
+                </Button>
+              </Link>
+            </div>
+          )}
+          
           <Sheet>
             <SheetTrigger asChild className="md:hidden">
               <Button variant="ghost" size="icon" className="text-foreground">
@@ -90,6 +123,39 @@ export function Header() {
                     {item.name}
                   </Link>
                 ))}
+                
+                {/* Mobile Authentication */}
+                {session ? (
+                  <div className="flex flex-col gap-3 mt-4">
+                    <span className="text-sm text-zinc-400">Welcome, {session.user?.name}</span>
+                    <Link href="/dashboard">
+                      <Button className="w-full bg-emerald-500 hover:bg-emerald-600 text-white px-6 py-2 rounded-full font-medium">
+                        Dashboard
+                      </Button>
+                    </Link>
+                    <Button 
+                      onClick={() => signOut()}
+                      variant="outline"
+                      className="w-full px-6 py-2 rounded-full font-medium"
+                    >
+                      Sign Out
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="flex flex-col gap-3 mt-4">
+                    <Link href="/auth/signin">
+                      <Button variant="outline" className="w-full px-6 py-2 rounded-full font-medium">
+                        Sign In
+                      </Button>
+                    </Link>
+                    <Link href="/auth/signup">
+                      <Button className="w-full bg-emerald-500 hover:bg-emerald-600 text-white px-6 py-2 rounded-full font-medium">
+                        Sign Up
+                      </Button>
+                    </Link>
+                  </div>
+                )}
+                
                 <ContactModal>
                   <Button className="w-full mt-4 bg-secondary text-secondary-foreground hover:bg-secondary/90 px-6 py-2 rounded-full font-medium shadow-sm">
                     Request a Demo
