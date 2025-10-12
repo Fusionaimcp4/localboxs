@@ -3,6 +3,8 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { CRMConfigModal } from "@/components/integrations/CRMConfigModal";
+import { CRMConfiguration } from "@/lib/integrations/types";
 
 interface Integration {
   id: string;
@@ -10,6 +12,7 @@ interface Integration {
   type: 'CALENDAR' | 'DATABASE' | 'API' | 'WEBHOOK' | 'CRM';
   status: 'ACTIVE' | 'INACTIVE' | 'ERROR';
   configuration: any;
+  isActive: boolean;
   createdAt: string;
 }
 
@@ -29,7 +32,9 @@ export default function IntegrationsPage() {
     errorIntegrations: 0,
   });
   const [loading, setLoading] = useState(true);
-  const [showAddModal, setShowAddModal] = useState(false);
+  const [showCRMModal, setShowCRMModal] = useState(false);
+  const [selectedIntegrationType, setSelectedIntegrationType] = useState<string | null>(null);
+  const [editingIntegration, setEditingIntegration] = useState<Integration | null>(null);
 
   useEffect(() => {
     fetchIntegrations();
@@ -49,6 +54,121 @@ export default function IntegrationsPage() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleAddIntegration = (type: string) => {
+    setSelectedIntegrationType(type);
+    if (type === 'CRM') {
+      setShowCRMModal(true);
+    } else {
+      // For other types, show a "coming soon" message
+      alert(`${type} integration coming soon!`);
+    }
+  };
+
+  const handleEditIntegration = (integration: Integration) => {
+    setEditingIntegration(integration);
+    if (integration.type === 'CRM') {
+      setShowCRMModal(true);
+    } else {
+      alert(`Editing ${integration.type} integration coming soon!`);
+    }
+  };
+
+  const handleDeleteIntegration = async (integrationId: string) => {
+    if (!confirm('Are you sure you want to delete this integration? This action cannot be undone.')) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/dashboard/integrations/${integrationId}`, {
+        method: 'DELETE',
+      });
+
+      if (response.ok) {
+        await fetchIntegrations();
+      } else {
+        const error = await response.json();
+        alert(`Failed to delete integration: ${error.error}`);
+      }
+    } catch (error) {
+      console.error('Failed to delete integration:', error);
+      alert('Failed to delete integration. Please try again.');
+    }
+  };
+
+  const handleToggleActive = async (integrationId: string, currentStatus: boolean) => {
+    try {
+      const response = await fetch(`/api/dashboard/integrations/${integrationId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          isActive: !currentStatus,
+        }),
+      });
+
+      if (response.ok) {
+        await fetchIntegrations();
+      } else {
+        const error = await response.json();
+        alert(`Failed to update integration: ${error.error}`);
+      }
+    } catch (error) {
+      console.error('Failed to toggle integration status:', error);
+      alert('Failed to update integration. Please try again.');
+    }
+  };
+
+  const handleSaveCRM = async (name: string, configuration: CRMConfiguration) => {
+    try {
+      let response;
+
+      if (editingIntegration) {
+        // Update existing integration
+        response = await fetch(`/api/dashboard/integrations/${editingIntegration.id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            name,
+            configuration,
+          }),
+        });
+      } else {
+        // Create new integration
+        response = await fetch('/api/dashboard/integrations/create', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            name,
+            type: 'CRM',
+            configuration,
+          }),
+        });
+      }
+
+      if (response.ok) {
+        await fetchIntegrations();
+        setShowCRMModal(false);
+        setEditingIntegration(null);
+      } else {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to save integration');
+      }
+    } catch (error) {
+      console.error('Failed to save CRM integration:', error);
+      throw error;
+    }
+  };
+
+  const handleCloseCRMModal = () => {
+    setShowCRMModal(false);
+    setEditingIntegration(null);
   };
 
   const getStatusColor = (status: string) => {
@@ -100,7 +220,7 @@ export default function IntegrationsPage() {
             </div>
             <div className="flex gap-3">
               <button
-                onClick={() => setShowAddModal(true)}
+                onClick={() => handleAddIntegration('CRM')}
                 className="px-6 py-3 bg-emerald-500 text-white rounded-2xl hover:bg-emerald-600 transition-colors"
               >
                 Add Integration
@@ -150,20 +270,27 @@ export default function IntegrationsPage() {
           <h3 className="text-2xl font-semibold mb-6">Available Integrations</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
-              { type: 'CALENDAR', name: 'Calendar Integration', description: 'Connect Google Calendar, Outlook, or other calendar services' },
-              { type: 'DATABASE', name: 'Database Integration', description: 'Connect to PostgreSQL, MySQL, MongoDB, or other databases' },
-              { type: 'API', name: 'API Integration', description: 'Connect to REST APIs, GraphQL endpoints, or custom services' },
-              { type: 'WEBHOOK', name: 'Webhook Integration', description: 'Set up custom webhooks for real-time notifications' },
-              { type: 'CRM', name: 'CRM Integration', description: 'Connect to Salesforce, HubSpot, or other CRM systems' },
+              { type: 'CRM', name: 'CRM Integration', description: 'Connect Chatwoot, Salesforce, HubSpot, or custom CRM systems', available: true },
+              { type: 'CALENDAR', name: 'Calendar Integration', description: 'Connect Google Calendar, Outlook, or other calendar services', available: false },
+              { type: 'DATABASE', name: 'Database Integration', description: 'Connect to PostgreSQL, MySQL, MongoDB, or other databases', available: false },
+              { type: 'API', name: 'API Integration', description: 'Connect to REST APIs, GraphQL endpoints, or custom services', available: false },
+              { type: 'WEBHOOK', name: 'Webhook Integration', description: 'Set up custom webhooks for real-time notifications', available: false },
             ].map((integration) => (
               <div
                 key={integration.type}
-                className="bg-zinc-900/60 rounded-3xl border border-zinc-800 p-6 hover:border-zinc-700 transition-colors cursor-pointer"
-                onClick={() => setShowAddModal(true)}
+                className={`bg-zinc-900/60 rounded-3xl border border-zinc-800 p-6 transition-colors ${
+                  integration.available 
+                    ? 'hover:border-zinc-700 cursor-pointer' 
+                    : 'opacity-60'
+                }`}
+                onClick={() => integration.available && handleAddIntegration(integration.type)}
               >
                 <div className="flex items-center gap-3 mb-4">
                   <span className="text-2xl">{getTypeIcon(integration.type)}</span>
-                  <h4 className="text-lg font-semibold">{integration.name}</h4>
+                  <h4 className="text-lg font-semibold">
+                    {integration.name}
+                    {!integration.available && <span className="ml-2 text-xs text-zinc-500">(Coming Soon)</span>}
+                  </h4>
                 </div>
                 <p className="text-zinc-400 text-sm">{integration.description}</p>
               </div>
@@ -181,37 +308,57 @@ export default function IntegrationsPage() {
           <h3 className="text-2xl font-semibold">Your Integrations</h3>
           
           {integrations.length > 0 ? (
-            integrations.map((integration) => (
-              <div
-                key={integration.id}
-                className="bg-zinc-900/60 rounded-3xl border border-zinc-800 p-6"
-              >
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center gap-3">
-                    <span className="text-2xl">{getTypeIcon(integration.type)}</span>
-                    <div>
-                      <h4 className="text-lg font-semibold">{integration.name}</h4>
-                      <p className="text-sm text-zinc-400">{integration.type}</p>
+            integrations.map((integration) => {
+              const status = integration.isActive ? 'ACTIVE' : 'INACTIVE';
+              const crmProvider = integration.type === 'CRM' ? integration.configuration?.provider : null;
+              
+              return (
+                <div
+                  key={integration.id}
+                  className="bg-zinc-900/60 rounded-3xl border border-zinc-800 p-6"
+                >
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center gap-3">
+                      <span className="text-2xl">{getTypeIcon(integration.type)}</span>
+                      <div>
+                        <h4 className="text-lg font-semibold">{integration.name}</h4>
+                        <p className="text-sm text-zinc-400">
+                          {integration.type}
+                          {crmProvider && ` - ${crmProvider}`}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <span className={`px-3 py-1 rounded-lg text-sm ${getStatusColor(status)}`}>
+                        {status}
+                      </span>
+                      <button
+                        onClick={() => handleToggleActive(integration.id, integration.isActive)}
+                        className="px-3 py-1 bg-blue-500/20 text-blue-400 rounded-lg hover:bg-blue-500/30 transition-colors text-sm"
+                      >
+                        {integration.isActive ? 'Deactivate' : 'Activate'}
+                      </button>
+                      <button
+                        onClick={() => handleEditIntegration(integration)}
+                        className="px-3 py-1 bg-zinc-700 text-zinc-300 rounded-lg hover:bg-zinc-600 transition-colors text-sm"
+                      >
+                        Configure
+                      </button>
+                      <button
+                        onClick={() => handleDeleteIntegration(integration.id)}
+                        className="px-3 py-1 bg-red-500/20 text-red-400 rounded-lg hover:bg-red-500/30 transition-colors text-sm"
+                      >
+                        Remove
+                      </button>
                     </div>
                   </div>
-                  <div className="flex items-center gap-3">
-                    <span className={`px-3 py-1 rounded-lg text-sm ${getStatusColor(integration.status)}`}>
-                      {integration.status}
-                    </span>
-                    <button className="px-3 py-1 bg-zinc-700 text-zinc-300 rounded-lg hover:bg-zinc-600 transition-colors text-sm">
-                      Configure
-                    </button>
-                    <button className="px-3 py-1 bg-red-500/20 text-red-400 rounded-lg hover:bg-red-500/30 transition-colors text-sm">
-                      Remove
-                    </button>
+                  
+                  <div className="text-sm text-zinc-500">
+                    Created: {new Date(integration.createdAt).toLocaleDateString()}
                   </div>
                 </div>
-                
-                <div className="text-sm text-zinc-500">
-                  Created: {new Date(integration.createdAt).toLocaleDateString()}
-                </div>
-              </div>
-            ))
+              );
+            })
           ) : (
             <div className="bg-zinc-900/60 rounded-3xl border border-zinc-800 p-12 text-center">
               <h3 className="text-xl font-semibold mb-4">No Integrations Yet</h3>
@@ -219,7 +366,7 @@ export default function IntegrationsPage() {
                 Connect external services to enhance your AI workflows and automate more tasks.
               </p>
               <button
-                onClick={() => setShowAddModal(true)}
+                onClick={() => handleAddIntegration('CRM')}
                 className="px-6 py-3 bg-emerald-500 text-white rounded-2xl hover:bg-emerald-600 transition-colors"
               >
                 Add Your First Integration
@@ -228,70 +375,17 @@ export default function IntegrationsPage() {
           )}
         </motion.div>
 
-        {/* Add Integration Modal */}
-        {showAddModal && (
-          <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-6 z-50">
-            <div className="bg-zinc-900 rounded-3xl border border-zinc-800 p-8 max-w-2xl w-full max-h-[80vh] overflow-y-auto">
-              <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-bold">Add New Integration</h2>
-                <button
-                  onClick={() => setShowAddModal(false)}
-                  className="text-zinc-400 hover:text-zinc-300 text-2xl"
-                >
-                  ×
-                </button>
-              </div>
-              
-              <div className="space-y-6">
-                <div>
-                  <label className="block text-sm font-medium text-zinc-200 mb-2">
-                    Integration Type
-                  </label>
-                  <select className="w-full rounded-2xl bg-zinc-800 border border-zinc-700 focus:border-zinc-500 outline-none px-4 py-3 text-zinc-100">
-                    <option value="CALENDAR">📅 Calendar Integration</option>
-                    <option value="DATABASE">🗄️ Database Integration</option>
-                    <option value="API">🔌 API Integration</option>
-                    <option value="WEBHOOK">🪝 Webhook Integration</option>
-                    <option value="CRM">👥 CRM Integration</option>
-                  </select>
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-zinc-200 mb-2">
-                    Integration Name
-                  </label>
-                  <input
-                    type="text"
-                    className="w-full rounded-2xl bg-zinc-800 border border-zinc-700 focus:border-zinc-500 outline-none px-4 py-3 text-zinc-100"
-                    placeholder="My Calendar Integration"
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-zinc-200 mb-2">
-                    Configuration
-                  </label>
-                  <textarea
-                    className="w-full rounded-2xl bg-zinc-800 border border-zinc-700 focus:border-zinc-500 outline-none px-4 py-3 text-zinc-100 h-32"
-                    placeholder="Enter configuration details..."
-                  />
-                </div>
-              </div>
-              
-              <div className="mt-6 flex justify-end gap-3">
-                <button
-                  onClick={() => setShowAddModal(false)}
-                  className="px-6 py-3 bg-zinc-700 text-zinc-300 rounded-2xl hover:bg-zinc-600 transition-colors"
-                >
-                  Cancel
-                </button>
-                <button className="px-6 py-3 bg-emerald-500 text-white rounded-2xl hover:bg-emerald-600 transition-colors">
-                  Add Integration
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
+        {/* CRM Integration Modal */}
+        <CRMConfigModal
+          isOpen={showCRMModal}
+          onClose={handleCloseCRMModal}
+          onSave={handleSaveCRM}
+          existingIntegration={editingIntegration ? {
+            id: editingIntegration.id,
+            name: editingIntegration.name,
+            configuration: editingIntegration.configuration,
+          } : undefined}
+        />
       </div>
     </div>
   );

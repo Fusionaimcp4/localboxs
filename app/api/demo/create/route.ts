@@ -19,8 +19,10 @@ export const runtime = "nodejs";
 
 // Generate slug with hash for uniqueness (same as inspect API)
 function generateSlugWithHash(url: string): string {
-  const hostname = new URL(url).hostname.replace(/^www\./, '');
-  const urlHash = crypto.createHash('md5').update(url).digest('hex').substring(0, 8);
+  // Normalize URL for consistent hashing
+  const normalizedUrl = url.toLowerCase().replace(/\/$/, ''); // Remove trailing slash, lowercase
+  const hostname = new URL(normalizedUrl).hostname.replace(/^www\./, '');
+  const urlHash = crypto.createHash('md5').update(normalizedUrl).digest('hex').substring(0, 8);
   return `${slugify(hostname)}-${urlHash}`;
 }
 
@@ -130,8 +132,8 @@ export async function POST(request: NextRequest) {
     // Check for existing KB file from user preview
     const previewSystemMessageFile = `./public/system_messages/n8n_System_Message_${slug}.md`;
     
-    let finalSystemMessage: string;
-    let systemMessageFile: string;
+    let finalSystemMessage: string = '';
+    let systemMessageFile: string = previewSystemMessageFile;
     let reusingPreview = false;
 
     // Check if we have a fresh preview file to reuse
@@ -193,7 +195,7 @@ export async function POST(request: NextRequest) {
       (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : `http://${process.env.DEMO_DOMAIN || 'localhost:3000'}`);
     const demoUrl = `${baseUrl}/demo/${slug}`;
     
-    const { inbox_id, website_token } = await createWebsiteInbox(businessName, demoUrl);
+    const { inbox_id, website_token } = await createWebsiteInbox(businessName, demoUrl, userId);
 
     // Step 7: Render demo HTML
     const chatwootBaseUrl = process.env.CHATWOOT_BASE_URL || 'https://chatwoot.mcp4.ai';
@@ -276,15 +278,17 @@ export async function POST(request: NextRequest) {
     try {
       // Create Chatwoot Agent Bot
       console.log(`Creating agent bot for ${businessName}...`);
-      const bot = await createAgentBot(businessName);
+      const bot = await createAgentBot(businessName, userId);
       botId = bot.id;
       botAccessToken = bot.access_token;
 
       // Assign bot to inbox
-      try {
-        await assignBotToInbox(inbox_id, botId);
-      } catch (assignError) {
-        console.warn(`Bot assignment failed:`, assignError);
+      if (botId) {
+        try {
+          await assignBotToInbox(inbox_id, botId, userId);
+        } catch (assignError) {
+          console.warn(`Bot assignment failed:`, assignError);
+        }
       }
 
       // Update workflow with bot information

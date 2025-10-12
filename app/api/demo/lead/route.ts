@@ -136,6 +136,21 @@ async function createContact(lead: LeadData, demo: DemoData): Promise<ChatwootCo
     // Chatwoot returns contact data nested under payload.contact
     return response.payload?.contact || response;
   } catch (error) {
+    // If email is already taken, search for existing contact and return it
+    if (error instanceof Error && error.message.includes('Email has already been taken')) {
+      console.warn(`Email ${lead.email} already exists, searching for existing contact`);
+      try {
+        const searchResponse = await chatwootRequest('GET', `/api/v1/accounts/${CW_ACCOUNT_ID}/contacts/search?q=${encodeURIComponent(lead.email)}`);
+        const existingContact = searchResponse.payload?.[0] || searchResponse[0];
+        if (existingContact) {
+          console.log(`Found existing contact with ID: ${existingContact.id}`);
+          return existingContact;
+        }
+      } catch (searchError) {
+        console.error('Failed to search for existing contact:', searchError);
+      }
+    }
+    
     // If phone number is already taken, try creating without phone number
     if (error instanceof Error && error.message.includes('Phone number has already been taken')) {
       console.warn(`Phone number ${phoneNumber} already exists, creating contact without phone number`);

@@ -16,7 +16,8 @@
     "deploy": "npm run build && npm run start",
     "type-check": "tsc --noEmit",
     "clean": "rm -rf .next out dist",
-    "analyze": "ANALYZE=true npm run build"
+    "analyze": "ANALYZE=true npm run build",
+    "generate-encryption-key": "ts-node --compiler-options \"{\\\"module\\\":\\\"commonjs\\\"}\" scripts/generate-encryption-key.ts"
   },
   "dependencies": {
     "@emotion/is-prop-valid": "^1.3.1",
