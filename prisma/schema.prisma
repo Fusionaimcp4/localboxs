@@ -17,7 +17,7 @@ model User {
   email     String   @unique
   name      String
   company   String?
-  password  String?  // For credentials provider
+  password  String? // For credentials provider
   role      UserRole @default(USER)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -27,9 +27,11 @@ model User {
   sessions Session[]
 
   // Relations
-  demos     Demo[]
-  workflows Workflow[] @relation("WorkflowUser")
-  apiKeys   ApiKey[]
+  demos          Demo[]
+  workflows      Workflow[]      @relation("WorkflowUser")
+  apiKeys        ApiKey[]
+  knowledgeBases KnowledgeBase[]
+  integrations   Integration[]
 
   @@map("users")
 }
@@ -56,11 +58,11 @@ model Demo {
   updatedAt         DateTime @updatedAt
 
   // Chatwoot Integration
-  chatwootInboxId    Int?
+  chatwootInboxId      Int?
   chatwootWebsiteToken String?
 
   // Relations
-  user           User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user           User            @relation(fields: [userId], references: [id], onDelete: Cascade)
   workflows      Workflow[]
   contacts       Contact[]
   systemMessages SystemMessage[]
@@ -70,18 +72,19 @@ model Demo {
 
 // Workflow Management
 model Workflow {
-  id          String        @id @default(cuid())
-  demoId      String
-  userId      String
+  id            String         @id @default(cuid())
+  demoId        String
+  userId        String
   n8nWorkflowId String?
-  status      WorkflowStatus @default(INACTIVE)
+  status        WorkflowStatus @default(INACTIVE)
   configuration Json?
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
 
   // Relations
-  demo Demo @relation(fields: [demoId], references: [id], onDelete: Cascade)
-  user User @relation("WorkflowUser", fields: [userId], references: [id], onDelete: Cascade)
+  demo           Demo                    @relation(fields: [demoId], references: [id], onDelete: Cascade)
+  user           User                    @relation("WorkflowUser", fields: [userId], references: [id], onDelete: Cascade)
+  knowledgeBases WorkflowKnowledgeBase[]
 
   @@map("workflows")
 }
@@ -112,15 +115,15 @@ model Contact {
 
 // AI Model Management
 model ApiKey {
-  id          String   @id @default(cuid())
-  userId      String
-  provider    String   // openai, anthropic, google, etc.
-  model       String
-  apiKey      String   // encrypted
-  isActive    Boolean  @default(true)
-  usageStats  Json?    // { totalRequests, totalTokens, cost }
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id         String   @id @default(cuid())
+  userId     String
+  provider   String // openai, anthropic, google, etc.
+  model      String
+  apiKey     String // encrypted
+  isActive   Boolean  @default(true)
+  usageStats Json? // { totalRequests, totalTokens, cost }
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
   // Relations
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -130,31 +133,34 @@ model ApiKey {
 
 // System Message Management
 model SystemMessage {
-  id          String   @id @default(cuid())
-  demoId      String   @unique
-  content     String
-  sections    Json?    // structured sections
-  version     Int      @default(1)
-  isActive    Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id        String   @id @default(cuid())
+  demoId    String   @unique
+  content   String
+  sections  Json? // structured sections
+  version   Int      @default(1)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   // Relations
-  demo        Demo     @relation(fields: [demoId], references: [id], onDelete: Cascade)
+  demo Demo @relation(fields: [demoId], references: [id], onDelete: Cascade)
 
   @@map("system_messages")
 }
 
 // Integration Management
 model Integration {
-  id            String   @id @default(cuid())
+  id            String          @id @default(cuid())
   userId        String
   name          String
   type          IntegrationType
   configuration Json
-  isActive      Boolean  @default(true)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  isActive      Boolean         @default(true)
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("integrations")
 }
@@ -169,14 +175,148 @@ enum IntegrationType {
 
 // Analytics and Monitoring
 model Analytics {
-  id          String   @id @default(cuid())
-  demoId      String?
-  userId      String?
-  eventType   String
-  eventData   Json?
-  timestamp   DateTime @default(now())
+  id        String   @id @default(cuid())
+  demoId    String?
+  userId    String?
+  eventType String
+  eventData Json?
+  timestamp DateTime @default(now())
 
   @@map("analytics")
+}
+
+// Knowledge Base Management
+model KnowledgeBase {
+  id          String  @id @default(cuid())
+  userId      String
+  name        String
+  description String?
+  type        KBType  @default(USER)
+
+  // Metadata
+  totalDocuments Int       @default(0)
+  totalChunks    Int       @default(0)
+  totalTokens    Int       @default(0)
+  lastSyncedAt   DateTime?
+
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  user      User                    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  documents Document[]
+  workflows WorkflowKnowledgeBase[]
+
+  @@index([userId])
+  @@index([type])
+  @@map("knowledge_bases")
+}
+
+model Document {
+  id              String @id @default(cuid())
+  knowledgeBaseId String
+
+  // File info
+  filename     String
+  originalName String
+  fileType     String // pdf, docx, txt, md, csv, json
+  fileSize     Int // bytes
+  filePath     String // Storage path
+  fileUrl      String? // Public URL if needed
+
+  // Content
+  extractedText String? @db.Text
+  summary       String? @db.Text
+
+  // Metadata
+  pageCount Int?
+  wordCount Int?
+  language  String? @default("en")
+
+  // Processing status
+  status          ProcessingStatus @default(PENDING)
+  processingError String?          @db.Text
+
+  // Chunking info
+  chunkingStrategy String? @default("recursive")
+  chunkSize        Int?    @default(1000)
+  chunkOverlap     Int?    @default(200)
+
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  knowledgeBase KnowledgeBase   @relation(fields: [knowledgeBaseId], references: [id], onDelete: Cascade)
+  chunks        DocumentChunk[]
+
+  @@index([knowledgeBaseId])
+  @@index([status])
+  @@map("documents")
+}
+
+model DocumentChunk {
+  id         String @id @default(cuid())
+  documentId String
+
+  // Chunk info
+  content    String @db.Text
+  chunkIndex Int
+  tokenCount Int
+
+  // Metadata
+  pageNumber Int?
+  section    String?
+
+  // Vector embedding (stored as JSON for now, pgvector later)
+  embedding      Json?
+  embeddingModel String @default("text-embedding-3-small")
+
+  createdAt DateTime @default(now())
+
+  // Relations
+  document Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+  @@index([documentId])
+  @@index([chunkIndex])
+  @@map("document_chunks")
+}
+
+model WorkflowKnowledgeBase {
+  id              String @id @default(cuid())
+  workflowId      String
+  knowledgeBaseId String
+
+  // Configuration
+  priority            Int   @default(0)
+  retrievalLimit      Int   @default(5) // Top K results
+  similarityThreshold Float @default(0.7)
+
+  isActive   Boolean  @default(true)
+  assignedAt DateTime @default(now())
+
+  // Relations
+  workflow      Workflow      @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+  knowledgeBase KnowledgeBase @relation(fields: [knowledgeBaseId], references: [id], onDelete: Cascade)
+
+  @@unique([workflowId, knowledgeBaseId])
+  @@index([workflowId])
+  @@index([knowledgeBaseId])
+  @@map("workflow_knowledge_bases")
+}
+
+enum KBType {
+  USER // Global user KB
+  WORKFLOW // Workflow-specific KB
+  DEMO // Demo-specific KB
+}
+
+enum ProcessingStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
 }
 
 // NextAuth.js required tables
@@ -218,4 +358,3 @@ model VerificationToken {
   @@unique([identifier, token])
   @@map("verification_tokens")
 }
-

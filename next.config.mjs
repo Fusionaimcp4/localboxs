@@ -83,6 +83,13 @@ const nextConfig = {
         },
       };
     }
+    
+    // Externalize mammoth for server-side only
+    if (isServer) {
+      config.externals = config.externals || [];
+      config.externals.push('mammoth', 'canvas');
+    }
+    
     return config;
   },
 }

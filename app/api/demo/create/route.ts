@@ -145,6 +145,8 @@ export async function POST(request: NextRequest) {
       const previewContent = await readTextFileIfExists(previewSystemMessageFile);
       if (previewContent) {
         finalSystemMessage = previewContent;
+        // Replace ${businessName} placeholder even in reused files
+        finalSystemMessage = finalSystemMessage.replace(/\$\{businessName\}/g, businessName);
         systemMessageFile = previewSystemMessageFile;
         reusingPreview = true;
       }
@@ -173,6 +175,9 @@ export async function POST(request: NextRequest) {
 
       // Step 4: Merge KB into skeleton
       finalSystemMessage = mergeKBIntoSkeleton(skeletonText, kbMarkdown);
+
+      // Step 4.5: Replace ${businessName} placeholder with actual business name
+      finalSystemMessage = finalSystemMessage.replace(/\$\{businessName\}/g, businessName);
 
       // Step 5: Set system message file path
       systemMessageFile = previewSystemMessageFile; // Use hashed naming

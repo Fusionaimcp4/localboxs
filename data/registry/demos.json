@@ -886,5 +886,76 @@
     },
     "created_at": "2025-10-12T00:51:39.081Z",
     "updated_at": "2025-10-12T03:05:48.962Z"
+  },
+  "melangefoods-com-d4dc6c06": {
+    "slug": "melangefoods-com-d4dc6c06",
+    "business": "melangefoods.com",
+    "url": "https://melangefoods.com",
+    "system_message_file": "./public/system_messages/n8n_System_Message_melangefoods-com-d4dc6c06.md",
+    "demo_url": "http://localhost:3000/demo/melangefoods-com-d4dc6c06",
+    "chatwoot": {
+      "inbox_id": 124,
+      "website_token": "iTDujrYgumvx2Jxmdkdu83Rc"
+    },
+    "workflow_duplication": "success",
+    "agent_bot": {
+      "id": 122,
+      "access_token": "2tAWDebMWTACKZ8peWpPAVpG"
+    },
+    "lead": {
+      "name": "dawit",
+      "email": "dawit@melangefoods.com",
+      "company": "MG",
+      "phone": ""
+    },
+    "created_at": "2025-10-12T21:47:39.042Z",
+    "updated_at": "2025-10-13T05:41:39.329Z"
+  },
+  "gypsykitchendc-com-4288ac67": {
+    "slug": "gypsykitchendc-com-4288ac67",
+    "business": "gypsykitchendc.com",
+    "url": "https://www.gypsykitchendc.com",
+    "system_message_file": "./public/system_messages/n8n_System_Message_gypsykitchendc-com-4288ac67.md",
+    "demo_url": "http://localhost:3000/demo/gypsykitchendc-com-4288ac67",
+    "chatwoot": {
+      "inbox_id": 125,
+      "website_token": "WAKRhEZNF5wbXV6C7ZhGi1gA"
+    },
+    "workflow_duplication": "success",
+    "agent_bot": {
+      "id": 123,
+      "access_token": "zmU5p3mG2AJEeRyZJz29RZfV"
+    },
+    "lead": {
+      "name": " kidane km",
+      "email": "yib@yaho.com",
+      "company": "gypsykitchendc",
+      "phone": ""
+    },
+    "created_at": "2025-10-13T16:14:21.742Z"
+  },
+  "gypsykitchendc-com-a4347562": {
+    "slug": "gypsykitchendc-com-a4347562",
+    "business": "gypsykitchendc.com",
+    "url": "https://gypsykitchendc.com",
+    "system_message_file": "./public/system_messages/n8n_System_Message_gypsykitchendc-com-a4347562.md",
+    "demo_url": "http://localhost:3000/demo/gypsykitchendc-com-a4347562",
+    "chatwoot": {
+      "inbox_id": 128,
+      "website_token": "8M6YhtWFNE3XG4GXTv3528fN"
+    },
+    "workflow_duplication": "success",
+    "agent_bot": {
+      "id": 126,
+      "access_token": "3R6a7EH1pA6W44KcRJjJuhBW"
+    },
+    "lead": {
+      "name": "fgd",
+      "email": "df@khdfk.com",
+      "company": "dd",
+      "phone": ""
+    },
+    "created_at": "2025-10-13T16:22:55.548Z",
+    "updated_at": "2025-10-14T00:16:04.935Z"
   }
 }

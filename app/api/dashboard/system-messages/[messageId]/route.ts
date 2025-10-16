@@ -55,11 +55,14 @@ export async function PUT(
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
+    // Replace ${businessName} placeholder with actual business name
+    const processedContent = content.replace(/\$\{businessName\}/g, systemMessage.demo.businessName);
+
     // Update the system message in the database
     const updatedMessage = await prisma.systemMessage.update({
       where: { id: messageId },
       data: {
-        content: content,
+        content: processedContent,
         version: systemMessage.version + 1,
         updatedAt: new Date().toISOString(),
         sections: structuredData ? JSON.stringify(structuredData) : null
@@ -73,7 +76,7 @@ export async function PUT(
       'system_messages',
       `n8n_System_Message_${systemMessage.demo.slug}.md`
     );
-    await fs.writeFile(filePath, content, 'utf-8');
+    await fs.writeFile(filePath, processedContent, 'utf-8');
 
     console.log(`✅ System message ${messageId} updated in DB and file system.`);
 
@@ -84,7 +87,7 @@ export async function PUT(
       try {
         await updateN8nWorkflowSystemMessage(
           activeWorkflow.n8nWorkflowId,
-          content,
+          processedContent,
           systemMessage.demo.businessName
         );
         console.log(`✅ n8n workflow ${activeWorkflow.n8nWorkflowId} updated successfully.`);

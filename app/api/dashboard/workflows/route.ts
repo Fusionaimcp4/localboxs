@@ -1,13 +1,18 @@
+/**
+ * Workflows API - List user's workflows
+ */
+
 import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
+import { prisma } from '@/lib/prisma';
 
+export const runtime = 'nodejs';
+
+// GET - List all workflows for the authenticated user
 export async function GET(request: NextRequest) {
   try {
-    // Get the current user session
     const session = await getServerSession(authOptions);
-    
     if (!session?.user?.id) {
       return NextResponse.json(
         { error: 'Unauthorized' },
@@ -15,25 +20,23 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const userId = session.user.id;
-
-    // Fetch user's workflows
     const workflows = await prisma.workflow.findMany({
       where: {
-        userId
+        userId: session.user.id,
       },
       include: {
         demo: {
           select: {
+            id: true,
             businessName: true,
             slug: true,
-            demoUrl: true
-          }
-        }
+            demoUrl: true,
+          },
+        },
       },
       orderBy: {
-        updatedAt: 'desc'
-      }
+        createdAt: 'desc',
+      },
     });
 
     // Calculate stats
@@ -45,12 +48,12 @@ export async function GET(request: NextRequest) {
     };
 
     return NextResponse.json({
+      success: true,
       workflows,
-      stats
+      stats,
     });
-
   } catch (error) {
-    console.error('Workflows API error:', error);
+    console.error('[Workflows] Error:', error);
     return NextResponse.json(
       { error: 'Failed to fetch workflows' },
       { status: 500 }
