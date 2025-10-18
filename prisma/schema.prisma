@@ -13,18 +13,29 @@ datasource db {
 
 // User Management
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  name      String
-  company   String?
-  password  String? // For credentials provider
-  role      UserRole @default(USER)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id                 String   @id @default(cuid())
+  email              String   @unique
+  name               String?
+  company            String?
+  password           String?  // null for pure OAuth accounts
+  role               UserRole @default(USER)
+  tenantId           String?  // keep if already present (not currently in schema, adding as optional)
 
-  // NextAuth relations
-  accounts Account[]
-  sessions Session[]
+  // Security & UX
+  isVerified         Boolean  @default(false)
+  emailVerifiedAt    DateTime?
+  failedLoginCount   Int      @default(0)
+  lastLoginAt        DateTime?
+  lastLoginIp        String?
+  totpSecret         String?  // base32 TOTP secret for 2FA
+  avatarUrl          String?
+
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  // NextAuth relations (Accounts/Sessions) if using adapter
+  accounts           Account[]
+  sessions           Session[]
 
   // Relations
   demos          Demo[]
@@ -32,6 +43,7 @@ model User {
   apiKeys        ApiKey[]
   knowledgeBases KnowledgeBase[]
   integrations   Integration[]
+  verificationTokens VerificationToken[] // new relation for tokens
 
   @@map("users")
 }
@@ -319,6 +331,31 @@ enum ProcessingStatus {
   FAILED
 }
 
+// Token table for verification & reset
+model VerificationToken {
+  id          String   @id @default(cuid())
+  userId      String
+  tokenHash   String   // store hash, not raw token
+  type        String   // 'email_verify' | 'password_reset'
+  expiresAt   DateTime
+  createdAt   DateTime @default(now())
+
+  user        User     @relation(fields: [userId], references: [id])
+
+  @@index([userId, type])
+  @@index([expiresAt])
+  @@map("verification_tokens")
+}
+
+// Optional: disposable domain list (adding if not present, otherwise skipping)
+model BlockedEmailDomain {
+  domain   String @id
+  reason   String?
+  createdAt DateTime @default(now())
+
+  @@map("blocked_email_domains")
+}
+
 // NextAuth.js required tables
 model Account {
   id                String  @id @default(cuid())
@@ -348,13 +385,4 @@ model Session {
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("sessions")
-}
-
-model VerificationToken {
-  identifier String
-  token      String   @unique
-  expires    DateTime
-
-  @@unique([identifier, token])
-  @@map("verification_tokens")
 }

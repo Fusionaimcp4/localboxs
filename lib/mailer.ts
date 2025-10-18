@@ -1,0 +1,51 @@
+import nodemailer from 'nodemailer';
+import path from 'path';
+import fs from 'fs/promises';
+
+interface EmailOptions {
+  to: string;
+  subject: string;
+  html: string;
+}
+
+// Create a Nodemailer transporter using SMTP
+const transporter = nodemailer.createTransport({
+  host: process.env.SMTP_HOST,
+  port: parseInt(process.env.SMTP_PORT || '587'),
+  secure: process.env.SMTP_SECURE === 'true', // Use 'true' for 465, 'false' for other ports
+  auth: {
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS,
+  },
+});
+
+// Function to send an email
+export async function sendEmail(options: EmailOptions) {
+  const from = process.env.EMAIL_FROM || 'Localbox <no-reply@localboxs.com>';
+
+  await transporter.sendMail({
+    from,
+    to: options.to,
+    subject: options.subject,
+    html: options.html,
+  });
+  console.log(`Email sent to ${options.to} with subject: ${options.subject}`);
+}
+
+// Function to load email templates
+export async function loadEmailTemplate(templateName: string, replacements: Record<string, string>): Promise<string> {
+  const templatePath = path.join(process.cwd(), 'emails', `${templateName}.html`);
+  let html = await fs.readFile(templatePath, 'utf-8');
+
+  for (const key in replacements) {
+    html = html.replace(new RegExp(`{{\s*${key}\s*}}`, 'g'), replacements[key]);
+  }
+
+  return html;
+}
+
+
+
+
+
+

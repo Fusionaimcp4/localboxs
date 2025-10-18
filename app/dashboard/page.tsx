@@ -3,6 +3,8 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
+import { AlertCircle } from "lucide-react";
 
 interface DashboardStats {
   totalDemos: number;
@@ -25,6 +27,7 @@ interface Demo {
 }
 
 export default function DashboardPage() {
+  const { data: session, update: updateSession } = useSession();
   const [stats, setStats] = useState<DashboardStats>({
     totalDemos: 0,
     activeWorkflows: 0,
@@ -43,6 +46,7 @@ export default function DashboardPage() {
     domainName: '',
     isDeleting: false
   });
+  const [isResendingVerification, setIsResendingVerification] = useState(false);
 
   useEffect(() => {
     fetchDashboardData();
@@ -130,6 +134,33 @@ export default function DashboardPage() {
     });
   };
 
+  const handleResendVerification = async () => {
+    if (!session?.user?.id) return;
+
+    setIsResendingVerification(true);
+    try {
+      const response = await fetch('/api/auth/resend-verification', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      const data = await response.json();
+
+      if (response.ok) {
+        alert(data.message || 'Verification email sent.');
+        await updateSession(); // Re-fetch session to update isVerified status immediately
+      } else {
+        alert(`Failed to resend verification email: ${data.error || 'Unknown error'}`);
+      }
+    } catch (error) {
+      console.error('Failed to resend verification email:', error);
+      alert(`Failed to resend verification email: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    } finally {
+      setIsResendingVerification(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-zinc-950 to-zinc-900 text-zinc-100">
@@ -168,6 +199,30 @@ export default function DashboardPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-zinc-950 to-zinc-900 text-zinc-100">
       <div className="mx-auto max-w-7xl px-6 py-16">
+        {/* Email Verification Banner */}
+        {session?.user?.id && !session.user.isVerified && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="bg-yellow-500/10 border border-yellow-500/20 rounded-2xl p-6 mb-8 flex items-center justify-between"
+          >
+            <div className="flex items-center">
+              <AlertCircle className="text-yellow-400 w-6 h-6 mr-3" />
+              <p className="text-yellow-300">
+                Your email address is not verified. Please check your inbox for a verification link.
+              </p>
+            </div>
+            <button
+              onClick={handleResendVerification}
+              disabled={isResendingVerification}
+              className="px-4 py-2 bg-yellow-600 text-white rounded-xl hover:bg-yellow-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isResendingVerification ? "Sending..." : "Resend Verification Email"}
+            </button>
+          </motion.div>
+        )}
+
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}

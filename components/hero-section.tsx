@@ -9,7 +9,7 @@ export function HeroSection() {
   return (
     <section
       className="flex flex-col items-center text-center relative mx-auto rounded-2xl overflow-hidden my-6 py-0 px-4
-         w-full h-[400px] md:w-[1220px] md:h-[600px] lg:h-[810px] md:px-0"
+         w-full h-[500px] sm:h-[600px] md:w-[1220px] md:h-[600px] lg:h-[810px] md:px-0"
     >
       {/* SVG Background */}
       <div className="absolute inset-0 z-0">
@@ -439,27 +439,29 @@ export function HeroSection() {
         <Header />
       </div>
 
-      <div className="relative z-10 space-y-4 md:space-y-5 lg:space-y-6 mb-6 md:mb-7 lg:mb-9 max-w-md md:max-w-[500px] lg:max-w-[588px] mt-16 md:mt-[120px] lg:mt-[160px] px-4">
-        <h1 className="text-foreground text-3xl md:text-4xl lg:text-6xl font-semibold leading-tight">
-        Turn Visitors Into Qualified Leads 24/7 With AI.
+      {/* Mobile-optimized content */}
+      <div className="relative z-10 space-y-6 sm:space-y-8 md:space-y-5 lg:space-y-6 mb-8 sm:mb-10 md:mb-7 lg:mb-9 max-w-sm sm:max-w-md md:max-w-[500px] lg:max-w-[588px] mt-20 sm:mt-24 md:mt-[120px] lg:mt-[160px] px-4 sm:px-6">
+        <h1 className="text-foreground text-2xl sm:text-3xl md:text-4xl lg:text-6xl font-semibold leading-tight">
+          Turn Visitors Into Qualified Leads 24/7 With AI.
         </h1>
-        <p className="text-muted-foreground text-base md:text-base lg:text-lg font-medium leading-relaxed max-w-lg mx-auto">
-        All your customer conversations in one place SMS, Web Chat, WhatsApp, Email. Our AI handles From Hello to Handoff.
+        <p className="text-muted-foreground text-base sm:text-lg md:text-base lg:text-lg font-medium leading-relaxed max-w-lg mx-auto">
+          All your customer conversations in one place SMS, Web Chat, WhatsApp, Email. Our AI handles From Hello to Handoff.
         </p>
       </div>
 
-      <div className="relative z-10 flex flex-col sm:flex-row items-center gap-4">
+      {/* Mobile-optimized buttons */}
+      <div className="relative z-10 flex flex-col sm:flex-row items-center gap-4 w-full max-w-sm sm:max-w-md px-4 sm:px-6">
         <ContactModal>
           <Button
-            className="bg-secondary text-secondary-foreground hover:bg-secondary/90 px-8 py-3 rounded-full font-medium text-base shadow-lg ring-1 ring-white/10"
+            className="w-full sm:w-auto bg-secondary text-secondary-foreground hover:bg-secondary/90 px-8 py-4 sm:py-3 rounded-full font-medium text-base shadow-lg ring-1 ring-white/10 min-h-[48px]"
           >
             Request a Demo
           </Button>
         </ContactModal>
-        <Link href="/userdemo">
+        <Link href="/userdemo" className="w-full sm:w-auto">
           <Button
             variant="ghost"
-            className="text-secondary-foreground hover:bg-secondary/10 px-8 py-3 rounded-full font-medium text-base"
+            className="w-full sm:w-auto text-secondary-foreground hover:bg-secondary/10 px-8 py-4 sm:py-3 rounded-full font-medium text-base min-h-[48px]"
           >
             Start a Pilot
           </Button>
