@@ -961,24 +961,72 @@
   "localboxs-com-49d2553e": {
     "slug": "localboxs-com-49d2553e",
     "business": "localboxs.com",
-    "url": "https://localboxs.com",
+    "url": "https://Localboxs.com",
     "system_message_file": "./public/system_messages/n8n_System_Message_localboxs-com-49d2553e.md",
     "demo_url": "http://localhost:3000/demo/localboxs-com-49d2553e",
     "chatwoot": {
-      "inbox_id": 129,
-      "website_token": "Q1jxkjox7XgkqFcPXbQVkpoE"
+      "inbox_id": 133,
+      "website_token": "zUqnerT3vCFQEpqAvCMnTtz3"
     },
     "workflow_duplication": "success",
     "agent_bot": {
-      "id": 127,
-      "access_token": "HUdvk1m1UN4sVjFqLK7DDLt1"
+      "id": 131,
+      "access_token": "YYwfZQinWkPcGfRUfdWYw6jQ"
     },
     "lead": {
-      "name": "yilak ",
-      "email": "admin@localboxs.com",
-      "company": "Localboxes",
+      "name": "User admin",
+      "email": "contact@mcp4.ai",
+      "company": "Localboxs",
       "phone": ""
     },
-    "created_at": "2025-10-17T21:25:50.564Z"
+    "created_at": "2025-10-17T21:25:50.564Z",
+    "updated_at": "2025-10-19T01:55:50.992Z"
+  },
+  "humanbot-io-0afa2bd9": {
+    "slug": "humanbot-io-0afa2bd9",
+    "business": "humanbot.io",
+    "url": "https://humanbot.io",
+    "system_message_file": "./public/system_messages/n8n_System_Message_humanbot-io-0afa2bd9.md",
+    "demo_url": "http://localhost:3000/demo/humanbot-io-0afa2bd9",
+    "chatwoot": {
+      "inbox_id": 132,
+      "website_token": "Ke3RzvkJrssWjqj6HQRntVu2"
+    },
+    "workflow_duplication": "success",
+    "agent_bot": {
+      "id": 130,
+      "access_token": "GryhAurMM1AZNWZmGD4F1rE4"
+    },
+    "lead": {
+      "name": "humanbot",
+      "email": "support@humanbot.io",
+      "company": "humanbot.",
+      "phone": ""
+    },
+    "created_at": "2025-10-18T21:14:48.160Z",
+    "updated_at": "2025-10-18T21:20:22.832Z"
+  },
+  "better-auth-com-943af9f6": {
+    "slug": "better-auth-com-943af9f6",
+    "business": "better-auth.com",
+    "url": "https://www.better-auth.com/",
+    "system_message_file": "./public/system_messages/n8n_System_Message_better-auth-com-943af9f6.md",
+    "demo_url": "http://localhost:3000/demo/better-auth-com-943af9f6",
+    "chatwoot": {
+      "inbox_id": 134,
+      "website_token": "tvVAER7uB4hWPMaR3ofgB65S"
+    },
+    "workflow_duplication": "success",
+    "agent_bot": {
+      "id": 132,
+      "access_token": "M8cLj6evzc68G5Tnf9Rx98g6"
+    },
+    "lead": {
+      "name": "admin user1",
+      "email": "service@mcp4.ai",
+      "company": "",
+      "phone": ""
+    },
+    "created_at": "2025-10-20T16:26:19.908Z"
   }
 }

@@ -30,6 +30,11 @@ model User {
   totpSecret         String?  // base32 TOTP secret for 2FA
   avatarUrl          String?
 
+  // Subscription & Tier Management
+  subscriptionTier   SubscriptionTier @default(FREE)
+  subscriptionStatus SubscriptionStatus @default(ACTIVE)
+  subscriptionExpiresAt DateTime?
+
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
 
@@ -44,6 +49,7 @@ model User {
   knowledgeBases KnowledgeBase[]
   integrations   Integration[]
   verificationTokens VerificationToken[] // new relation for tokens
+  features       UserFeature[] // Many-to-many relationship with features
 
   @@map("users")
 }
@@ -52,6 +58,20 @@ enum UserRole {
   USER
   ADMIN
   SUPER_ADMIN
+}
+
+enum SubscriptionTier {
+  FREE
+  PRO
+  PRO_PLUS
+  ENTERPRISE
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  EXPIRED
+  CANCELLED
+  SUSPENDED
 }
 
 // Demo Management
@@ -345,6 +365,79 @@ model VerificationToken {
   @@index([userId, type])
   @@index([expiresAt])
   @@map("verification_tokens")
+}
+
+// Feature Management for Tiered Access
+model Feature {
+  id          String @id @default(cuid())
+  name        String @unique
+  description String
+  tier        SubscriptionTier
+  isActive    Boolean @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  users       UserFeature[]
+
+  @@map("features")
+}
+
+model UserFeature {
+  id        String @id @default(cuid())
+  userId    String
+  featureId String
+  grantedAt DateTime @default(now())
+  expiresAt DateTime?
+
+  // Relations
+  user      User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  feature   Feature @relation(fields: [featureId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, featureId])
+  @@index([userId])
+  @@index([featureId])
+  @@map("user_features")
+}
+
+// Dynamic Tier Limits Configuration
+model TierLimit {
+  id          String @id @default(cuid())
+  tier        SubscriptionTier @unique
+  maxDemos    Int
+  maxWorkflows Int
+  maxKnowledgeBases Int
+  maxDocuments Int
+  maxIntegrations Int
+  apiCallsPerMonth Int
+  documentSizeLimit Int // in bytes
+  chunkSize Int
+  maxChunksPerDocument Int
+  isActive    Boolean @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("tier_limits")
+}
+
+// Pricing Plans Configuration
+model PricingPlan {
+  id          String @id @default(cuid())
+  tier        SubscriptionTier @unique
+  name        String
+  price       Decimal @db.Decimal(10, 2)
+  currency    String @default("USD")
+  period      String @default("month") // month, year, forever
+  description String
+  features    String[] // Array of feature descriptions
+  isPopular   Boolean @default(false)
+  isActive    Boolean @default(true)
+  ctaText     String @default("Get Started")
+  ctaHref     String @default("/dashboard/userdemo")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("pricing_plans")
 }
 
 // Optional: disposable domain list (adding if not present, otherwise skipping)

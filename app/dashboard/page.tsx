@@ -1,10 +1,11 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
-import { AlertCircle } from "lucide-react";
+import { AlertCircle, Plus, Settings, BarChart3, MessageSquare, ChevronRight, Eye, Trash2, X } from "lucide-react";
+import { UsageDashboard } from "@/components/usage-dashboard";
 
 interface DashboardStats {
   totalDemos: number;
@@ -161,33 +162,35 @@ export default function DashboardPage() {
     }
   };
 
+
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-zinc-950 to-zinc-900 text-zinc-100">
-        <div className="mx-auto max-w-7xl px-6 py-16">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
+        {/* Mobile-First Loading State */}
+        <div className="px-4 py-6 space-y-6">
           {/* Header Skeleton */}
-          <div className="mb-12 animate-pulse">
-            <div className="h-10 bg-zinc-800/50 rounded-lg w-64 mb-4"></div>
-            <div className="h-6 bg-zinc-800/50 rounded-lg w-96"></div>
+          <div className="animate-pulse">
+            <div className="h-8 bg-slate-200 dark:bg-slate-700 rounded-lg w-48 mb-2"></div>
+            <div className="h-5 bg-slate-200 dark:bg-slate-700 rounded-lg w-64"></div>
           </div>
           
           {/* Stats Skeleton */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+          <div className="grid grid-cols-1 gap-4">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="bg-zinc-900/60 rounded-3xl border border-zinc-800 p-6 animate-pulse">
-                <div className="h-8 bg-zinc-800/50 rounded w-16 mb-2"></div>
-                <div className="h-4 bg-zinc-800/50 rounded w-24"></div>
+              <div key={i} className="bg-white dark:bg-slate-800 rounded-2xl p-6 animate-pulse">
+                <div className="h-6 bg-slate-200 dark:bg-slate-700 rounded w-16 mb-2"></div>
+                <div className="h-4 bg-slate-200 dark:bg-slate-700 rounded w-24"></div>
               </div>
             ))}
           </div>
           
           {/* Actions Skeleton */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
-            {[1, 2].map((i) => (
-              <div key={i} className="bg-zinc-900/60 rounded-3xl border border-zinc-800 p-8 animate-pulse">
-                <div className="h-6 bg-zinc-800/50 rounded w-40 mb-4"></div>
-                <div className="h-4 bg-zinc-800/50 rounded w-full mb-2"></div>
-                <div className="h-4 bg-zinc-800/50 rounded w-3/4"></div>
+          <div className="space-y-4">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="bg-white dark:bg-slate-800 rounded-2xl p-6 animate-pulse">
+                <div className="h-5 bg-slate-200 dark:bg-slate-700 rounded w-32 mb-3"></div>
+                <div className="h-4 bg-slate-200 dark:bg-slate-700 rounded w-full mb-2"></div>
+                <div className="h-4 bg-slate-200 dark:bg-slate-700 rounded w-3/4"></div>
               </div>
             ))}
           </div>
@@ -197,250 +200,331 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-zinc-950 to-zinc-900 text-zinc-100">
-      <div className="mx-auto max-w-7xl px-6 py-16">
-        {/* Email Verification Banner */}
-        {session?.user?.id && !session.user.isVerified && (
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="bg-yellow-500/10 border border-yellow-500/20 rounded-2xl p-6 mb-8 flex items-center justify-between"
-          >
-            <div className="flex items-center">
-              <AlertCircle className="text-yellow-400 w-6 h-6 mr-3" />
-              <p className="text-yellow-300">
+    <div className="px-4 py-6 space-y-6">
+      {/* Email Verification Banner */}
+      {session?.user?.id && !session.user.isVerified && (
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-2xl p-4"
+        >
+          <div className="flex items-start gap-3">
+            <AlertCircle className="text-amber-500 w-5 h-5 mt-0.5 flex-shrink-0" />
+            <div className="flex-1">
+              <p className="text-amber-800 dark:text-amber-200 text-sm font-medium mb-2">
+                Email verification required
+              </p>
+              <p className="text-amber-700 dark:text-amber-300 text-sm mb-3">
                 Your email address is not verified. Please check your inbox for a verification link.
               </p>
+              <button
+                onClick={handleResendVerification}
+                disabled={isResendingVerification}
+                className="px-4 py-2 bg-amber-500 text-white rounded-xl text-sm font-medium hover:bg-amber-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isResendingVerification ? "Sending..." : "Resend Verification Email"}
+              </button>
             </div>
-            <button
-              onClick={handleResendVerification}
-              disabled={isResendingVerification}
-              className="px-4 py-2 bg-yellow-600 text-white rounded-xl hover:bg-yellow-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {isResendingVerification ? "Sending..." : "Resend Verification Email"}
-            </button>
-          </motion.div>
-        )}
-
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3 }}
-          className="mb-12"
-        >
-          <h1 className="text-4xl font-bold mb-4">
-            Your Dashboard
-          </h1>
-          <p className="text-xl text-zinc-400">
-            Manage your AI support demos and workflows
-          </p>
+          </div>
         </motion.div>
+      )}
 
-        {/* Quick Stats */}
+      {/* Header */}
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3 }}
+        className="hidden sm:block"
+      >
+        <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100 mb-2">
+          Your Dashboard
+        </h1>
+        <p className="text-lg text-slate-600 dark:text-slate-400">
+          Manage your AI support demos and workflows
+        </p>
+      </motion.div>
+
+        {/* Quick Stats - Mobile Optimized */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: 0.05 }}
-          className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12"
+          className="grid grid-cols-1 sm:grid-cols-3 gap-4"
         >
-          <div className="bg-zinc-900/60 rounded-3xl border border-zinc-800 p-6">
-            <h3 className="text-2xl font-bold text-emerald-400 mb-2">{stats.totalDemos}</h3>
-            <p className="text-zinc-400">Your Demos</p>
+          <div className="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-700">
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">{stats.totalDemos}</h3>
+              <div className="p-2 bg-emerald-50 dark:bg-emerald-900/20 rounded-xl">
+                <BarChart3 className="w-5 h-5 text-emerald-500" />
+              </div>
+            </div>
+            <p className="text-slate-600 dark:text-slate-400 font-medium">Your support chats</p>
           </div>
-          <div className="bg-zinc-900/60 rounded-3xl border border-zinc-800 p-6">
-            <h3 className="text-2xl font-bold text-blue-400 mb-2">{stats.activeWorkflows}</h3>
-            <p className="text-zinc-400">Active Workflows</p>
+          
+          <div className="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-700">
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="text-2xl font-bold text-blue-600 dark:text-blue-400">{stats.activeWorkflows}</h3>
+              <div className="p-2 bg-blue-50 dark:bg-blue-900/20 rounded-xl">
+                <Settings className="w-5 h-5 text-blue-500" />
+              </div>
+            </div>
+            <p className="text-slate-600 dark:text-slate-400 font-medium">Active Workflows</p>
           </div>
-          <div className="bg-zinc-900/60 rounded-3xl border border-zinc-800 p-6">
-            <h3 className="text-2xl font-bold text-purple-400 mb-2">{stats.totalContacts}</h3>
-            <p className="text-zinc-400">Total Contacts</p>
+          
+          <div className="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-700">
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="text-2xl font-bold text-purple-600 dark:text-purple-400">{stats.totalContacts}</h3>
+              <div className="p-2 bg-purple-50 dark:bg-purple-900/20 rounded-xl">
+                <MessageSquare className="w-5 h-5 text-purple-500" />
+              </div>
+            </div>
+            <p className="text-slate-600 dark:text-slate-400 font-medium">Total Contacts</p>
           </div>
         </motion.div>
 
-        {/* Quick Actions */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3, delay: 0.1 }}
-          className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12"
-        >
-          <Link
-            href="/userdemo"
-            className="bg-zinc-900/60 rounded-3xl border border-zinc-800 p-8 hover:border-zinc-700 transition-colors duration-200"
-          >
-            <h3 className="text-xl font-semibold mb-4">Create New Demo</h3>
-            <p className="text-zinc-400 mb-6">
-              Generate a new AI support demo for your business
-            </p>
-            <div className="text-emerald-400 font-medium">Get Started →</div>
-          </Link>
-
-          <Link
-            href="/dashboard/system-messages"
-            className="bg-zinc-900/60 rounded-3xl border border-zinc-800 p-8 hover:border-zinc-700 transition-colors duration-200"
-          >
-            <h3 className="text-xl font-semibold mb-4">System Messages</h3>
-            <p className="text-zinc-400 mb-6">
-              Manage your AI system message templates
-            </p>
-            <div className="text-emerald-400 font-medium">Manage →</div>
-          </Link>
-        </motion.div>
-
-        {/* Additional Actions */}
+        {/* Usage Dashboard */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: 0.15 }}
-          className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12"
+        >
+          <UsageDashboard />
+        </motion.div>
+
+        {/* Quick Actions - Mobile First */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, delay: 0.1 }}
+          className="space-y-4"
         >
           <Link
-            href="/dashboard/workflows"
-            className="bg-zinc-900/60 rounded-3xl border border-zinc-800 p-8 hover:border-zinc-700 transition-colors duration-200"
+            href="/dashboard/userdemo"
+            className="block bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-700 hover:shadow-md transition-all duration-200"
           >
-            <h3 className="text-xl font-semibold mb-4">Workflow Control</h3>
-            <p className="text-zinc-400 mb-6">
-              Start, stop, and monitor your AI workflows
-            </p>
-            <div className="text-emerald-400 font-medium">Control →</div>
+            <div className="flex items-center gap-4">
+              <div className="p-3 bg-emerald-50 dark:bg-emerald-900/20 rounded-2xl">
+                <Plus className="w-6 h-6 text-emerald-500" />
+              </div>
+              <div className="flex-1">
+                <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-1">Create New Demo</h3>
+                <p className="text-slate-600 dark:text-slate-400 text-sm">
+                  Generate a new AI support demo for your business
+                </p>
+              </div>
+              <ChevronRight className="w-5 h-5 text-slate-400" />
+            </div>
+          </Link>
+
+          <Link
+            href="/dashboard/system-messages"
+            className="block bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-700 hover:shadow-md transition-all duration-200"
+          >
+            <div className="flex items-center gap-4">
+              <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-2xl">
+                <MessageSquare className="w-6 h-6 text-blue-500" />
+              </div>
+              <div className="flex-1">
+                <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-1">System Messages</h3>
+                <p className="text-slate-600 dark:text-slate-400 text-sm">
+                  Manage your AI system message templates
+                </p>
+              </div>
+              <ChevronRight className="w-5 h-5 text-slate-400" />
+            </div>
+          </Link>
+
+          <Link
+            href="/dashboard/workflows"
+            className="block bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-700 hover:shadow-md transition-all duration-200"
+          >
+            <div className="flex items-center gap-4">
+              <div className="p-3 bg-purple-50 dark:bg-purple-900/20 rounded-2xl">
+                <Settings className="w-6 h-6 text-purple-500" />
+              </div>
+              <div className="flex-1">
+                <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-1">Workflow Control</h3>
+                <p className="text-slate-600 dark:text-slate-400 text-sm">
+                  Start, stop, and monitor your AI workflows
+                </p>
+              </div>
+              <ChevronRight className="w-5 h-5 text-slate-400" />
+            </div>
           </Link>
 
           <Link
             href="/dashboard/integrations"
-            className="bg-zinc-900/60 rounded-3xl border border-zinc-800 p-8 hover:border-zinc-700 transition-colors duration-200"
+            className="block bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-700 hover:shadow-md transition-all duration-200"
           >
-            <h3 className="text-xl font-semibold mb-4">Integrations</h3>
-            <p className="text-zinc-400 mb-6">
-              Connect external services and APIs
-            </p>
-            <div className="text-emerald-400 font-medium">Connect →</div>
+            <div className="flex items-center gap-4">
+              <div className="p-3 bg-orange-50 dark:bg-orange-900/20 rounded-2xl">
+                <Settings className="w-6 h-6 text-orange-500" />
+              </div>
+              <div className="flex-1">
+                <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-1">Integrations</h3>
+                <p className="text-slate-600 dark:text-slate-400 text-sm">
+                  Connect external services and APIs
+                </p>
+              </div>
+              <ChevronRight className="w-5 h-5 text-slate-400" />
+            </div>
           </Link>
         </motion.div>
 
-        {/* Recent Demos */}
+        {/* Recent Demos - Mobile Optimized */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: 0.2 }}
-          className="bg-zinc-900/60 rounded-3xl border border-zinc-800 p-8"
+          className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700"
         >
-          <div className="flex justify-between items-center mb-6">
-            <h3 className="text-xl font-semibold">Your Recent Demos</h3>
-            <Link
-              href="/dashboard/demos"
-              className="text-emerald-400 hover:text-emerald-300 transition-colors"
-            >
-              View All →
-            </Link>
+          <div className="p-6 border-b border-slate-200 dark:border-slate-700">
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">Your Recent support chats</h3>
+              <Link
+                href="/dashboard/demos"
+                className="text-emerald-500 hover:text-emerald-600 dark:text-emerald-400 dark:hover:text-emerald-300 transition-colors text-sm font-medium"
+              >
+                View All →
+              </Link>
+            </div>
           </div>
           
-          <div className="space-y-4">
-            {recentDemos.length > 0 ? (
-              recentDemos.map((demo) => (
-                <div
-                  key={demo.id}
-                  className="flex items-center justify-between p-4 bg-zinc-800/50 rounded-2xl border border-zinc-700"
-                >
-                  <div>
-                    <h4 className="font-semibold">{demo.businessName}</h4>
-                    <p className="text-sm text-zinc-400">{demo.businessUrl}</p>
-                    <p className="text-xs text-zinc-500">{new Date(demo.createdAt).toLocaleDateString()}</p>
+          <div className="p-6">
+            <div className="space-y-4">
+              {recentDemos.length > 0 ? (
+                recentDemos.map((demo) => (
+                  <div
+                    key={demo.id}
+                    className="p-4 bg-slate-50 dark:bg-slate-700/50 rounded-xl border border-slate-200 dark:border-slate-600"
+                  >
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="flex-1">
+                        <h4 className="font-semibold text-slate-900 dark:text-slate-100 mb-1">{demo.businessName}</h4>
+                        <p className="text-sm text-slate-600 dark:text-slate-400 mb-1">{demo.businessUrl}</p>
+                        <p className="text-xs text-slate-500 dark:text-slate-500">{new Date(demo.createdAt).toLocaleDateString()}</p>
+                      </div>
+                    </div>
+                    <div className="flex gap-2">
+                      <Link
+                        href={demo.demoUrl}
+                        target="_blank"
+                        className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-emerald-500 text-white rounded-xl text-sm font-medium hover:bg-emerald-600 transition-colors"
+                      >
+                        <Eye className="w-4 h-4" />
+                        View Demo
+                      </Link>
+                      <button
+                        onClick={() => handleDeleteDemo(demo)}
+                        className="flex items-center justify-center gap-2 px-4 py-2 bg-red-50 dark:bg-red-900/20 text-red-500 dark:text-red-400 rounded-xl text-sm font-medium hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                        Delete
+                      </button>
+                    </div>
                   </div>
-                  <div className="flex gap-2">
-                    <Link
-                      href={demo.demoUrl}
-                      target="_blank"
-                      className="px-3 py-1 bg-emerald-500/20 text-emerald-400 rounded-lg text-sm hover:bg-emerald-500/30 transition-colors"
-                    >
-                      View Demo
-                    </Link>
-                    <button
-                      onClick={() => handleDeleteDemo(demo)}
-                      className="px-3 py-1 bg-red-500/20 text-red-400 rounded-lg text-sm hover:bg-red-500/30 transition-colors"
-                    >
-                      Delete
-                    </button>
+                ))
+              ) : (
+                <div className="text-center py-8">
+                  <div className="p-4 bg-slate-100 dark:bg-slate-700 rounded-2xl w-fit mx-auto mb-4">
+                    <BarChart3 className="w-8 h-8 text-slate-400" />
                   </div>
+                  <p className="text-slate-600 dark:text-slate-400 font-medium mb-2">No demos yet</p>
+                  <p className="text-sm text-slate-500 dark:text-slate-500 mb-4">Create your first demo to get started!</p>
+                  <Link
+                    href="/dashboard/userdemo"
+                    className="inline-flex items-center gap-2 px-6 py-3 bg-emerald-500 text-white rounded-xl font-medium hover:bg-emerald-600 transition-colors"
+                  >
+                    <Plus className="w-5 h-5" />
+                    Create Demo
+                  </Link>
                 </div>
-              ))
-            ) : (
-              <div className="text-zinc-400 text-center py-8">
-                <p>No demos yet.</p>
-                <p className="text-sm mt-2">Create your first demo to get started!</p>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </motion.div>
-      </div>
 
-      {/* Delete Confirmation Modal */}
-      {deleteModal.isOpen && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-6 z-50">
-          <div className="bg-zinc-900 rounded-3xl border border-zinc-800 p-8 max-w-md w-full">
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-bold text-red-400">Delete Demo</h2>
-              <button
-                onClick={cancelDeleteDemo}
-                className="text-zinc-400 hover:text-zinc-300 text-2xl"
-                disabled={deleteModal.isDeleting}
-              >
-                ×
-              </button>
-            </div>
-            
-            <div className="space-y-4">
-              <div className="bg-red-500/10 border border-red-500/20 rounded-2xl p-4">
-                <p className="text-red-400 font-medium mb-2">⚠️ This action cannot be undone!</p>
-                <p className="text-zinc-300 text-sm">
-                  This will permanently delete:
-                </p>
-                <ul className="text-zinc-400 text-sm mt-2 ml-4 list-disc">
-                  <li>The demo and all its data</li>
-                  <li>Associated n8n workflow</li>
-                  <li>System message files</li>
-                  <li>Demo page files</li>
-                </ul>
-              </div>
+      {/* Delete Confirmation Modal - Mobile Optimized */}
+      <AnimatePresence>
+        {deleteModal.isOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-end sm:items-center justify-center p-4 z-50"
+          >
+            <motion.div
+              initial={{ y: 300, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: 300, opacity: 0 }}
+              className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto"
+            >
+              <div className="p-6">
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="text-xl font-bold text-red-500 dark:text-red-400">Delete Demo</h2>
+                  <button
+                    onClick={cancelDeleteDemo}
+                    className="p-2 rounded-xl bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors"
+                    disabled={deleteModal.isDeleting}
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
+                
+                <div className="space-y-4">
+                  <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-4">
+                    <p className="text-red-600 dark:text-red-400 font-medium mb-2">⚠️ This action cannot be undone!</p>
+                    <p className="text-slate-600 dark:text-slate-400 text-sm mb-2">
+                      This will permanently delete:
+                    </p>
+                    <ul className="text-slate-500 dark:text-slate-500 text-sm ml-4 space-y-1">
+                      <li>• The demo and all its data</li>
+                      <li>• Associated n8n workflow</li>
+                      <li>• System message files</li>
+                      <li>• Demo page files</li>
+                    </ul>
+                  </div>
 
-              <div>
-                <label className="block text-sm font-medium text-zinc-200 mb-2">
-                  Type the domain name to confirm deletion:
-                </label>
-                <input
-                  type="text"
-                  value={deleteModal.domainName}
-                  onChange={(e) => setDeleteModal(prev => ({ ...prev, domainName: e.target.value }))}
-                  placeholder={deleteModal.demo?.businessName}
-                  className="w-full rounded-2xl bg-zinc-800 border border-zinc-700 focus:border-red-500 outline-none px-4 py-3 text-zinc-100"
-                  disabled={deleteModal.isDeleting}
-                />
-                <p className="text-xs text-zinc-500 mt-1">
-                  Expected: <span className="text-zinc-300">{deleteModal.demo?.businessName}</span>
-                </p>
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                      Type the domain name to confirm deletion:
+                    </label>
+                    <input
+                      type="text"
+                      value={deleteModal.domainName}
+                      onChange={(e) => setDeleteModal(prev => ({ ...prev, domainName: e.target.value }))}
+                      placeholder={deleteModal.demo?.businessName}
+                      className="w-full rounded-xl bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 focus:border-red-500 focus:ring-2 focus:ring-red-500/20 outline-none px-4 py-3 text-slate-900 dark:text-slate-100"
+                      disabled={deleteModal.isDeleting}
+                    />
+                    <p className="text-xs text-slate-500 dark:text-slate-500 mt-1">
+                      Expected: <span className="text-slate-700 dark:text-slate-300 font-medium">{deleteModal.demo?.businessName}</span>
+                    </p>
+                  </div>
+                </div>
+                
+                <div className="mt-6 flex gap-3">
+                  <button
+                    onClick={cancelDeleteDemo}
+                    className="flex-1 px-4 py-3 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl font-medium hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors"
+                    disabled={deleteModal.isDeleting}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={confirmDeleteDemo}
+                    disabled={deleteModal.isDeleting || deleteModal.domainName !== deleteModal.demo?.businessName}
+                    className="flex-1 px-4 py-3 bg-red-500 text-white rounded-xl font-medium hover:bg-red-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {deleteModal.isDeleting ? 'Deleting...' : 'Delete Demo'}
+                  </button>
+                </div>
               </div>
-            </div>
-            
-            <div className="mt-6 flex justify-end gap-3">
-              <button
-                onClick={cancelDeleteDemo}
-                className="px-6 py-3 bg-zinc-700 text-zinc-300 rounded-2xl hover:bg-zinc-600 transition-colors"
-                disabled={deleteModal.isDeleting}
-              >
-                Cancel
-              </button>
-              <button
-                onClick={confirmDeleteDemo}
-                disabled={deleteModal.isDeleting || deleteModal.domainName !== deleteModal.demo?.businessName}
-                className="px-6 py-3 bg-red-500 text-white rounded-2xl hover:bg-red-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {deleteModal.isDeleting ? 'Deleting...' : 'Delete Demo'}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { CreateKBRequest } from '@/lib/knowledge-base/types';
+import { canPerformAction, trackUsage } from '@/lib/usage-tracking';
 
 // GET - List all knowledge bases for the user
 export async function GET(request: NextRequest) {
@@ -73,6 +74,20 @@ export async function POST(request: NextRequest) {
     const userId = session.user.id;
     const body: CreateKBRequest = await request.json();
 
+    // Check tier limits before proceeding
+    const usageCheck = await canPerformAction(userId, 'create_knowledge_base');
+    if (!usageCheck.allowed) {
+      return NextResponse.json(
+        { 
+          error: 'Tier limit exceeded',
+          message: usageCheck.reason,
+          usage: usageCheck.usage,
+          upgradeRequired: true
+        },
+        { status: 403 }
+      );
+    }
+
     // Validate input
     if (!body.name || body.name.trim().length === 0) {
       return NextResponse.json(
@@ -98,6 +113,9 @@ export async function POST(request: NextRequest) {
         isActive: true,
       },
     });
+
+    // Track usage
+    await trackUsage(userId, 'knowledge_base_created');
 
     return NextResponse.json({
       success: true,

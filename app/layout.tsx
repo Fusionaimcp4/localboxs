@@ -6,6 +6,7 @@ import './globals.css'
 import { Toaster } from '@/components/ui/toaster'
 import Script from 'next/script'
 import AuthProvider from '@/components/auth-provider'
+import DashboardLayout from '@/components/dashboard-layout'
 
 export const metadata: Metadata = {
   title: 'LocalBoxs - All-in-One Conversations Platform | AI-First Customer Support',
@@ -42,7 +43,9 @@ html {
       </head>
       <body>
         <AuthProvider>
-          {children}
+          <DashboardLayout>
+            {children}
+          </DashboardLayout>
         </AuthProvider>
         <Toaster />
         <Analytics />

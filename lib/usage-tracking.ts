@@ -1,0 +1,231 @@
+import { prisma } from '@/lib/prisma';
+import { SubscriptionTier } from '@/lib/generated/prisma';
+import { getDynamicTierLimits, DynamicTierLimits } from '@/lib/dynamic-tier-limits';
+import { checkUsageLimits, UsageStats } from '@/lib/tier-access';
+
+// Usage tracking for API routes
+export async function trackUsage(
+  userId: string, 
+  action: 'demo_created' | 'workflow_created' | 'knowledge_base_created' | 'document_uploaded' | 'integration_created' | 'api_call'
+): Promise<void> {
+  try {
+    // For now, we'll track usage in a simple way
+    // In a production system, you might want to use Redis or a dedicated analytics service
+    console.log(`[Usage] User ${userId} performed ${action}`);
+    
+    // You could implement more sophisticated tracking here:
+    // - Store in a usage_logs table
+    // - Update Redis counters
+    // - Send to analytics service
+  } catch (error) {
+    console.error('Failed to track usage:', error);
+  }
+}
+
+// Get current usage stats for a user
+export async function getUserUsageStats(userId: string): Promise<UsageStats> {
+  try {
+    const [demos, workflows, knowledgeBases, documents, integrations] = await Promise.all([
+      prisma.demo.count({ where: { userId } }),
+      prisma.workflow.count({ where: { userId } }),
+      prisma.knowledgeBase.count({ where: { userId } }),
+      prisma.document.count({ 
+        where: { 
+          knowledgeBase: { userId } 
+        } 
+      }),
+      prisma.integration.count({ where: { userId } })
+    ]);
+
+    // For API calls, you'd typically track this separately
+    // This is a placeholder - implement based on your API call tracking system
+    const apiCalls = 0; // TODO: Implement API call tracking
+
+    return {
+      demos,
+      workflows,
+      knowledgeBases,
+      documents,
+      integrations,
+      apiCalls
+    };
+  } catch (error) {
+    console.error('Failed to get usage stats:', error);
+    return {
+      demos: 0,
+      workflows: 0,
+      knowledgeBases: 0,
+      documents: 0,
+      integrations: 0,
+      apiCalls: 0
+    };
+  }
+}
+
+// Check if user can perform an action based on their tier
+export async function canPerformAction(
+  userId: string, 
+  action: 'create_demo' | 'create_workflow' | 'create_knowledge_base' | 'upload_document' | 'create_integration'
+): Promise<{ allowed: boolean; reason?: string; usage?: UsageStats }> {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { subscriptionTier: true }
+    });
+
+    if (!user) {
+      return { allowed: false, reason: 'User not found' };
+    }
+
+    const usage = await getUserUsageStats(userId);
+    const limits = await getDynamicTierLimits(user.subscriptionTier as SubscriptionTier);
+    const usageCheck = checkUsageLimits(user.subscriptionTier as SubscriptionTier, usage);
+
+    // Check specific action limits using dynamic limits
+    switch (action) {
+      case 'create_demo':
+        if (limits.maxDemos !== -1 && usage.demos >= limits.maxDemos) {
+          return { 
+            allowed: false, 
+            reason: `Demo limit reached (${limits.maxDemos}). Upgrade to increase limits.`,
+            usage 
+          };
+        }
+        break;
+      
+      case 'create_workflow':
+        if (limits.maxWorkflows !== -1 && usage.workflows >= limits.maxWorkflows) {
+          return { 
+            allowed: false, 
+            reason: `Workflow limit reached (${limits.maxWorkflows}). Upgrade to increase limits.`,
+            usage 
+          };
+        }
+        break;
+      
+      case 'create_knowledge_base':
+        if (limits.maxKnowledgeBases !== -1 && usage.knowledgeBases >= limits.maxKnowledgeBases) {
+          return { 
+            allowed: false, 
+            reason: `Knowledge base limit reached (${limits.maxKnowledgeBases}). Upgrade to increase limits.`,
+            usage 
+          };
+        }
+        break;
+      
+      case 'upload_document':
+        if (limits.maxDocuments !== -1 && usage.documents >= limits.maxDocuments) {
+          return { 
+            allowed: false, 
+            reason: `Document limit reached (${limits.maxDocuments}). Upgrade to increase limits.`,
+            usage 
+          };
+        }
+        break;
+      
+      case 'create_integration':
+        if (limits.maxIntegrations !== -1 && usage.integrations >= limits.maxIntegrations) {
+          return { 
+            allowed: false, 
+            reason: `Integration limit reached (${limits.maxIntegrations}). Upgrade to increase limits.`,
+            usage 
+          };
+        }
+        break;
+    }
+
+    return { allowed: true, usage };
+  } catch (error) {
+    console.error('Failed to check action permission:', error);
+    return { allowed: false, reason: 'Internal error' };
+  }
+}
+
+// Middleware helper for API routes
+export function withTierCheck(
+  handler: (req: Request, context: any) => Promise<Response>,
+  requiredTier: SubscriptionTier = 'FREE'
+) {
+  return async (req: Request, context: any) => {
+    try {
+      // Get user from session (you'll need to implement this based on your auth setup)
+      const userId = context.userId; // This should be set by your auth middleware
+      
+      if (!userId) {
+        return new Response(
+          JSON.stringify({ error: 'Unauthorized' }), 
+          { status: 401, headers: { 'Content-Type': 'application/json' } }
+        );
+      }
+
+      const user = await prisma.user.findUnique({
+        where: { id: userId },
+        select: { subscriptionTier: true }
+      });
+
+      if (!user) {
+        return new Response(
+          JSON.stringify({ error: 'User not found' }), 
+          { status: 404, headers: { 'Content-Type': 'application/json' } }
+        );
+      }
+
+      const userTier = user.subscriptionTier as SubscriptionTier;
+      const limits = getTierLimits(userTier);
+      
+      // Check if user has access to the required tier
+      const tierOrder = ['FREE', 'PRO', 'PRO_PLUS', 'ENTERPRISE'];
+      const userTierIndex = tierOrder.indexOf(userTier);
+      const requiredTierIndex = tierOrder.indexOf(requiredTier);
+      
+      if (userTierIndex < requiredTierIndex) {
+        return new Response(
+          JSON.stringify({ 
+            error: 'Tier Upgrade Required',
+            requiredTier,
+            currentTier: userTier,
+            message: `This feature requires ${requiredTier} tier or higher.`
+          }), 
+          { status: 403, headers: { 'Content-Type': 'application/json' } }
+        );
+      }
+
+      // Call the original handler
+      return await handler(req, context);
+    } catch (error) {
+      console.error('Tier check middleware error:', error);
+      return new Response(
+        JSON.stringify({ error: 'Internal server error' }), 
+        { status: 500, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
+  };
+}
+
+// Usage analytics helper
+export async function getUsageAnalytics(userId: string) {
+  try {
+    const usage = await getUserUsageStats(userId);
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { subscriptionTier: true }
+    });
+
+    if (!user) {
+      return null;
+    }
+
+    const limits = getTierLimits(user.subscriptionTier as SubscriptionTier);
+    const usageCheck = checkUsageLimits(user.subscriptionTier as SubscriptionTier, usage);
+
+    return {
+      usage,
+      limits,
+      status: usageCheck,
+      tier: user.subscriptionTier
+    };
+  } catch (error) {
+    console.error('Failed to get usage analytics:', error);
+    return null;
+  }
+}

@@ -120,7 +120,7 @@ export function CTASection() {
               Book a 20-min Demo
             </Button>
           </ContactModal>
-          <Link href="/userdemo">
+          <Link href="/dashboard/userdemo">
             <Button
               variant="outline"
               className="px-[30px] py-2 text-base font-medium leading-6 rounded-[99px]"

@@ -108,36 +108,38 @@ export function CRMConfigModal({ isOpen, onClose, onSave, existingIntegration }:
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-6 z-50 overflow-y-auto">
-      <div className="bg-zinc-900 rounded-3xl border border-zinc-800 p-8 max-w-3xl w-full max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50 overflow-y-auto">
+      <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6 sm:p-8 max-w-4xl w-full max-h-[90vh] overflow-y-auto">
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold">
+          <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100">
             {existingIntegration ? 'Edit' : 'Add'} CRM Integration
           </h2>
           <button
             onClick={onClose}
-            className="text-zinc-400 hover:text-zinc-300 text-2xl"
+            className="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-500 dark:text-slate-400 transition-colors"
             disabled={isSaving}
           >
-            ×
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
           </button>
         </div>
 
         <div className="space-y-6">
           {/* Integration Name */}
           <div>
-            <label className="block text-sm font-medium text-zinc-200 mb-2">
-              Integration Name <span className="text-red-400">*</span>
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+              Integration Name <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
               value={integrationName}
               onChange={(e) => setIntegrationName(e.target.value)}
-              className="w-full rounded-2xl bg-zinc-800 border border-zinc-700 focus:border-zinc-500 outline-none px-4 py-3 text-zinc-100"
+              className="w-full px-4 py-3 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-xl focus:outline-none focus:border-emerald-500 transition-colors text-slate-900 dark:text-slate-100"
               placeholder="My Chatwoot Integration"
               disabled={isSaving}
             />
-            <p className="text-xs text-zinc-500 mt-1">
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-2">
               A friendly name to identify this integration
             </p>
           </div>
@@ -145,35 +147,35 @@ export function CRMConfigModal({ isOpen, onClose, onSave, existingIntegration }:
           {/* CRM Provider Selection */}
           {!existingIntegration && (
             <div>
-              <label className="block text-sm font-medium text-zinc-200 mb-2">
-                CRM Provider <span className="text-red-400">*</span>
+              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-4">
+                CRM Provider <span className="text-red-500">*</span>
               </label>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                 {allProviders.map((provider) => (
                   <button
                     key={provider.id}
                     onClick={() => handleProviderChange(provider.id)}
-                    className={`p-4 rounded-2xl border-2 transition-all ${
+                    className={`p-4 rounded-xl border-2 transition-all ${
                       selectedProvider === provider.id
-                        ? 'border-emerald-500 bg-emerald-500/10'
-                        : 'border-zinc-700 bg-zinc-800/50 hover:border-zinc-600'
+                        ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20'
+                        : 'border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 hover:border-slate-300 dark:hover:border-slate-500'
                     }`}
                     disabled={isSaving}
                   >
                     <div className="text-2xl mb-2">{provider.icon}</div>
-                    <div className="text-sm font-medium">{provider.name}</div>
+                    <div className="text-sm font-medium text-slate-900 dark:text-slate-100">{provider.name}</div>
                   </button>
                 ))}
               </div>
-              <p className="text-xs text-zinc-500 mt-2">
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-3">
                 {providerInfo.description}
               </p>
             </div>
           )}
 
           {/* Provider-Specific Configuration Form */}
-          <div className="border-t border-zinc-800 pt-6">
-            <h3 className="text-lg font-semibold mb-4">
+          <div className="border-t border-slate-200 dark:border-slate-700 pt-6">
+            <h3 className="text-lg font-semibold mb-4 text-slate-900 dark:text-slate-100">
               {providerInfo.name} Configuration
             </h3>
             
@@ -194,8 +196,8 @@ export function CRMConfigModal({ isOpen, onClose, onSave, existingIntegration }:
             )}
             
             {!['CHATWOOT', 'CUSTOM'].includes(selectedProvider) && (
-              <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-2xl p-4">
-                <p className="text-yellow-400 text-sm">
+              <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-xl p-4">
+                <p className="text-yellow-700 dark:text-yellow-400 text-sm">
                   🚧 {providerInfo.name} integration is coming soon!
                 </p>
               </div>
@@ -204,25 +206,25 @@ export function CRMConfigModal({ isOpen, onClose, onSave, existingIntegration }:
 
           {/* Error Message */}
           {error && (
-            <div className="bg-red-500/10 border border-red-500/20 rounded-2xl p-4">
-              <p className="text-red-400 text-sm">{error}</p>
+            <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-4">
+              <p className="text-red-700 dark:text-red-400 text-sm">{error}</p>
             </div>
           )}
 
           {/* Test Result */}
           {testResult && (
-            <div className={`border rounded-2xl p-4 ${
+            <div className={`border rounded-xl p-4 ${
               testResult.success
-                ? 'bg-green-500/10 border-green-500/20'
-                : 'bg-red-500/10 border-red-500/20'
+                ? 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800'
+                : 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800'
             }`}>
               <p className={`text-sm font-medium mb-2 ${
-                testResult.success ? 'text-green-400' : 'text-red-400'
+                testResult.success ? 'text-green-700 dark:text-green-400' : 'text-red-700 dark:text-red-400'
               }`}>
                 {testResult.success ? '✓ ' : '✗ '}{testResult.message}
               </p>
               {testResult.details && testResult.success && (
-                <div className="text-xs text-zinc-400 space-y-1">
+                <div className="text-xs text-slate-600 dark:text-slate-400 space-y-1">
                   {testResult.details.accountInfo && (
                     <p>Account: {testResult.details.accountInfo.name || testResult.details.accountInfo.id}</p>
                   )}
@@ -232,34 +234,34 @@ export function CRMConfigModal({ isOpen, onClose, onSave, existingIntegration }:
                 </div>
               )}
               {testResult.error && (
-                <p className="text-xs text-red-400 mt-2">{testResult.error}</p>
+                <p className="text-xs text-red-600 dark:text-red-400 mt-2">{testResult.error}</p>
               )}
             </div>
           )}
         </div>
 
         {/* Actions */}
-        <div className="mt-6 flex justify-between gap-3">
+        <div className="mt-8 flex flex-col sm:flex-row justify-between gap-3">
           <button
             onClick={handleTestConnection}
             disabled={isTesting || isSaving || !['CHATWOOT', 'CUSTOM'].includes(selectedProvider)}
-            className="px-6 py-3 bg-blue-500 text-white rounded-2xl hover:bg-blue-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full sm:w-auto px-6 py-3 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-blue-500/25 min-h-[48px]"
           >
             {isTesting ? 'Testing...' : 'Test Connection'}
           </button>
           
-          <div className="flex gap-3">
+          <div className="flex flex-col sm:flex-row gap-3">
             <button
               onClick={onClose}
               disabled={isSaving}
-              className="px-6 py-3 bg-zinc-700 text-zinc-300 rounded-2xl hover:bg-zinc-600 transition-colors disabled:opacity-50"
+              className="w-full sm:w-auto px-6 py-3 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors disabled:opacity-50 min-h-[48px]"
             >
               Cancel
             </button>
             <button
               onClick={handleSave}
               disabled={isSaving || !integrationName.trim() || !['CHATWOOT', 'CUSTOM'].includes(selectedProvider)}
-              className="px-6 py-3 bg-emerald-500 text-white rounded-2xl hover:bg-emerald-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full sm:w-auto px-6 py-3 bg-emerald-500 text-white rounded-xl hover:bg-emerald-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-emerald-500/25 min-h-[48px]"
             >
               {isSaving ? 'Saving...' : (existingIntegration ? 'Update' : 'Save') + ' Integration'}
             </button>

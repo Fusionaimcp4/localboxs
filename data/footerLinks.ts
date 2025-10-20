@@ -17,7 +17,7 @@ export const footerLinkGroups: ReadonlyArray<FooterLinkGroup> = [
   {
     title: "Product",
     links: [
-      { label: "Demo", href: "/userdemo" },
+      { label: "Demo", href: "/dashboard/userdemo" },
       { label: "Pricing", href: "/#pricing" },
       { label: "Features", href: "/#features" },
     ],

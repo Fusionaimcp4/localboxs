@@ -52,9 +52,9 @@ export function ChatwootConfigForm({ configuration, onChange, disabled }: Chatwo
 
         return (
           <div key={field.name}>
-            <label className="block text-sm font-medium text-zinc-200 mb-2">
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
               {field.label}
-              {field.validation.required && <span className="text-red-400 ml-1">*</span>}
+              {field.validation.required && <span className="text-red-500 ml-1">*</span>}
             </label>
 
             {field.type === 'checkbox' ? (
@@ -64,16 +64,16 @@ export function ChatwootConfigForm({ configuration, onChange, disabled }: Chatwo
                   checked={Boolean(value)}
                   onChange={(e) => handleFieldChange(field.name, e.target.checked)}
                   disabled={disabled}
-                  className="w-5 h-5 rounded border-zinc-700 bg-zinc-800 text-emerald-500 focus:ring-emerald-500 focus:ring-offset-0"
+                  className="w-5 h-5 rounded border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-emerald-500 focus:ring-emerald-500 focus:ring-offset-0"
                 />
-                <span className="text-sm text-zinc-300">{field.helpText}</span>
+                <span className="text-sm text-slate-600 dark:text-slate-400">{field.helpText}</span>
               </label>
             ) : field.type === 'select' ? (
               <select
                 value={value}
                 onChange={(e) => handleFieldChange(field.name, e.target.value)}
                 disabled={disabled}
-                className="w-full rounded-2xl bg-zinc-800 border border-zinc-700 focus:border-zinc-500 outline-none px-4 py-3 text-zinc-100"
+                className="w-full px-4 py-3 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-xl focus:outline-none focus:border-emerald-500 transition-colors text-slate-900 dark:text-slate-100"
               >
                 <option value="">Select {field.label}</option>
                 {field.options?.map((opt) => (
@@ -88,7 +88,7 @@ export function ChatwootConfigForm({ configuration, onChange, disabled }: Chatwo
                 onChange={(e) => handleFieldChange(field.name, e.target.value)}
                 placeholder={field.placeholder}
                 disabled={disabled}
-                className="w-full rounded-2xl bg-zinc-800 border border-zinc-700 focus:border-zinc-500 outline-none px-4 py-3 text-zinc-100 h-32 resize-none"
+                className="w-full px-4 py-3 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-xl focus:outline-none focus:border-emerald-500 transition-colors text-slate-900 dark:text-slate-100 h-32 resize-none"
               />
             ) : (
               <input
@@ -97,23 +97,23 @@ export function ChatwootConfigForm({ configuration, onChange, disabled }: Chatwo
                 onChange={(e) => handleFieldChange(field.name, e.target.value)}
                 placeholder={field.placeholder}
                 disabled={disabled}
-                className="w-full rounded-2xl bg-zinc-800 border border-zinc-700 focus:border-zinc-500 outline-none px-4 py-3 text-zinc-100"
+                className="w-full px-4 py-3 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-xl focus:outline-none focus:border-emerald-500 transition-colors text-slate-900 dark:text-slate-100"
               />
             )}
 
             {field.helpText && field.type !== 'checkbox' && (
-              <p className="text-xs text-zinc-500 mt-1">{field.helpText}</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-2">{field.helpText}</p>
             )}
           </div>
         );
       })}
 
       {/* Additional Information */}
-      <div className="bg-blue-500/10 border border-blue-500/20 rounded-2xl p-4 mt-6">
-        <p className="text-blue-400 text-sm mb-2 font-medium">
+      <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl p-4 mt-6">
+        <p className="text-blue-700 dark:text-blue-400 text-sm mb-2 font-medium">
           ℹ️ How to get your Chatwoot credentials:
         </p>
-        <ul className="text-xs text-zinc-400 space-y-1 list-disc list-inside">
+        <ul className="text-xs text-slate-600 dark:text-slate-400 space-y-1 list-disc list-inside">
           <li><strong>Base URL:</strong> Your Chatwoot installation URL (e.g., https://app.chatwoot.com)</li>
           <li><strong>Account ID:</strong> Found in Settings → Account → Account Details</li>
           <li><strong>API Token:</strong> Go to Profile Settings → Access Token → Copy Token</li>
@@ -122,7 +122,7 @@ export function ChatwootConfigForm({ configuration, onChange, disabled }: Chatwo
           href="https://www.chatwoot.com/docs/product/channels/api/client-apis"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-blue-400 hover:text-blue-300 text-xs mt-2 inline-block"
+          className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 text-xs mt-2 inline-block"
         >
           View Chatwoot API Documentation →
         </a>

@@ -14,6 +14,7 @@ import path from 'path';
 import { prisma } from '@/lib/prisma';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
+import { canPerformAction, trackUsage } from '@/lib/usage-tracking';
 
 export const runtime = "nodejs";
 
@@ -95,6 +96,20 @@ export async function POST(request: NextRequest) {
 
     const userId = session.user.id;
     const payload: CreateDemoPayload = await request.json();
+    
+    // Check tier limits before proceeding
+    const usageCheck = await canPerformAction(userId, 'create_demo');
+    if (!usageCheck.allowed) {
+      return NextResponse.json(
+        { 
+          error: 'Tier limit exceeded',
+          message: usageCheck.reason,
+          usage: usageCheck.usage,
+          upgradeRequired: true
+        },
+        { status: 403 }
+      );
+    }
     
     // Validate input
     if (!payload.url) {
@@ -265,6 +280,9 @@ export async function POST(request: NextRequest) {
       });
 
       console.log(`✅ Demo saved to database: ${demo.id}`);
+      
+      // Track usage
+      await trackUsage(userId, 'demo_created');
     } catch (dbError) {
       console.error('❌ Failed to save demo to database:', dbError);
       console.error('❌ Database error details:', {

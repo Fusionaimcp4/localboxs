@@ -109,7 +109,7 @@ export function FooterSection() {
               </p>
             </div>
             <div className="flex flex-col sm:flex-row gap-3">
-              <Link href="/userdemo">
+              <Link href="/dashboard/userdemo">
                 <button className="px-6 py-3 bg-primary text-primary-foreground rounded-lg font-medium text-sm hover:bg-primary/90 transition-colors duration-200 flex items-center gap-2">
                   Try Free Demo
                   <ArrowRight className="w-4 h-4" />

@@ -458,7 +458,7 @@ export function HeroSection() {
             Request a Demo
           </Button>
         </ContactModal>
-        <Link href="/userdemo" className="w-full sm:w-auto">
+        <Link href="/dashboard/userdemo" className="w-full sm:w-auto">
           <Button
             variant="ghost"
             className="w-full sm:w-auto text-secondary-foreground hover:bg-secondary/10 px-8 py-4 sm:py-3 rounded-full font-medium text-base min-h-[48px]"

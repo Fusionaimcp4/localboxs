@@ -95,11 +95,6 @@ export function Header() {
                     Sign In
                   </Button>
                 </Link>
-                <Link href="/auth/signup">
-                  <Button className="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-full font-medium">
-                    Sign Up
-                  </Button>
-                </Link>
               </div>
             )}
           </div>

@@ -9,7 +9,7 @@ import type { NextAuthOptions } from 'next-auth'
 import { rateLimiter, checkAndSetLockout } from '@/lib/rateLimit' // Import rate limiter
 import { verifyTurnstile } from '@/lib/captcha' // Import captcha verifier
 
-// Extend NextAuth types to include role, tenantId, isVerified, avatarUrl
+// Extend NextAuth types to include role, tenantId, isVerified, avatarUrl, subscriptionTier
 declare module 'next-auth' {
   interface Session {
     user: {
@@ -22,6 +22,8 @@ declare module 'next-auth' {
       isVerified?: boolean // Add isVerified
       avatarUrl?: string | null // Add avatarUrl
       totpRequired?: boolean // Add totpRequired
+      subscriptionTier?: string // Add subscriptionTier
+      subscriptionStatus?: string // Add subscriptionStatus
     }
   }
 
@@ -31,6 +33,8 @@ declare module 'next-auth' {
     isVerified?: boolean
     avatarUrl?: string | null
     totpRequired?: boolean // Add totpRequired to User type
+    subscriptionTier?: string // Add subscriptionTier
+    subscriptionStatus?: string // Add subscriptionStatus
   }
 }
 
@@ -42,6 +46,8 @@ declare module 'next-auth/jwt' {
     isVerified?: boolean
     avatarUrl?: string | null
     totpRequired?: boolean // Add totpRequired to JWT type
+    subscriptionTier?: string // Add subscriptionTier
+    subscriptionStatus?: string // Add subscriptionStatus
   }
 }
 
@@ -140,6 +146,8 @@ export const authOptions: NextAuthOptions = {
             isVerified: user.isVerified,
             avatarUrl: user.avatarUrl,
             totpRequired: user.totpSecret ? true : false, // Add totpRequired flag
+            subscriptionTier: user.subscriptionTier, // Add subscriptionTier
+            subscriptionStatus: user.subscriptionStatus, // Add subscriptionStatus
           }
         } catch (error) {
           console.error('[Auth] Credentials authorize error:', error)
@@ -183,7 +191,18 @@ export const authOptions: NextAuthOptions = {
       // Always fetch the latest user data to ensure up-to-date verification status
       const dbUser = await prisma.user.findUnique({
         where: { id: token.id || user?.id }, // Use token.id if available, otherwise user?.id
-        select: { id: true, role: true, tenantId: true, isVerified: true, avatarUrl: true, name: true, email: true, totpSecret: true }
+        select: { 
+          id: true, 
+          role: true, 
+          tenantId: true, 
+          isVerified: true, 
+          avatarUrl: true, 
+          name: true, 
+          email: true, 
+          totpSecret: true,
+          subscriptionTier: true,
+          subscriptionStatus: true
+        }
       });
 
       if (dbUser) {
@@ -195,6 +214,8 @@ export const authOptions: NextAuthOptions = {
         token.name = dbUser.name;
         token.email = dbUser.email;
         token.totpRequired = dbUser.totpSecret ? true : false;
+        token.subscriptionTier = dbUser.subscriptionTier as string;
+        token.subscriptionStatus = dbUser.subscriptionStatus as string;
       } else if (user) {
         // If user is new (only provided on first sign in), use its data
         token.id = user.id;
@@ -204,6 +225,8 @@ export const authOptions: NextAuthOptions = {
         token.avatarUrl = user.avatarUrl;
         token.name = user.name;
         token.email = user.email; // Ensure email is present
+        token.subscriptionTier = user.subscriptionTier as string;
+        token.subscriptionStatus = user.subscriptionStatus as string;
         if ('totpRequired' in user) {
           token.totpRequired = user.totpRequired; // Set totpRequired if present from authorize
         }
@@ -228,6 +251,8 @@ export const authOptions: NextAuthOptions = {
         session.user.tenantId = token.tenantId;
         session.user.isVerified = token.isVerified;
         session.user.avatarUrl = token.avatarUrl;
+        session.user.subscriptionTier = token.subscriptionTier as string;
+        session.user.subscriptionStatus = token.subscriptionStatus as string;
         if ('totpRequired' in token) {
           session.user.totpRequired = token.totpRequired; // Add totpRequired to session
         }

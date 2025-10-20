@@ -6,7 +6,7 @@ import Link from "next/link";
 import { 
   ArrowLeft, Upload, FileText, Trash2, 
   Settings, AlertCircle, CheckCircle, Clock, XCircle, RefreshCw,
-  Link as LinkIcon, Plus, Edit2, Zap
+  Link as LinkIcon, Plus, Edit2, Zap, X, Database
 } from "lucide-react";
 
 interface Document {
@@ -193,10 +193,10 @@ export default function KnowledgeBaseDetailPage({ params }: { params: Promise<{ 
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'COMPLETED': return <CheckCircle className="w-5 h-5 text-green-400" />;
-      case 'PROCESSING': return <Clock className="w-5 h-5 text-blue-400 animate-spin" />;
-      case 'FAILED': return <XCircle className="w-5 h-5 text-red-400" />;
-      default: return <AlertCircle className="w-5 h-5 text-yellow-400" />;
+      case 'COMPLETED': return <CheckCircle className="w-5 h-5 text-green-500" />;
+      case 'PROCESSING': return <Clock className="w-5 h-5 text-blue-500 animate-spin" />;
+      case 'FAILED': return <XCircle className="w-5 h-5 text-red-500" />;
+      default: return <AlertCircle className="w-5 h-5 text-yellow-500" />;
     }
   };
 
@@ -416,19 +416,41 @@ export default function KnowledgeBaseDetailPage({ params }: { params: Promise<{ 
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-zinc-950 to-zinc-900 text-zinc-100 flex items-center justify-center">
-        <div className="w-8 h-8 border-2 border-emerald-500/30 border-t-emerald-500 rounded-full animate-spin"></div>
+      <div className="px-4 py-6 space-y-6">
+        {/* Header Skeleton */}
+        <div className="animate-pulse">
+          <div className="h-6 bg-slate-200 dark:bg-slate-700 rounded-lg w-32 mb-4"></div>
+          <div className="h-8 bg-slate-200 dark:bg-slate-700 rounded-lg w-48 mb-2"></div>
+          <div className="h-5 bg-slate-200 dark:bg-slate-700 rounded-lg w-64"></div>
+        </div>
+        
+        {/* Stats Skeleton */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} className="bg-white dark:bg-slate-800 rounded-2xl p-6 animate-pulse">
+              <div className="h-4 bg-slate-200 dark:bg-slate-700 rounded w-16 mb-2"></div>
+              <div className="h-8 bg-slate-200 dark:bg-slate-700 rounded w-12"></div>
+            </div>
+          ))}
+        </div>
+        
+        {/* Upload Zone Skeleton */}
+        <div className="bg-white dark:bg-slate-800 rounded-2xl p-12 animate-pulse">
+          <div className="h-12 bg-slate-200 dark:bg-slate-700 rounded w-12 mx-auto mb-4"></div>
+          <div className="h-6 bg-slate-200 dark:bg-slate-700 rounded w-48 mx-auto mb-2"></div>
+          <div className="h-4 bg-slate-200 dark:bg-slate-700 rounded w-64 mx-auto"></div>
+        </div>
       </div>
     );
   }
 
   if (!kb) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-zinc-950 to-zinc-900 text-zinc-100 flex items-center justify-center">
-        <div className="text-center">
-          <AlertCircle className="w-16 h-16 text-red-400 mx-auto mb-4" />
-          <h2 className="text-2xl font-bold mb-2">Knowledge Base Not Found</h2>
-          <Link href="/dashboard/knowledge-bases" className="text-emerald-400 hover:underline">
+      <div className="px-4 py-6 space-y-6">
+        <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-12 text-center">
+          <AlertCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
+          <h2 className="text-2xl font-bold mb-2 text-slate-900 dark:text-slate-100">Knowledge Base Not Found</h2>
+          <Link href="/dashboard/knowledge-bases" className="text-emerald-500 hover:underline">
             ← Back to Knowledge Bases
           </Link>
         </div>
@@ -437,265 +459,262 @@ export default function KnowledgeBaseDetailPage({ params }: { params: Promise<{ 
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-zinc-950 to-zinc-900 text-zinc-100">
-      <div className="mx-auto max-w-7xl px-6 py-16">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3 }}
-          className="mb-12"
+    <div className="px-4 py-6 space-y-6">
+      {/* Header */}
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3 }}
+        className="space-y-4"
+      >
+        <Link
+          href="/dashboard/knowledge-bases"
+          className="inline-flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300"
         >
-          <Link
-            href="/dashboard/knowledge-bases"
-            className="inline-flex items-center gap-2 text-zinc-400 hover:text-zinc-300 mb-6"
+          <ArrowLeft className="w-5 h-5" />
+          Back to Knowledge Bases
+        </Link>
+        
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-slate-100 mb-2">{kb.name}</h1>
+            {kb.description && (
+              <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400">{kb.description}</p>
+            )}
+          </div>
+          <button 
+            onClick={() => setShowSettings(true)}
+            className="w-full sm:w-auto px-4 py-2 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-xl hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors flex items-center justify-center gap-2 min-h-[48px]"
           >
-            <ArrowLeft className="w-5 h-5" />
-            Back to Knowledge Bases
-          </Link>
-          
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-4xl font-bold mb-2">{kb.name}</h1>
-              {kb.description && (
-                <p className="text-xl text-zinc-400">{kb.description}</p>
-              )}
-            </div>
-            <button 
-              onClick={() => setShowSettings(true)}
-              className="px-4 py-2 bg-zinc-800 text-zinc-300 rounded-2xl hover:bg-zinc-700 transition-colors flex items-center gap-2"
-            >
-              <Settings className="w-5 h-5" />
-              Settings
-            </button>
-          </div>
-        </motion.div>
+            <Settings className="w-5 h-5" />
+            Settings
+          </button>
+        </div>
+      </motion.div>
 
-        {/* Stats */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3, delay: 0.05 }}
-          className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12"
-        >
-          <div className="bg-zinc-900/60 rounded-3xl border border-zinc-800 p-6">
-            <p className="text-zinc-400 text-sm mb-1">Documents</p>
-            <p className="text-3xl font-bold">{kb.totalDocuments}</p>
-          </div>
-          <div className="bg-zinc-900/60 rounded-3xl border border-zinc-800 p-6">
-            <p className="text-zinc-400 text-sm mb-1">Chunks</p>
-            <p className="text-3xl font-bold">{kb.totalChunks}</p>
-          </div>
-          <div className="bg-zinc-900/60 rounded-3xl border border-zinc-800 p-6">
-            <p className="text-zinc-400 text-sm mb-1">Tokens</p>
-            <p className="text-3xl font-bold">{(kb.totalTokens / 1000).toFixed(1)}K</p>
-          </div>
-          <div className="bg-zinc-900/60 rounded-3xl border border-zinc-800 p-6">
-            <p className="text-zinc-400 text-sm mb-1">Status</p>
-            <p className={`text-lg font-semibold ${kb.isActive ? 'text-green-400' : 'text-zinc-400'}`}>
-              {kb.isActive ? 'Active' : 'Inactive'}
-            </p>
-          </div>
-        </motion.div>
+      {/* Stats */}
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3, delay: 0.05 }}
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"
+      >
+        <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6">
+          <p className="text-slate-600 dark:text-slate-400 text-sm mb-1">Documents</p>
+          <p className="text-3xl font-bold text-slate-900 dark:text-slate-100">{kb.totalDocuments}</p>
+        </div>
+        <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6">
+          <p className="text-slate-600 dark:text-slate-400 text-sm mb-1">Chunks</p>
+          <p className="text-3xl font-bold text-slate-900 dark:text-slate-100">{kb.totalChunks}</p>
+        </div>
+        <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6">
+          <p className="text-slate-600 dark:text-slate-400 text-sm mb-1">Tokens</p>
+          <p className="text-3xl font-bold text-slate-900 dark:text-slate-100">{(kb.totalTokens / 1000).toFixed(1)}K</p>
+        </div>
+        <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6">
+          <p className="text-slate-600 dark:text-slate-400 text-sm mb-1">Status</p>
+          <p className={`text-lg font-semibold ${kb.isActive ? 'text-green-500' : 'text-slate-500'}`}>
+            {kb.isActive ? 'Active' : 'Inactive'}
+          </p>
+        </div>
+      </motion.div>
 
-        {/* Upload Zone */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3, delay: 0.1 }}
-          className="mb-12"
+      {/* Upload Zone */}
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3, delay: 0.1 }}
+      >
+        <h3 className="text-xl font-semibold mb-4 text-slate-900 dark:text-slate-100">Upload Documents</h3>
+        <div
+          onDragEnter={handleDrag}
+          onDragLeave={handleDrag}
+          onDragOver={handleDrag}
+          onDrop={handleDrop}
+          className={`border-2 border-dashed rounded-2xl p-8 sm:p-12 text-center transition-all ${
+            dragActive 
+              ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20' 
+              : 'border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-800/50'
+          } ${uploading ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:border-emerald-500/50'}`}
         >
-          <h3 className="text-2xl font-semibold mb-6">Upload Documents</h3>
-          <div
-            onDragEnter={handleDrag}
-            onDragLeave={handleDrag}
-            onDragOver={handleDrag}
-            onDrop={handleDrop}
-            className={`border-2 border-dashed rounded-3xl p-12 text-center transition-all ${
-              dragActive 
-                ? 'border-emerald-500 bg-emerald-500/10' 
-                : 'border-zinc-700 bg-zinc-900/40'
-            } ${uploading ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:border-emerald-500/50'}`}
+          <Upload className={`w-12 h-12 mx-auto mb-4 ${dragActive ? 'text-emerald-500' : 'text-slate-500'}`} />
+          <h4 className="text-lg font-semibold mb-2 text-slate-900 dark:text-slate-100">
+            {uploading ? 'Uploading...' : 'Drop files here or click to upload'}
+          </h4>
+          <p className="text-slate-600 dark:text-slate-400 mb-4">
+            Supported formats: PDF, DOCX, TXT, MD, CSV, JSON (max 10MB)
+          </p>
+          <input
+            type="file"
+            accept=".pdf,.docx,.txt,.md,.csv,.json"
+            onChange={(e) => handleFileUpload(e.target.files)}
+            disabled={uploading}
+            className="hidden"
+            id="file-upload"
+          />
+          <label
+            htmlFor="file-upload"
+            className="w-full sm:w-auto px-6 py-3 bg-emerald-500 text-white rounded-xl hover:bg-emerald-600 transition-colors inline-block cursor-pointer shadow-lg shadow-emerald-500/25 min-h-[48px] flex items-center justify-center"
           >
-            <Upload className={`w-12 h-12 mx-auto mb-4 ${dragActive ? 'text-emerald-400' : 'text-zinc-500'}`} />
-            <h4 className="text-lg font-semibold mb-2">
-              {uploading ? 'Uploading...' : 'Drop files here or click to upload'}
-            </h4>
-            <p className="text-zinc-400 mb-4">
-              Supported formats: PDF, DOCX, TXT, MD, CSV, JSON (max 10MB)
-            </p>
-            <input
-              type="file"
-              accept=".pdf,.docx,.txt,.md,.csv,.json"
-              onChange={(e) => handleFileUpload(e.target.files)}
-              disabled={uploading}
-              className="hidden"
-              id="file-upload"
-            />
-            <label
-              htmlFor="file-upload"
-              className="px-6 py-3 bg-emerald-500 text-white rounded-2xl hover:bg-emerald-600 transition-colors inline-block cursor-pointer"
-            >
-              Select File
-            </label>
-          </div>
-        </motion.div>
+            Select File
+          </label>
+        </div>
+      </motion.div>
 
-        {/* Documents List */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3, delay: 0.15 }}
-        >
-          <h3 className="text-2xl font-semibold mb-6">Documents ({kb.documents.length})</h3>
-          
-          {kb.documents.length > 0 ? (
-            <div className="space-y-3">
-              {kb.documents.map((doc) => (
-                <div
-                  key={doc.id}
-                  className="bg-zinc-900/60 rounded-2xl border border-zinc-800 p-6 hover:border-zinc-700 transition-colors"
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-4 flex-1">
-                      <FileText className="w-8 h-8 text-emerald-400" />
-                      <div className="flex-1">
-                        <h4 className="font-semibold mb-1">{doc.originalName}</h4>
-                        <div className="flex items-center gap-4 text-sm text-zinc-400">
-                          <span>{doc.fileType.toUpperCase()}</span>
-                          <span>•</span>
-                          <span>{formatFileSize(doc.fileSize)}</span>
-                          <span>•</span>
-                          <span>{doc._count.chunks} chunks</span>
-                          {doc.wordCount && (
-                            <>
-                              <span>•</span>
-                              <span>{doc.wordCount.toLocaleString()} words</span>
-                            </>
-                          )}
-                        </div>
+      {/* Documents List */}
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3, delay: 0.15 }}
+      >
+        <h3 className="text-xl font-semibold mb-4 text-slate-900 dark:text-slate-100">Documents ({kb.documents.length})</h3>
+        
+        {kb.documents.length > 0 ? (
+          <div className="space-y-3">
+            {kb.documents.map((doc) => (
+              <div
+                key={doc.id}
+                className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6 hover:border-slate-300 dark:hover:border-slate-600 transition-colors"
+              >
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                  <div className="flex items-center gap-4 flex-1">
+                    <FileText className="w-8 h-8 text-emerald-500" />
+                    <div className="flex-1">
+                      <h4 className="font-semibold mb-1 text-slate-900 dark:text-slate-100">{doc.originalName}</h4>
+                      <div className="flex flex-wrap items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
+                        <span className="px-2 py-1 bg-slate-100 dark:bg-slate-700 rounded-lg">{doc.fileType.toUpperCase()}</span>
+                        <span>{formatFileSize(doc.fileSize)}</span>
+                        <span>•</span>
+                        <span>{doc._count.chunks} chunks</span>
+                        {doc.wordCount && (
+                          <>
+                            <span>•</span>
+                            <span>{doc.wordCount.toLocaleString()} words</span>
+                          </>
+                        )}
                       </div>
                     </div>
-                    <div className="flex items-center gap-4">
-                      <div className="flex items-center gap-2">
-                        {getStatusIcon(doc.status)}
-                        <span className="text-sm">{doc.status}</span>
-                      </div>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2">
+                      {getStatusIcon(doc.status)}
+                      <span className="text-sm text-slate-600 dark:text-slate-400">{doc.status}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
                       {(doc.status === 'COMPLETED' || doc.status === 'FAILED') && (
                         <button 
                           onClick={() => handleReprocessDocument(doc.id)}
-                          className="p-2 hover:bg-blue-500/10 rounded-lg transition-colors group"
+                          className="p-2 hover:bg-blue-100 dark:hover:bg-blue-900/30 rounded-lg transition-colors group"
                           title="Reprocess document"
                         >
-                          <RefreshCw className="w-5 h-5 text-zinc-400 group-hover:text-blue-400" />
+                          <RefreshCw className="w-5 h-5 text-slate-400 group-hover:text-blue-500" />
                         </button>
                       )}
                       <button 
                         onClick={() => handleDeleteDocument(doc.id)}
                         disabled={deletingDocId === doc.id}
-                        className="p-2 hover:bg-red-500/10 rounded-lg transition-colors group disabled:opacity-50"
+                        className="p-2 hover:bg-red-100 dark:hover:bg-red-900/30 rounded-lg transition-colors group disabled:opacity-50"
                         title="Delete document"
                       >
-                        <Trash2 className={`w-5 h-5 text-zinc-400 group-hover:text-red-400 ${deletingDocId === doc.id ? 'animate-pulse' : ''}`} />
+                        <Trash2 className={`w-5 h-5 text-slate-400 group-hover:text-red-500 ${deletingDocId === doc.id ? 'animate-pulse' : ''}`} />
                       </button>
                     </div>
                   </div>
-                  {doc.processingError && (
-                    <div className="mt-4 p-3 bg-red-500/10 border border-red-500/20 rounded-lg text-sm text-red-400">
-                      Error: {doc.processingError}
-                    </div>
-                  )}
                 </div>
-              ))}
-            </div>
-          ) : (
-            <div className="bg-zinc-900/40 rounded-2xl border border-zinc-800 p-12 text-center">
-              <FileText className="w-16 h-16 text-zinc-600 mx-auto mb-4" />
-              <p className="text-zinc-400">No documents yet. Upload your first document to get started.</p>
-            </div>
-          )}
-        </motion.div>
-
-        {/* Workflow Assignment Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3, delay: 0.2 }}
-          className="mt-12"
-        >
-          <div className="flex items-center justify-between mb-6">
-            <h3 className="text-2xl font-semibold">Linked Workflows ({workflowLinks.length})</h3>
-            <button
-              onClick={handleOpenLinkModal}
-              className="px-4 py-2 bg-emerald-500 text-white rounded-2xl hover:bg-emerald-600 transition-colors flex items-center gap-2"
-            >
-              <Plus className="w-5 h-5" />
-              Link Workflow
-            </button>
+                {doc.processingError && (
+                  <div className="mt-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg text-sm text-red-600 dark:text-red-400">
+                    Error: {doc.processingError}
+                  </div>
+                )}
+              </div>
+            ))}
           </div>
+        ) : (
+          <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-12 text-center">
+            <FileText className="w-16 h-16 text-slate-400 mx-auto mb-4" />
+            <p className="text-slate-600 dark:text-slate-400">No documents yet. Upload your first document to get started.</p>
+          </div>
+        )}
+      </motion.div>
 
-          {workflowLinks.length > 0 ? (
-            <div className="space-y-3">
-              {workflowLinks.map((link) => (
-                <div
-                  key={link.id}
-                  className="bg-zinc-900/60 rounded-2xl border border-zinc-800 p-6 hover:border-zinc-700 transition-colors"
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-4 flex-1">
-                      <div className={`w-3 h-3 rounded-full ${link.isActive ? 'bg-green-400' : 'bg-zinc-600'}`}></div>
-                      <div className="flex-1">
-                        <h4 className="font-semibold mb-1">{link.workflow.demo.businessName}</h4>
-                        <div className="flex items-center gap-4 text-sm text-zinc-400">
-                          <span className="flex items-center gap-1">
-                            <Zap className="w-4 h-4" />
-                            Priority: {link.priority}
-                          </span>
-                          <span>•</span>
-                          <span>Limit: {link.retrievalLimit} chunks</span>
-                          <span>•</span>
-                          <span>Threshold: {link.similarityThreshold}</span>
-                          {link.workflow.n8nWorkflowId && (
-                            <>
-                              <span>•</span>
-                              <span className="font-mono text-xs">workflow: {link.workflow.n8nWorkflowId}</span>
-                            </>
-                          )}
-                        </div>
+      {/* Workflow Assignment Section */}
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3, delay: 0.2 }}
+      >
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+          <h3 className="text-xl font-semibold text-slate-900 dark:text-slate-100">Linked Workflows ({workflowLinks.length})</h3>
+          <button
+            onClick={handleOpenLinkModal}
+            className="w-full sm:w-auto px-4 py-2 bg-emerald-500 text-white rounded-xl hover:bg-emerald-600 transition-colors flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/25 min-h-[48px]"
+          >
+            <Plus className="w-5 h-5" />
+            Link Workflow
+          </button>
+        </div>
+
+        {workflowLinks.length > 0 ? (
+          <div className="space-y-3">
+            {workflowLinks.map((link) => (
+              <div
+                key={link.id}
+                className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6 hover:border-slate-300 dark:hover:border-slate-600 transition-colors"
+              >
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                  <div className="flex items-center gap-4 flex-1">
+                    <div className={`w-3 h-3 rounded-full ${link.isActive ? 'bg-green-500' : 'bg-slate-400'}`}></div>
+                    <div className="flex-1">
+                      <h4 className="font-semibold mb-1 text-slate-900 dark:text-slate-100">{link.workflow.demo.businessName}</h4>
+                      <div className="flex flex-wrap items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
+                        <span className="flex items-center gap-1">
+                          <Zap className="w-4 h-4" />
+                          Priority: {link.priority}
+                        </span>
+                        <span>•</span>
+                        <span>Limit: {link.retrievalLimit} chunks</span>
+                        <span>•</span>
+                        <span>Threshold: {link.similarityThreshold}</span>
+                        {link.workflow.n8nWorkflowId && (
+                          <>
+                            <span>•</span>
+                            <span className="font-mono text-xs px-2 py-1 bg-slate-100 dark:bg-slate-700 rounded">{link.workflow.n8nWorkflowId}</span>
+                          </>
+                        )}
                       </div>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <button
-                        onClick={() => handleToggleLinkActive(link.id, link.isActive)}
-                        className={`px-3 py-1 rounded-lg text-sm transition-colors ${
-                          link.isActive
-                            ? 'bg-green-500/10 text-green-400 hover:bg-green-500/20'
-                            : 'bg-zinc-700 text-zinc-400 hover:bg-zinc-600'
-                        }`}
-                      >
-                        {link.isActive ? 'Active' : 'Inactive'}
-                      </button>
-                      <button
-                        onClick={() => handleUnlinkWorkflow(link.workflowId)}
-                        className="p-2 hover:bg-red-500/10 rounded-lg transition-colors group"
-                        title="Unlink workflow"
-                      >
-                        <Trash2 className="w-5 h-5 text-zinc-400 group-hover:text-red-400" />
-                      </button>
-                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => handleToggleLinkActive(link.id, link.isActive)}
+                      className={`px-3 py-1 rounded-lg text-sm transition-colors ${
+                        link.isActive
+                          ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 hover:bg-green-200 dark:hover:bg-green-900/50'
+                          : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-600'
+                      }`}
+                    >
+                      {link.isActive ? 'Active' : 'Inactive'}
+                    </button>
+                    <button
+                      onClick={() => handleUnlinkWorkflow(link.workflowId)}
+                      className="p-2 hover:bg-red-100 dark:hover:bg-red-900/30 rounded-lg transition-colors group"
+                      title="Unlink workflow"
+                    >
+                      <Trash2 className="w-5 h-5 text-slate-400 group-hover:text-red-500" />
+                    </button>
                   </div>
                 </div>
-              ))}
-            </div>
-          ) : (
-            <div className="bg-zinc-900/40 rounded-2xl border border-zinc-800 p-12 text-center">
-              <LinkIcon className="w-16 h-16 text-zinc-600 mx-auto mb-4" />
-              <p className="text-zinc-400 mb-4">No workflows linked yet.</p>
-              <p className="text-sm text-zinc-500">Link this knowledge base to a workflow to make it available for RAG.</p>
-            </div>
-          )}
-        </motion.div>
-      </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-12 text-center">
+            <LinkIcon className="w-16 h-16 text-slate-400 mx-auto mb-4" />
+            <p className="text-slate-600 dark:text-slate-400 mb-4">No workflows linked yet.</p>
+            <p className="text-sm text-slate-500 dark:text-slate-500">Link this knowledge base to a workflow to make it available for RAG.</p>
+          </div>
+        )}
+      </motion.div>
 
       {/* Link Workflow Modal */}
       {showLinkModal && (
@@ -703,26 +722,26 @@ export default function KnowledgeBaseDetailPage({ params }: { params: Promise<{ 
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-zinc-900 rounded-3xl border border-zinc-800 max-w-2xl w-full p-8"
+            className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 max-w-2xl w-full p-6 sm:p-8"
           >
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold">Link Workflow</h2>
+              <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Link Workflow</h2>
               <button
                 onClick={() => setShowLinkModal(false)}
-                className="p-2 hover:bg-zinc-800 rounded-lg transition-colors"
+                className="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors"
               >
-                <XCircle className="w-6 h-6" />
+                <X className="w-6 h-6 text-slate-600 dark:text-slate-400" />
               </button>
             </div>
 
             <div className="space-y-6">
               {/* Workflow Selection */}
               <div>
-                <label className="block text-sm font-medium mb-2">Select Workflow</label>
+                <label className="block text-sm font-medium mb-2 text-slate-700 dark:text-slate-300">Select Workflow</label>
                 <select
                   value={linkForm.workflowId}
                   onChange={(e) => setLinkForm({ ...linkForm, workflowId: e.target.value })}
-                  className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-2xl focus:outline-none focus:border-emerald-500 transition-colors"
+                  className="w-full px-4 py-3 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-xl focus:outline-none focus:border-emerald-500 transition-colors text-slate-900 dark:text-slate-100"
                 >
                   <option value="">Choose a workflow...</option>
                   {availableWorkflows
@@ -734,31 +753,31 @@ export default function KnowledgeBaseDetailPage({ params }: { params: Promise<{ 
                     ))
                   }
                 </select>
-                <p className="text-sm text-zinc-400 mt-2">
+                <p className="text-sm text-slate-500 dark:text-slate-400 mt-2">
                   {availableWorkflows.length === 0 ? 'No workflows available' : `${availableWorkflows.filter(wf => !workflowLinks.some(link => link.workflowId === wf.id)).length} workflows available`}
                 </p>
               </div>
 
               {/* Priority */}
               <div>
-                <label className="block text-sm font-medium mb-2">
+                <label className="block text-sm font-medium mb-2 text-slate-700 dark:text-slate-300">
                   Priority
-                  <span className="text-zinc-400 font-normal ml-2">(lower = higher priority)</span>
+                  <span className="text-slate-500 dark:text-slate-400 font-normal ml-2">(lower = higher priority)</span>
                 </label>
                 <input
                   type="number"
                   value={linkForm.priority}
                   onChange={(e) => setLinkForm({ ...linkForm, priority: parseInt(e.target.value) || 1 })}
                   min="1"
-                  className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-2xl focus:outline-none focus:border-emerald-500 transition-colors"
+                  className="w-full px-4 py-3 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-xl focus:outline-none focus:border-emerald-500 transition-colors text-slate-900 dark:text-slate-100"
                 />
               </div>
 
               {/* Retrieval Limit */}
               <div>
-                <label className="block text-sm font-medium mb-2">
+                <label className="block text-sm font-medium mb-2 text-slate-700 dark:text-slate-300">
                   Retrieval Limit
-                  <span className="text-zinc-400 font-normal ml-2">(max chunks to return)</span>
+                  <span className="text-slate-500 dark:text-slate-400 font-normal ml-2">(max chunks to return)</span>
                 </label>
                 <input
                   type="number"
@@ -766,15 +785,15 @@ export default function KnowledgeBaseDetailPage({ params }: { params: Promise<{ 
                   onChange={(e) => setLinkForm({ ...linkForm, retrievalLimit: parseInt(e.target.value) || 5 })}
                   min="1"
                   max="20"
-                  className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-2xl focus:outline-none focus:border-emerald-500 transition-colors"
+                  className="w-full px-4 py-3 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-xl focus:outline-none focus:border-emerald-500 transition-colors text-slate-900 dark:text-slate-100"
                 />
               </div>
 
               {/* Similarity Threshold */}
               <div>
-                <label className="block text-sm font-medium mb-2">
+                <label className="block text-sm font-medium mb-2 text-slate-700 dark:text-slate-300">
                   Similarity Threshold
-                  <span className="text-zinc-400 font-normal ml-2">(0.3 = loose, 0.7 = strict)</span>
+                  <span className="text-slate-500 dark:text-slate-400 font-normal ml-2">(0.3 = loose, 0.7 = strict)</span>
                 </label>
                 <input
                   type="number"
@@ -783,21 +802,21 @@ export default function KnowledgeBaseDetailPage({ params }: { params: Promise<{ 
                   min="0"
                   max="1"
                   step="0.1"
-                  className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-2xl focus:outline-none focus:border-emerald-500 transition-colors"
+                  className="w-full px-4 py-3 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-xl focus:outline-none focus:border-emerald-500 transition-colors text-slate-900 dark:text-slate-100"
                 />
-                <div className="mt-2 flex items-center justify-between text-xs text-zinc-400">
+                <div className="mt-2 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
                   <span>Loose (more results)</span>
                   <span>Strict (fewer, more relevant)</span>
                 </div>
               </div>
 
               {/* Info Box */}
-              <div className="bg-blue-500/10 border border-blue-500/20 rounded-2xl p-4">
+              <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl p-4">
                 <div className="flex gap-3">
-                  <AlertCircle className="w-5 h-5 text-blue-400 flex-shrink-0 mt-0.5" />
-                  <div className="text-sm text-blue-300">
+                  <AlertCircle className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
+                  <div className="text-sm text-blue-700 dark:text-blue-300">
                     <p className="font-medium mb-1">About these settings:</p>
-                    <ul className="space-y-1 text-blue-200/80">
+                    <ul className="space-y-1 text-blue-600 dark:text-blue-400">
                       <li>• <strong>Priority:</strong> When multiple KBs are linked, lower numbers are searched first</li>
                       <li>• <strong>Limit:</strong> Maximum number of relevant chunks to return to the AI</li>
                       <li>• <strong>Threshold:</strong> Minimum similarity score (0.4-0.5 recommended)</li>
@@ -808,17 +827,17 @@ export default function KnowledgeBaseDetailPage({ params }: { params: Promise<{ 
             </div>
 
             {/* Actions */}
-            <div className="flex items-center gap-3 mt-8">
+            <div className="flex flex-col sm:flex-row items-center gap-3 mt-8">
               <button
                 onClick={() => setShowLinkModal(false)}
-                className="flex-1 px-6 py-3 bg-zinc-800 text-zinc-300 rounded-2xl hover:bg-zinc-700 transition-colors"
+                className="w-full sm:flex-1 px-6 py-3 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors min-h-[48px]"
               >
                 Cancel
               </button>
               <button
                 onClick={handleLinkWorkflow}
                 disabled={!linkForm.workflowId}
-                className="flex-1 px-6 py-3 bg-emerald-500 text-white rounded-2xl hover:bg-emerald-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full sm:flex-1 px-6 py-3 bg-emerald-500 text-white rounded-xl hover:bg-emerald-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-emerald-500/25 min-h-[48px]"
               >
                 Link Workflow
               </button>
@@ -833,48 +852,48 @@ export default function KnowledgeBaseDetailPage({ params }: { params: Promise<{ 
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-zinc-900 rounded-3xl border border-zinc-800 max-w-2xl w-full p-8"
+            className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 max-w-2xl w-full p-6 sm:p-8"
           >
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold">Knowledge Base Settings</h2>
+              <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Knowledge Base Settings</h2>
               <button
                 onClick={() => setShowSettings(false)}
-                className="p-2 hover:bg-zinc-800 rounded-lg transition-colors"
+                className="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors"
               >
-                <XCircle className="w-6 h-6" />
+                <X className="w-6 h-6 text-slate-600 dark:text-slate-400" />
               </button>
             </div>
 
             <div className="space-y-6">
               {/* Name */}
               <div>
-                <label className="block text-sm font-medium mb-2">Name</label>
+                <label className="block text-sm font-medium mb-2 text-slate-700 dark:text-slate-300">Name</label>
                 <input
                   type="text"
                   value={settingsForm.name}
                   onChange={(e) => setSettingsForm({ ...settingsForm, name: e.target.value })}
-                  className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-2xl focus:outline-none focus:border-emerald-500 transition-colors"
+                  className="w-full px-4 py-3 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-xl focus:outline-none focus:border-emerald-500 transition-colors text-slate-900 dark:text-slate-100"
                   placeholder="My Knowledge Base"
                 />
               </div>
 
               {/* Description */}
               <div>
-                <label className="block text-sm font-medium mb-2">Description</label>
+                <label className="block text-sm font-medium mb-2 text-slate-700 dark:text-slate-300">Description</label>
                 <textarea
                   value={settingsForm.description}
                   onChange={(e) => setSettingsForm({ ...settingsForm, description: e.target.value })}
-                  className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-2xl focus:outline-none focus:border-emerald-500 transition-colors resize-none"
+                  className="w-full px-4 py-3 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-xl focus:outline-none focus:border-emerald-500 transition-colors resize-none text-slate-900 dark:text-slate-100"
                   placeholder="Describe this knowledge base..."
                   rows={3}
                 />
               </div>
 
               {/* Active Status */}
-              <div className="flex items-center justify-between p-4 bg-zinc-800 rounded-2xl">
+              <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-700 rounded-xl">
                 <div>
-                  <p className="font-medium">Active Status</p>
-                  <p className="text-sm text-zinc-400">Enable or disable this knowledge base</p>
+                  <p className="font-medium text-slate-900 dark:text-slate-100">Active Status</p>
+                  <p className="text-sm text-slate-600 dark:text-slate-400">Enable or disable this knowledge base</p>
                 </div>
                 <label className="relative inline-block w-12 h-6">
                   <input
@@ -883,33 +902,33 @@ export default function KnowledgeBaseDetailPage({ params }: { params: Promise<{ 
                     onChange={(e) => setSettingsForm({ ...settingsForm, isActive: e.target.checked })}
                     className="sr-only peer"
                   />
-                  <div className="w-12 h-6 bg-zinc-700 rounded-full peer peer-checked:bg-emerald-500 transition-colors"></div>
+                  <div className="w-12 h-6 bg-slate-300 dark:bg-slate-600 rounded-full peer peer-checked:bg-emerald-500 transition-colors"></div>
                   <div className="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-transform peer-checked:translate-x-6"></div>
                 </label>
               </div>
 
               {/* Stats (Read-only) */}
               <div className="grid grid-cols-3 gap-4">
-                <div className="p-4 bg-zinc-800 rounded-2xl">
-                  <p className="text-sm text-zinc-400 mb-1">Documents</p>
-                  <p className="text-2xl font-bold">{kb?.totalDocuments || 0}</p>
+                <div className="p-4 bg-slate-50 dark:bg-slate-700 rounded-xl">
+                  <p className="text-sm text-slate-600 dark:text-slate-400 mb-1">Documents</p>
+                  <p className="text-2xl font-bold text-slate-900 dark:text-slate-100">{kb?.totalDocuments || 0}</p>
                 </div>
-                <div className="p-4 bg-zinc-800 rounded-2xl">
-                  <p className="text-sm text-zinc-400 mb-1">Chunks</p>
-                  <p className="text-2xl font-bold">{kb?.totalChunks || 0}</p>
+                <div className="p-4 bg-slate-50 dark:bg-slate-700 rounded-xl">
+                  <p className="text-sm text-slate-600 dark:text-slate-400 mb-1">Chunks</p>
+                  <p className="text-2xl font-bold text-slate-900 dark:text-slate-100">{kb?.totalChunks || 0}</p>
                 </div>
-                <div className="p-4 bg-zinc-800 rounded-2xl">
-                  <p className="text-sm text-zinc-400 mb-1">Tokens</p>
-                  <p className="text-2xl font-bold">{((kb?.totalTokens || 0) / 1000).toFixed(1)}K</p>
+                <div className="p-4 bg-slate-50 dark:bg-slate-700 rounded-xl">
+                  <p className="text-sm text-slate-600 dark:text-slate-400 mb-1">Tokens</p>
+                  <p className="text-2xl font-bold text-slate-900 dark:text-slate-100">{((kb?.totalTokens || 0) / 1000).toFixed(1)}K</p>
                 </div>
               </div>
 
               {/* Danger Zone */}
-              <div className="border-t border-zinc-800 pt-6">
-                <h3 className="text-lg font-semibold mb-3 text-red-400">Danger Zone</h3>
+              <div className="border-t border-slate-200 dark:border-slate-700 pt-6">
+                <h3 className="text-lg font-semibold mb-3 text-red-500">Danger Zone</h3>
                 <button
                   onClick={handleDeleteKB}
-                  className="w-full px-4 py-3 bg-red-500/10 text-red-400 border border-red-500/20 rounded-2xl hover:bg-red-500/20 transition-colors"
+                  className="w-full px-4 py-3 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-800 rounded-xl hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors min-h-[48px]"
                 >
                   Delete Knowledge Base
                 </button>
@@ -917,16 +936,16 @@ export default function KnowledgeBaseDetailPage({ params }: { params: Promise<{ 
             </div>
 
             {/* Actions */}
-            <div className="flex items-center gap-3 mt-8">
+            <div className="flex flex-col sm:flex-row items-center gap-3 mt-8">
               <button
                 onClick={() => setShowSettings(false)}
-                className="flex-1 px-6 py-3 bg-zinc-800 text-zinc-300 rounded-2xl hover:bg-zinc-700 transition-colors"
+                className="w-full sm:flex-1 px-6 py-3 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors min-h-[48px]"
               >
                 Cancel
               </button>
               <button
                 onClick={handleSaveSettings}
-                className="flex-1 px-6 py-3 bg-emerald-500 text-white rounded-2xl hover:bg-emerald-600 transition-colors"
+                className="w-full sm:flex-1 px-6 py-3 bg-emerald-500 text-white rounded-xl hover:bg-emerald-600 transition-colors shadow-lg shadow-emerald-500/25 min-h-[48px]"
               >
                 Save Changes
               </button>

@@ -11,6 +11,7 @@ import {
   getPublicFileUrl,
 } from '@/lib/knowledge-base/file-utils';
 import { processDocumentAsync } from '@/lib/knowledge-base/document-processor';
+import { canPerformAction, trackUsage } from '@/lib/usage-tracking';
 
 export const runtime = 'nodejs';
 
@@ -44,6 +45,20 @@ export async function POST(
       return NextResponse.json(
         { error: 'Knowledge base not found' },
         { status: 404 }
+      );
+    }
+
+    // Check tier limits before proceeding
+    const usageCheck = await canPerformAction(userId, 'upload_document');
+    if (!usageCheck.allowed) {
+      return NextResponse.json(
+        { 
+          error: 'Tier limit exceeded',
+          message: usageCheck.reason,
+          usage: usageCheck.usage,
+          upgradeRequired: true
+        },
+        { status: 403 }
       );
     }
 
@@ -110,6 +125,9 @@ export async function POST(
         updatedAt: new Date(),
       },
     });
+
+    // Track usage
+    await trackUsage(userId, 'document_uploaded');
 
     return NextResponse.json({
       success: true,
