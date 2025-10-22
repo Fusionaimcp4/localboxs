@@ -46,7 +46,7 @@
 </head>
 <body>
   <header>
-    <img class="logo" src="https://avatars.githubusercontent.com/u/193538494?s=200&v=4" alt="starsling.dev Logo" />
+    
     <h1>starsling.dev — AI Support Demo</h1>
     <div class="tag">Powered by LocalBoxes • AI Support with starsling.dev Knowledge Base</div>
   </header>
@@ -111,16 +111,44 @@
   </main>
 
   <script>
+    window.chatwootSettings = {"position":"right","type":"standard","launcherTitle":"Chat with us"};
     (function(d,t) {
-      var BASE_URL="https://chatwoot.mcp4.ai";
-      var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
-      g.src=BASE_URL+"/packs/js/sdk.js"; s.parentNode.insertBefore(g,s);
-      g.onload=function(){
-        window.chatwootSDK.run({ websiteToken: "oZtok4g9hyeiHvaGwLTTzXQj", baseUrl: BASE_URL });
-        if (window.$chatwoot && window.$chatwoot.setCustomAttributes) {
-          window.$chatwoot.setCustomAttributes({ business: "starsling.dev", slug: "starsling-dev-22617a77" });
+      var BASE_URL = "https://chatwoot.mcp4.ai";
+      var g = d.createElement(t), s = d.getElementsByTagName(t)[0];
+      g.src = BASE_URL + "/packs/js/sdk.js";
+      g.async = true;
+      g.crossOrigin = "anonymous"; // Add CORS support
+      s.parentNode.insertBefore(g,s);
+      g.onload = function() {
+        try {
+          window.chatwootSDK.run({
+            websiteToken: "wWDRf8GjVyBpUaVcQvizNG42",
+            baseUrl: BASE_URL
+          });
+          if (window.$chatwoot && window.$chatwoot.setCustomAttributes) {
+            window.$chatwoot.setCustomAttributes({ business: "starsling.dev", slug: "starsling-dev-22617a77" });
+          }
+        } catch (error) {
+          // Silently handle widget loading errors
         }
-      }
+      };
+      g.onerror = function(error) {
+        // Fallback: try to load without CORS
+        var fallbackScript = d.createElement(t);
+        fallbackScript.src = BASE_URL + "/packs/js/sdk.js";
+        fallbackScript.async = true;
+        fallbackScript.onload = function() {
+          try {
+            window.chatwootSDK.run({
+              websiteToken: "wWDRf8GjVyBpUaVcQvizNG42",
+              baseUrl: BASE_URL
+            });
+          } catch (fallbackError) {
+            // Silently handle fallback errors
+          }
+        };
+        s.parentNode.insertBefore(fallbackScript, s);
+      };
     })(document,"script");
   </script>
 </body>

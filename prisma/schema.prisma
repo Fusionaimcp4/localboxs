@@ -186,6 +186,40 @@ model SystemMessage {
   @@map("system_messages")
 }
 
+// System Message Template Management
+model SystemMessageTemplate {
+  id          String   @id @default(cuid())
+  name        String
+  description String
+  content     String
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  versions SystemMessageVersion[]
+
+  @@map("system_message_templates")
+}
+
+model SystemMessageVersion {
+  id           String   @id @default(cuid())
+  templateId   String
+  version      Int
+  content      String
+  isPublished  Boolean  @default(false)
+  publishedAt  DateTime?
+  publishedBy  String?
+  changeLog    String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Relations
+  template SystemMessageTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
+
+  @@map("system_message_versions")
+}
+
 // Integration Management
 model Integration {
   id            String          @id @default(cuid())

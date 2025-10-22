@@ -1059,13 +1059,13 @@
     "system_message_file": "./public/system_messages/n8n_System_Message_starsling-dev-22617a77.md",
     "demo_url": "http://localhost:3000/demo/starsling-dev-22617a77",
     "chatwoot": {
-      "inbox_id": 136,
-      "website_token": "oZtok4g9hyeiHvaGwLTTzXQj"
+      "inbox_id": 149,
+      "website_token": "wWDRf8GjVyBpUaVcQvizNG42"
     },
     "workflow_duplication": "success",
     "agent_bot": {
-      "id": 134,
-      "access_token": "v8TCm5fvnRniKj88J5yocnnu"
+      "id": 147,
+      "access_token": "vMCawHwtW2fNFcZTiDrsecfd"
     },
     "lead": {
       "name": "admin user1",
@@ -1073,7 +1073,8 @@
       "company": "",
       "phone": ""
     },
-    "created_at": "2025-10-21T19:06:05.084Z"
+    "created_at": "2025-10-21T19:06:05.084Z",
+    "updated_at": "2025-10-22T20:39:45.393Z"
   },
   "ethiochicken-com-1bf6e916": {
     "slug": "ethiochicken-com-1bf6e916",

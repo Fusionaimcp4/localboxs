@@ -6,6 +6,7 @@ import { createWebsiteInbox } from '@/lib/chatwoot';
 import { renderDemoHTML } from '@/lib/renderDemo';
 import { slugify } from '@/lib/slug';
 import { writeTextFile, readTextFileIfExists, atomicJSONUpdate } from '@/lib/fsutils';
+import { getPublishedSystemMessageTemplate } from '@/lib/system-message-template';
 import { duplicateWorkflowViaWebhook } from '@/lib/n8n-webhook';
 import { createAgentBot, assignBotToInbox } from '@/lib/chatwoot_admin';
 import { n8nCredentialService } from '@/lib/n8n-credentials';
@@ -178,16 +179,8 @@ export async function POST(request: NextRequest) {
       // Step 2: Generate knowledge base
       const kbMarkdown = await generateKBFromWebsite(cleanedText, payload.url);
 
-      // Step 3: Load skeleton template
-      const skeletonPath = process.env.SKELETON_PATH || './data/templates/n8n_System_Message.md';
-      const skeletonText = await readTextFileIfExists(skeletonPath);
-      
-      if (!skeletonText) {
-        return NextResponse.json(
-          { error: 'Skeleton template not found' },
-          { status: 500 }
-        );
-      }
+      // Step 3: Load skeleton template from database or file
+      const skeletonText = await getPublishedSystemMessageTemplate();
 
       // Step 4: Merge KB into skeleton
       finalSystemMessage = mergeKBIntoSkeleton(skeletonText, kbMarkdown);
