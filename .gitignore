@@ -75,6 +75,13 @@ secrets/
 *.key
 *.crt
 
+# ─────────────── Docker & Deployment ───────────────
+.docker/
+docker-compose.override.yml
+backups/
+ssl/
+*.tar.gz
+
 # ─────────────── Optional Tool Caches ───────────────
 .eslintcache
 .rpt2_cache*/
