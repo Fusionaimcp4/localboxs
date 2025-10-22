@@ -35,6 +35,11 @@ model User {
   subscriptionStatus SubscriptionStatus @default(ACTIVE)
   subscriptionExpiresAt DateTime?
 
+  // Fusion integration fields
+  fusionSubAccountId String?
+  fusionCredentialName String? // n8n credential name for this user
+  fusionCredentialId String? // n8n credential ID for this user (encrypted)
+
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
 
@@ -50,6 +55,7 @@ model User {
   integrations   Integration[]
   verificationTokens VerificationToken[] // new relation for tokens
   features       UserFeature[] // Many-to-many relationship with features
+  apiCallLogs    ApiCallLog[] // API call tracking for usage
 
   @@map("users")
 }
@@ -447,6 +453,40 @@ model BlockedEmailDomain {
   createdAt DateTime @default(now())
 
   @@map("blocked_email_domains")
+}
+
+// API Call Logging for Usage Tracking
+model ApiCallLog {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // API Call Details
+  provider    String   // "openai", "anthropic", "google", etc.
+  model       String   // "text-embedding-3-small", "gpt-4o", etc.
+  endpoint    String   // "embeddings", "chat", "completions", etc.
+  
+  // Token Usage
+  inputTokens Int      @default(0)
+  outputTokens Int     @default(0)
+  totalTokens Int      @default(0)
+  
+  // Cost and Performance
+  cost        Float    @default(0.0)
+  responseTime Int     @default(0) // milliseconds
+  
+  // Context
+  context     String?  // "knowledge_base_processing", "chat", "search", etc.
+  documentId  String?  // Link to document if applicable
+  knowledgeBaseId String? // Link to knowledge base if applicable
+  workflowId  String?  // Link to workflow if applicable
+  
+  // Metadata
+  success     Boolean  @default(true)
+  errorMessage String?
+  createdAt   DateTime @default(now())
+  
+  @@map("api_call_logs")
 }
 
 // NextAuth.js required tables

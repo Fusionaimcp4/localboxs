@@ -1,12 +1,13 @@
 /**
- * Generate an encryption key for integration credentials
- * Run this once and add the key to your .env file
+ * Generate a secure encryption key for credential storage
  */
 
-import { generateEncryptionKey } from '../lib/integrations/encryption';
+import { EncryptionService } from '../lib/encryption';
 
-console.log('\n🔐 Generating Integration Encryption Key\n');
-console.log('Add this to your .env file:\n');
-console.log(`INTEGRATION_ENCRYPTION_KEY=${generateEncryptionKey()}\n`);
-console.log('⚠️  Keep this key secure and never commit it to version control!\n');
-
+console.log('🔐 Generating secure encryption key...');
+const key = EncryptionService.generateKey();
+console.log(`\n✅ Generated encryption key:`);
+console.log(key);
+console.log(`\n📋 Add this to your .env file:`);
+console.log(`ENCRYPTION_KEY=${key}`);
+console.log(`\n⚠️  IMPORTANT: Keep this key secure and never commit it to version control!`);

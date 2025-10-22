@@ -8,6 +8,9 @@ import { SignUpForm } from "./sign-up-form";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { VisuallyHidden } from "@/components/ui/visually-hidden";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { CheckCircle, AlertCircle } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -17,6 +20,18 @@ interface AuthModalProps {
 
 export function AuthModal({ isOpen, onClose, defaultTab = "signin" }: AuthModalProps) {
   const [activeTab, setActiveTab] = React.useState(defaultTab);
+  const searchParams = useSearchParams();
+  
+  // Get message and error from URL parameters
+  const message = searchParams.get('message');
+  const error = searchParams.get('error');
+  
+  // Set initial tab based on message type
+  React.useEffect(() => {
+    if (message && message.includes('Registration successful')) {
+      setActiveTab('signin');
+    }
+  }, [message]);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -45,6 +60,28 @@ export function AuthModal({ isOpen, onClose, defaultTab = "signin" }: AuthModalP
                 </span>
               </div>
             </div>
+
+            {/* Success/Error Messages */}
+            {(message || error) && (
+              <div className="mb-6">
+                {message && (
+                  <Alert className="border-green-500/20 bg-green-500/10">
+                    <CheckCircle className="h-4 w-4 text-green-500" />
+                    <AlertDescription className="text-green-400">
+                      {message}
+                    </AlertDescription>
+                  </Alert>
+                )}
+                {error && (
+                  <Alert className="border-red-500/20 bg-red-500/10">
+                    <AlertCircle className="h-4 w-4 text-red-500" />
+                    <AlertDescription className="text-red-400">
+                      {error}
+                    </AlertDescription>
+                  </Alert>
+                )}
+              </div>
+            )}
 
             <Tabs
               defaultValue={defaultTab}

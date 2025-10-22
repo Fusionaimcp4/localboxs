@@ -8,6 +8,7 @@ import {
   Settings, AlertCircle, CheckCircle, Clock, XCircle, RefreshCw,
   Link as LinkIcon, Plus, Edit2, Zap, X, Database
 } from "lucide-react";
+import { notifications } from "@/lib/notifications";
 
 interface Document {
   id: string;
@@ -161,11 +162,11 @@ export default function KnowledgeBaseDetailPage({ params }: { params: Promise<{ 
         await fetchKB();
       } else {
         const error = await response.json();
-        alert(`Upload failed: ${error.error}`);
+        notifications.error(`Upload failed: ${error.error}`);
       }
     } catch (error) {
       console.error('Upload failed:', error);
-      alert('Upload failed. Please try again.');
+      notifications.error('Upload failed. Please try again.');
     } finally {
       setUploading(false);
     }
@@ -207,7 +208,8 @@ export default function KnowledgeBaseDetailPage({ params }: { params: Promise<{ 
   };
 
   const handleDeleteDocument = async (docId: string) => {
-    if (!confirm('Are you sure you want to delete this document? This action cannot be undone.')) {
+    const confirmed = await notifications.confirm('Are you sure you want to delete this document? This action cannot be undone.');
+    if (!confirmed) {
       return;
     }
 
@@ -221,18 +223,19 @@ export default function KnowledgeBaseDetailPage({ params }: { params: Promise<{ 
         await fetchKB();
       } else {
         const error = await response.json();
-        alert(`Delete failed: ${error.error}`);
+        notifications.error(`Delete failed: ${error.error}`);
       }
     } catch (error) {
       console.error('Delete failed:', error);
-      alert('Delete failed. Please try again.');
+      notifications.error('Delete failed. Please try again.');
     } finally {
       setDeletingDocId(null);
     }
   };
 
   const handleReprocessDocument = async (docId: string) => {
-    if (!confirm('Reprocess this document? This will regenerate chunks and embeddings.')) {
+    const confirmed = await notifications.confirm('Reprocess this document? This will regenerate chunks and embeddings.');
+    if (!confirmed) {
       return;
     }
 
@@ -244,15 +247,15 @@ export default function KnowledgeBaseDetailPage({ params }: { params: Promise<{ 
       });
 
       if (response.ok) {
-        alert('Document reprocessing started');
+        notifications.success('Document reprocessing started');
         await fetchKB();
       } else {
         const error = await response.json();
-        alert(`Reprocess failed: ${error.error}`);
+        notifications.error(`Reprocess failed: ${error.error}`);
       }
     } catch (error) {
       console.error('Reprocess failed:', error);
-      alert('Reprocess failed. Please try again.');
+      notifications.error('Reprocess failed. Please try again.');
     }
   };
 
@@ -265,21 +268,22 @@ export default function KnowledgeBaseDetailPage({ params }: { params: Promise<{ 
       });
 
       if (response.ok) {
-        alert('Settings saved successfully');
+        notifications.success('Settings saved successfully');
         setShowSettings(false);
         await fetchKB();
       } else {
         const error = await response.json();
-        alert(`Save failed: ${error.error}`);
+        notifications.error(`Save failed: ${error.error}`);
       }
     } catch (error) {
       console.error('Save settings failed:', error);
-      alert('Save failed. Please try again.');
+      notifications.error('Save failed. Please try again.');
     }
   };
 
   const handleDeleteKB = async () => {
-    if (!confirm('Are you sure you want to delete this knowledge base? This will delete all documents and cannot be undone.')) {
+    const confirmed = await notifications.confirm('Are you sure you want to delete this knowledge base? This will delete all documents and cannot be undone.');
+    if (!confirmed) {
       return;
     }
 
@@ -292,11 +296,11 @@ export default function KnowledgeBaseDetailPage({ params }: { params: Promise<{ 
         window.location.href = '/dashboard/knowledge-bases';
       } else {
         const error = await response.json();
-        alert(`Delete failed: ${error.error}`);
+        notifications.error(`Delete failed: ${error.error}`);
       }
     } catch (error) {
       console.error('Delete failed:', error);
-      alert('Delete failed. Please try again.');
+      notifications.error('Delete failed. Please try again.');
     }
   };
 
@@ -332,7 +336,7 @@ export default function KnowledgeBaseDetailPage({ params }: { params: Promise<{ 
 
   const handleLinkWorkflow = async () => {
     if (!linkForm.workflowId) {
-      alert('Please select a workflow');
+      notifications.warning('Please select a workflow');
       return;
     }
 
@@ -344,7 +348,7 @@ export default function KnowledgeBaseDetailPage({ params }: { params: Promise<{ 
       });
 
       if (response.ok) {
-        alert('Workflow linked successfully!');
+        notifications.success('Workflow linked successfully!');
         setShowLinkModal(false);
         setLinkForm({
           workflowId: '',
@@ -355,16 +359,17 @@ export default function KnowledgeBaseDetailPage({ params }: { params: Promise<{ 
         await fetchWorkflowLinks();
       } else {
         const error = await response.json();
-        alert(`Link failed: ${error.error}`);
+        notifications.error(`Link failed: ${error.error}`);
       }
     } catch (error) {
       console.error('Link failed:', error);
-      alert('Link failed. Please try again.');
+      notifications.error('Link failed. Please try again.');
     }
   };
 
   const handleUnlinkWorkflow = async (workflowId: string) => {
-    if (!confirm('Are you sure you want to unlink this workflow?')) {
+    const confirmed = await notifications.confirm('Are you sure you want to unlink this workflow?');
+    if (!confirmed) {
       return;
     }
 
@@ -375,15 +380,15 @@ export default function KnowledgeBaseDetailPage({ params }: { params: Promise<{ 
       );
 
       if (response.ok) {
-        alert('Workflow unlinked successfully!');
+        notifications.success('Workflow unlinked successfully!');
         await fetchWorkflowLinks();
       } else {
         const error = await response.json();
-        alert(`Unlink failed: ${error.error}`);
+        notifications.error(`Unlink failed: ${error.error}`);
       }
     } catch (error) {
       console.error('Unlink failed:', error);
-      alert('Unlink failed. Please try again.');
+      notifications.error('Unlink failed. Please try again.');
     }
   };
 
@@ -399,11 +404,11 @@ export default function KnowledgeBaseDetailPage({ params }: { params: Promise<{ 
         await fetchWorkflowLinks();
       } else {
         const error = await response.json();
-        alert(`Update failed: ${error.error}`);
+        notifications.error(`Update failed: ${error.error}`);
       }
     } catch (error) {
       console.error('Update failed:', error);
-      alert('Update failed. Please try again.');
+      notifications.error('Update failed. Please try again.');
     }
   };
 

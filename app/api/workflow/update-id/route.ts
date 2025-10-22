@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { n8nCredentialService } from '@/lib/n8n-credentials';
 
 interface WorkflowIdPayload {
   businessName: string;
@@ -98,6 +99,16 @@ export async function POST(request: NextRequest) {
       });
 
       console.log(`✅ Updated workflow ${workflow.id} with n8n ID: ${payload.workflowId}`);
+      
+      // Update Fusion credentials for this workflow (following system message update pattern)
+      try {
+        console.log(`🔄 Setting up user-specific Fusion credentials for workflow ${payload.workflowId}...`);
+        await n8nCredentialService.updateWorkflowCredential(payload.workflowId, demo.userId);
+        console.log(`✅ Updated workflow ${payload.workflowId} with user-specific Fusion credentials`);
+      } catch (credentialError) {
+        console.error('Failed to update workflow credentials:', credentialError);
+        // Don't fail the entire workflow update if credential update fails
+      }
     } else {
       // Create a new workflow record if none exists
       const newWorkflow = await prisma.workflow.create({
@@ -116,6 +127,16 @@ export async function POST(request: NextRequest) {
       });
 
       console.log(`✅ Created new workflow ${newWorkflow.id} with n8n ID: ${payload.workflowId}`);
+      
+      // Update Fusion credentials for this new workflow (following system message update pattern)
+      try {
+        console.log(`🔄 Setting up user-specific Fusion credentials for new workflow ${payload.workflowId}...`);
+        await n8nCredentialService.updateWorkflowCredential(payload.workflowId, demo.userId);
+        console.log(`✅ Updated new workflow ${payload.workflowId} with user-specific Fusion credentials`);
+      } catch (credentialError) {
+        console.error('Failed to update new workflow credentials:', credentialError);
+        // Don't fail the entire workflow update if credential update fails
+      }
     }
 
     // Optionally update Chatwoot IDs if provided (n8n usually doesn't have these)

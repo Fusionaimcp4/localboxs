@@ -19,6 +19,7 @@ interface SignUpFormProps {
 export function SignUpForm({ onSuccess }: SignUpFormProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const router = useRouter();
 
@@ -31,6 +32,7 @@ export function SignUpForm({ onSuccess }: SignUpFormProps) {
 
     setIsLoading(true);
     setError("");
+    setSuccess("");
 
     const formData = new FormData(e.currentTarget);
     const data = {
@@ -53,8 +55,16 @@ export function SignUpForm({ onSuccess }: SignUpFormProps) {
         throw new Error(result.error || "Registration failed");
       }
 
+      // Show success message immediately
+      setSuccess("Registration successful! Redirecting to sign in...");
+      
+      // Call onSuccess callback
       onSuccess?.();
-      router.push("/auth/signin?message=Registration successful. Please check your email to verify your account.");
+      
+      // Redirect after a brief delay to show the success message
+      setTimeout(() => {
+        router.push("/auth/signin?message=Registration successful. Please check your email to verify your account.");
+      }, 1500);
     } catch (error) {
       setError(error instanceof Error ? error.message : "Registration failed");
     } finally {
@@ -84,6 +94,12 @@ export function SignUpForm({ onSuccess }: SignUpFormProps) {
       {error && (
         <Alert variant="destructive" className="bg-red-900/20 border-red-900/50">
           <AlertDescription className="text-red-400">{error}</AlertDescription>
+        </Alert>
+      )}
+
+      {success && (
+        <Alert className="bg-green-900/20 border-green-900/50">
+          <AlertDescription className="text-green-400">{success}</AlertDescription>
         </Alert>
       )}
 

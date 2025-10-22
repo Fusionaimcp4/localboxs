@@ -2,6 +2,7 @@ import { prisma } from '@/lib/prisma';
 import { SubscriptionTier } from '@/lib/generated/prisma';
 import { getDynamicTierLimits, DynamicTierLimits } from '@/lib/dynamic-tier-limits';
 import { checkUsageLimits, UsageStats } from '@/lib/tier-access';
+import { FusionSubAccountService } from '@/lib/fusion-sub-accounts';
 
 // Usage tracking for API routes
 export async function trackUsage(
@@ -25,7 +26,7 @@ export async function trackUsage(
 // Get current usage stats for a user
 export async function getUserUsageStats(userId: string): Promise<UsageStats> {
   try {
-    const [demos, workflows, knowledgeBases, documents, integrations] = await Promise.all([
+    const [demos, workflows, knowledgeBases, documents, integrations, user] = await Promise.all([
       prisma.demo.count({ where: { userId } }),
       prisma.workflow.count({ where: { userId } }),
       prisma.knowledgeBase.count({ where: { userId } }),
@@ -34,12 +35,41 @@ export async function getUserUsageStats(userId: string): Promise<UsageStats> {
           knowledgeBase: { userId } 
         } 
       }),
-      prisma.integration.count({ where: { userId } })
+      prisma.integration.count({ where: { userId } }),
+      prisma.user.findUnique({
+        where: { id: userId },
+        select: { fusionSubAccountId: true }
+      })
     ]);
 
-    // For API calls, you'd typically track this separately
-    // This is a placeholder - implement based on your API call tracking system
-    const apiCalls = 0; // TODO: Implement API call tracking
+    // Get API calls from both Fusion and our local tracking
+    let fusionApiCalls = 0;
+    let localApiCalls = 0;
+    
+    // Get Fusion API calls if user has a sub-account
+    if (user?.fusionSubAccountId) {
+      try {
+        const usageData = await FusionSubAccountService.getUsageMetrics(parseInt(user.fusionSubAccountId));
+        fusionApiCalls = usageData.metrics?.requests || 0;
+      } catch (error) {
+        console.error('Failed to get Fusion usage data:', error);
+        // Continue with fusionApiCalls = 0 if Fusion call fails
+      }
+    }
+    
+    // Get local API calls (knowledge base processing, etc.)
+    try {
+      const localStats = await prisma.apiCallLog.aggregate({
+        where: { userId },
+        _count: { id: true },
+      });
+      localApiCalls = localStats._count.id;
+    } catch (error) {
+      console.error('Failed to get local API call stats:', error);
+    }
+    
+    // Total API calls = Fusion calls + Local calls
+    const apiCalls = fusionApiCalls + localApiCalls;
 
     return {
       demos,

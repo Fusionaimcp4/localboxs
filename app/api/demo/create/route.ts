@@ -8,6 +8,7 @@ import { slugify } from '@/lib/slug';
 import { writeTextFile, readTextFileIfExists, atomicJSONUpdate } from '@/lib/fsutils';
 import { duplicateWorkflowViaWebhook } from '@/lib/n8n-webhook';
 import { createAgentBot, assignBotToInbox } from '@/lib/chatwoot_admin';
+import { n8nCredentialService } from '@/lib/n8n-credentials';
 import { promises as fs } from 'fs';
 import crypto from 'crypto';
 import path from 'path';
@@ -296,7 +297,7 @@ export async function POST(request: NextRequest) {
     // Step 10: Setup Chatwoot bot and trigger n8n workflow duplication
     let botId: number | string | undefined;
     let botAccessToken: string | undefined;
-    let workflowDuplicationResult: { success: boolean; error?: string } | undefined;
+    let workflowDuplicationResult: { success: boolean; error?: string; workflowId?: string } | undefined;
 
     try {
       // Create Chatwoot Agent Bot
@@ -338,6 +339,32 @@ export async function POST(request: NextRequest) {
           botAccessToken,
           finalSystemMessage
         );
+
+        // If workflow duplication succeeded and we got a workflow ID, save it first
+        if (workflowDuplicationResult.success && workflowDuplicationResult.workflowId && demo) {
+          try {
+            // Update the workflow record with the n8n workflow ID FIRST
+            await prisma.workflow.updateMany({
+              where: {
+                userId,
+                demoId: demo.id,
+                n8nWorkflowId: null
+              },
+              data: {
+                n8nWorkflowId: workflowDuplicationResult.workflowId
+              }
+            });
+            
+            console.log(`✅ Workflow ${workflowDuplicationResult.workflowId} saved to database`);
+            
+            // Credential update will happen in /api/workflow/update-id endpoint
+            // This follows the same pattern as system message updates
+            
+          } catch (credentialError) {
+            console.error('Failed to save workflow ID:', credentialError);
+            // Don't fail the entire demo creation if workflow save fails
+          }
+        }
       }
     } catch (e: any) {
       console.error("Auto-create bot failed:", e);

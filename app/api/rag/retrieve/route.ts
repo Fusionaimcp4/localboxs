@@ -151,13 +151,31 @@ export async function POST(request: NextRequest) {
 
     // Generate embedding for the query
     console.log(`[RAG] Generating embedding for query: "${query.substring(0, 50)}..."`);
+    const startTime = Date.now();
     const embeddingResponse = await openai.embeddings.create({
       model: 'text-embedding-3-small',
       input: query,
       encoding_format: 'float',
     });
-
+    const endTime = Date.now();
+    const responseTime = endTime - startTime;
     const queryEmbedding = embeddingResponse.data[0].embedding;
+
+    // Log the API call for usage tracking
+    const { logApiCall } = await import('@/lib/api-call-tracking');
+    await logApiCall({
+      userId: workflow.userId,
+      provider: 'openai',
+      model: 'text-embedding-3-small',
+      endpoint: 'embeddings',
+      inputTokens: Math.ceil(query.length / 4), // Rough estimate
+      outputTokens: 0,
+      totalTokens: Math.ceil(query.length / 4),
+      cost: 0.0,
+      responseTime,
+      context: 'rag_retrieval',
+      workflowId: workflow.id,
+    });
 
     // Get all chunks from the relevant KBs
     const chunks = await prisma.documentChunk.findMany({

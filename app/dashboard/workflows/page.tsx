@@ -21,6 +21,7 @@ import {
   Pause,
   X
 } from "lucide-react";
+import { notifications } from "@/lib/notifications";
 
 interface Workflow {
   id: string;
@@ -142,14 +143,14 @@ export default function WorkflowsPage() {
         console.log(`✅ Workflow ${action} successful:`, data);
         // Refresh workflows after action
         fetchWorkflows();
-        alert(`Workflow ${action} successful!`);
+        notifications.success(`Workflow ${action} successful!`);
       } else {
         console.error(`❌ Workflow ${action} failed:`, data);
-        alert(`Failed to ${action} workflow: ${data.error || 'Unknown error'}`);
+        notifications.error(`Failed to ${action} workflow: ${data.error || 'Unknown error'}`);
       }
     } catch (error) {
       console.error(`💥 Failed to ${action} workflow:`, error);
-      alert(`Failed to ${action} workflow: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      notifications.error(`Failed to ${action} workflow: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   };
 
@@ -206,16 +207,16 @@ export default function WorkflowsPage() {
       const data = await response.json();
       
       if (response.ok) {
-        alert(data.message);
+        notifications.success(data.message);
         // Refresh workflows to show updated model
         fetchWorkflows();
         setSelectedWorkflow(null);
       } else {
-        alert(`Failed to switch model: ${data.error || 'Unknown error'}`);
+        notifications.error(`Failed to switch model: ${data.error || 'Unknown error'}`);
       }
     } catch (error) {
       console.error('Failed to switch model:', error);
-      alert(`Failed to switch model: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      notifications.error(`Failed to switch model: ${error instanceof Error ? error.message : 'Unknown error'}`);
     } finally {
       setSwitchingModel(false);
     }
@@ -243,16 +244,16 @@ export default function WorkflowsPage() {
       const data = await response.json();
       
       if (response.ok) {
-        alert(data.message);
+        notifications.success(data.message);
         // Refresh workflows to show updated thresholds
         fetchWorkflows();
         setSelectedWorkflow(null);
       } else {
-        alert(`Failed to save timing thresholds: ${data.error || 'Unknown error'}`);
+        notifications.error(`Failed to save timing thresholds: ${data.error || 'Unknown error'}`);
       }
     } catch (error) {
       console.error('Failed to save timing thresholds:', error);
-      alert(`Failed to save timing thresholds: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      notifications.error(`Failed to save timing thresholds: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   };
 

@@ -5,7 +5,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { AlertCircle, Plus, Settings, BarChart3, MessageSquare, ChevronRight, Eye, Trash2, X } from "lucide-react";
-import { UsageDashboard } from "@/components/usage-dashboard";
+import { notifications } from "@/lib/notifications";
+import { logger } from "@/lib/logger";
 
 interface DashboardStats {
   totalDemos: number;
@@ -63,7 +64,7 @@ export default function DashboardPage() {
         setRecentDemos(data.recentDemos);
       }
     } catch (error) {
-      console.error('Failed to fetch dashboard data:', error);
+      logger.error('Failed to fetch dashboard data:', error);
     } finally {
       setLoading(false);
     }
@@ -114,13 +115,13 @@ export default function DashboardPage() {
           isDeleting: false
         });
 
-        alert(data.message);
+        notifications.success(data.message);
       } else {
-        alert(`Failed to delete demo: ${data.error || 'Unknown error'}`);
+        notifications.error(`Failed to delete demo: ${data.error || 'Unknown error'}`);
       }
     } catch (error) {
-      console.error('Failed to delete demo:', error);
-      alert(`Failed to delete demo: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      logger.error('Failed to delete demo:', error);
+      notifications.error(`Failed to delete demo: ${error instanceof Error ? error.message : 'Unknown error'}`);
     } finally {
       setDeleteModal(prev => ({ ...prev, isDeleting: false }));
     }
@@ -149,14 +150,14 @@ export default function DashboardPage() {
       const data = await response.json();
 
       if (response.ok) {
-        alert(data.message || 'Verification email sent.');
+        notifications.success(data.message || 'Verification email sent.');
         await updateSession(); // Re-fetch session to update isVerified status immediately
       } else {
-        alert(`Failed to resend verification email: ${data.error || 'Unknown error'}`);
+        notifications.error(`Failed to resend verification email: ${data.error || 'Unknown error'}`);
       }
     } catch (error) {
-      console.error('Failed to resend verification email:', error);
-      alert(`Failed to resend verification email: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      logger.error('Failed to resend verification email:', error);
+      notifications.error(`Failed to resend verification email: ${error instanceof Error ? error.message : 'Unknown error'}`);
     } finally {
       setIsResendingVerification(false);
     }
@@ -284,13 +285,6 @@ export default function DashboardPage() {
         </motion.div>
 
         {/* Usage Dashboard */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3, delay: 0.15 }}
-        >
-          <UsageDashboard />
-        </motion.div>
 
         {/* Quick Actions - Mobile First */}
         <motion.div

@@ -1,4 +1,4 @@
-import { getUserChatwootConfig } from './integrations/crm-service';
+import { logger } from './logger';
 
 export interface ChatwootInboxResponse {
   inbox_id: number;
@@ -36,7 +36,7 @@ export async function createWebsiteInbox(
         token = userConfig.apiKey;
       }
     } catch (error) {
-      console.warn('Failed to get user Chatwoot config, falling back to env vars:', error);
+      logger.warn('Failed to get user Chatwoot config, falling back to env vars:', error);
     }
   }
 
@@ -60,6 +60,14 @@ export async function createWebsiteInbox(
     }
   };
 
+  logger.debug('Using Chatwoot config:', {
+    baseUrl: base,
+    accountId: accountId,
+    tokenPrefix: token ? `${token.substring(0, 10)}...` : 'MISSING',
+    url: url,
+    payload: payload
+  });
+
   try {
     const res = await fetch(url, {
       method: 'POST',
@@ -82,7 +90,7 @@ export async function createWebsiteInbox(
       website_token: data.website_token
     };
   } catch (error) {
-    console.error('Chatwoot API error:', error);
+    logger.error('Chatwoot API error:', error);
     throw new Error(`Chatwoot inbox create failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
   }
 }

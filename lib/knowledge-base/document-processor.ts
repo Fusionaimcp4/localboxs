@@ -8,6 +8,7 @@ import { extractTextFromFile, estimateTokenCount, detectLanguage } from './text-
 import { chunkTextSmart } from './chunking';
 import { FileType } from './types';
 import OpenAI from 'openai';
+import { logApiCall } from '@/lib/api-call-tracking';
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -76,6 +77,8 @@ export async function processDocument(documentId: string): Promise<void> {
       const chunk = chunks[i];
       
       try {
+        const startTime = Date.now();
+        
         // Generate embedding using OpenAI
         const embeddingResponse = await openai.embeddings.create({
           model: embeddingModel,
@@ -83,8 +86,26 @@ export async function processDocument(documentId: string): Promise<void> {
           encoding_format: 'float',
         });
 
+        const endTime = Date.now();
+        const responseTime = endTime - startTime;
         const embedding = embeddingResponse.data[0].embedding;
         totalTokens += chunk.tokenCount;
+
+        // Log the API call for usage tracking
+        await logApiCall({
+          userId: document.knowledgeBase.userId,
+          provider: 'openai',
+          model: embeddingModel,
+          endpoint: 'embeddings',
+          inputTokens: chunk.tokenCount,
+          outputTokens: 0, // Embeddings don't have output tokens
+          totalTokens: chunk.tokenCount,
+          cost: 0.0, // We'll calculate this if needed
+          responseTime,
+          context: 'knowledge_base_processing',
+          documentId: document.id,
+          knowledgeBaseId: document.knowledgeBaseId,
+        });
 
         // Store chunk in database
         await prisma.documentChunk.create({
@@ -103,6 +124,25 @@ export async function processDocument(documentId: string): Promise<void> {
         console.log(`[Processor] Processed chunk ${i + 1}/${chunks.length}`);
       } catch (error) {
         console.error(`[Processor] Error processing chunk ${i}:`, error);
+        
+        // Log the failed API call
+        await logApiCall({
+          userId: document.knowledgeBase.userId,
+          provider: 'openai',
+          model: embeddingModel,
+          endpoint: 'embeddings',
+          inputTokens: chunk.tokenCount,
+          outputTokens: 0,
+          totalTokens: chunk.tokenCount,
+          cost: 0.0,
+          responseTime: 0,
+          context: 'knowledge_base_processing',
+          documentId: document.id,
+          knowledgeBaseId: document.knowledgeBaseId,
+          success: false,
+          errorMessage: error instanceof Error ? error.message : 'Unknown error',
+        });
+        
         // Continue with other chunks even if one fails
       }
     }

@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { Plus, ExternalLink, Trash2, Settings, MessageSquare, Zap, X, Eye } from "lucide-react";
+import { notifications } from "@/lib/notifications";
 
 interface Demo {
   id: string;
@@ -88,13 +89,13 @@ export default function DemosPage() {
           domainName: '',
           isDeleting: false
         });
-        alert(data.message);
+        notifications.success(data.message);
       } else {
-        alert(`Failed to delete demo: ${data.error || 'Unknown error'}`);
+        notifications.error(`Failed to delete demo: ${data.error || 'Unknown error'}`);
       }
     } catch (error) {
       console.error('Failed to delete demo:', error);
-      alert(`Failed to delete demo: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      notifications.error(`Failed to delete demo: ${error instanceof Error ? error.message : 'Unknown error'}`);
     } finally {
       setDeleteModal(prev => ({ ...prev, isDeleting: false }));
     }

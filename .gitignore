@@ -96,3 +96,58 @@ dist
 # Temporary files
 temp/
 /lib/generated/prisma
+
+# data
+data/
+tests/
+todo/
+# Production Configuration Files
+
+## .gitignore
+node_modules/
+.next/
+out/
+dist/
+build/
+.env
+.env.local
+.env.production
+.env.staging
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.DS_Store
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Prisma
+prisma/migrations/dev.db*
+
+# Temporary files
+temp/
+tmp/
+*.tmp
+
+# OS generated files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Production secrets
+secrets/
+*.pem
+*.key
+*.crt
+
+# Build artifacts
+.vercel/
+.netlify/

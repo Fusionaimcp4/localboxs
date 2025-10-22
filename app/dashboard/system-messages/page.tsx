@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { X, MessageSquare, Database, Edit3, Save, RotateCcw } from "lucide-react";
+import { notifications } from "@/lib/notifications";
 
 interface SystemMessage {
   id: string;
@@ -92,13 +93,13 @@ export default function SystemMessagesPage() {
         setSelectedMessage(prev => prev ? { ...prev, content: editContent, version: prev.version + 1, updatedAt: new Date().toISOString() } : null);
         
         setIsEditing(false);
-        alert('System message updated successfully!');
+        notifications.success('System message updated successfully!');
       } else {
-        alert(`Failed to update: ${data.error}`);
+        notifications.error(`Failed to update: ${data.error}`);
       }
     } catch (error) {
       console.error('Failed to save message:', error);
-      alert('Failed to save changes');
+      notifications.error('Failed to save changes');
     } finally {
       setSaving(false);
     }

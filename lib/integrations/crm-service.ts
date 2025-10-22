@@ -218,7 +218,7 @@ export async function testCRMConnection(
       return {
         success: false,
         message: 'Unsupported CRM provider',
-        error: `Provider ${configuration.provider} is not supported`,
+        error: `Provider ${(configuration as any).provider} is not supported`,
       };
   }
 }

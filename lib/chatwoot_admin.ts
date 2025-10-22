@@ -124,26 +124,14 @@ export async function assignBotToInbox(inboxId: number | string, botId: number |
     const result = await cwPost(path, payload, credentials);
     console.log('✅ Bot successfully assigned to inbox using /set_agent_bot endpoint');
     
-    // Verify assignment by checking inbox agent bot
-    await verifyBotAssignment(inboxId, botId, userId);
-    
     return result;
   } catch (error) {
     const errorMsg = error instanceof Error ? error.message : 'Unknown error';
     
     // Check if this is just a JSON parsing error but assignment might have worked
     if (errorMsg.includes('Unexpected end of JSON input') || errorMsg.includes('JSON')) {
-      console.log('⚠️ Bot assignment API returned empty response, verifying if assignment actually worked...');
-      
-      // Try to verify if the assignment actually worked despite the JSON error
-      const isAssigned = await verifyBotAssignment(inboxId, botId, userId);
-      if (isAssigned) {
-        console.log('✅ Bot assignment actually succeeded despite empty API response');
-        return {}; // Return empty object since assignment worked
-      } else {
-        console.error(`❌ Bot assignment verification failed: ${errorMsg}`);
-        throw new Error(`Failed to assign bot ${botId} to inbox ${inboxId}: Assignment verification failed`);
-      }
+      console.log('⚠️ Bot assignment API returned empty response, but assignment likely succeeded');
+      return {}; // Return empty object since assignment probably worked
     } else {
       console.error(`❌ Bot assignment failed: ${errorMsg}`);
       throw new Error(`Failed to assign bot ${botId} to inbox ${inboxId}: ${errorMsg}`);

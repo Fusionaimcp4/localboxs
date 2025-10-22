@@ -8,6 +8,7 @@ import { SubscriptionTier } from '@/lib/generated/prisma';
 import { Plus, Link as LinkIcon, Calendar, Database, Zap, Webhook, Users, Settings, Trash2, Power, MessageCircle, Copy, Check, X, ChevronDown, Crown, Lock } from "lucide-react";
 import { CRMConfigModal } from "@/components/integrations/CRMConfigModal";
 import { CRMConfiguration } from "@/lib/integrations/types";
+import { notifications } from "@/lib/notifications";
 
 interface Integration {
   id: string;
@@ -110,7 +111,7 @@ export default function IntegrationsPage() {
       setShowChatScriptModal(true);
     } else {
       // For other types, show a "coming soon" message
-      alert(`${type} integration coming soon!`);
+      notifications.info(`${type} integration coming soon!`);
     }
   };
 
@@ -119,12 +120,13 @@ export default function IntegrationsPage() {
     if (integration.type === 'CRM') {
       setShowCRMModal(true);
     } else {
-      alert(`Editing ${integration.type} integration coming soon!`);
+      notifications.info(`Editing ${integration.type} integration coming soon!`);
     }
   };
 
   const handleDeleteIntegration = async (integrationId: string) => {
-    if (!confirm('Are you sure you want to delete this integration? This action cannot be undone.')) {
+    const confirmed = await notifications.confirm('Are you sure you want to delete this integration? This action cannot be undone.');
+    if (!confirmed) {
       return;
     }
 
@@ -137,11 +139,11 @@ export default function IntegrationsPage() {
         await fetchIntegrations();
       } else {
         const error = await response.json();
-        alert(`Failed to delete integration: ${error.error}`);
+        notifications.error(`Failed to delete integration: ${error.error}`);
       }
     } catch (error) {
       console.error('Failed to delete integration:', error);
-      alert('Failed to delete integration. Please try again.');
+      notifications.error('Failed to delete integration. Please try again.');
     }
   };
 
@@ -161,11 +163,11 @@ export default function IntegrationsPage() {
         await fetchIntegrations();
       } else {
         const error = await response.json();
-        alert(`Failed to update integration: ${error.error}`);
+        notifications.error(`Failed to update integration: ${error.error}`);
       }
     } catch (error) {
       console.error('Failed to toggle integration status:', error);
-      alert('Failed to update integration. Please try again.');
+      notifications.error('Failed to update integration. Please try again.');
     }
   };
 

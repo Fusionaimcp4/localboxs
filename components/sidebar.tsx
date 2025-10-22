@@ -45,6 +45,12 @@ export default function Sidebar({ isAdmin = false }: SidebarProps) {
       description: "Overview and stats"
     },
     {
+      name: "Usage",
+      href: "/dashboard/usage",
+      icon: DollarSign,
+      description: "API usage and analytics"
+    },
+    {
       name: "Workflows",
       href: "/dashboard/workflows",
       icon: Workflow,

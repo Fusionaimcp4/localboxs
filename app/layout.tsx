@@ -9,6 +9,7 @@ import AuthProvider from '@/components/auth-provider'
 import DashboardLayout from '@/components/dashboard-layout'
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'),
   title: 'LocalBoxs - All-in-One Conversations Platform | AI-First Customer Support',
   description:
     'Phone, SMS, WhatsApp, Email, Web Chat. AI answers 95% instantly. No per-seat or per-resolution fees. Self-hosted or managed. Your data, your control.',
@@ -50,30 +51,34 @@ html {
         <Toaster />
         <Analytics />
         {/* Chatwoot widget - deferred loading for better performance */}
+        {/* Only load on non-demo pages to avoid conflicts */}
         <Script id="chatwoot-widget" strategy="lazyOnload">
           {`
-            // Defer Chatwoot loading until browser is idle
-            function initChatwoot() {
-              var BASE_URL="${process.env.CHATWOOT_BASE_URL || 'https://chatwoot.mcp4.ai'}";
-              var g=document.createElement('script'),s=document.getElementsByTagName('script')[0];
-              g.src=BASE_URL+"/packs/js/sdk.js";
-              g.async = true;
-              s.parentNode.insertBefore(g,s);
-              g.onload=function(){
-                if (window.chatwootSDK) {
-                  window.chatwootSDK.run({
-                    websiteToken: 'NJzYTHcT7937oMjf8Kjng6UQ',
-                    baseUrl: BASE_URL
-                  });
+            // Only load Chatwoot on non-demo pages
+            if (!window.location.pathname.startsWith('/demo/')) {
+              // Defer Chatwoot loading until browser is idle
+              function initChatwoot() {
+                var BASE_URL="${process.env.CHATWOOT_BASE_URL || 'https://chatwoot.mcp4.ai'}";
+                var g=document.createElement('script'),s=document.getElementsByTagName('script')[0];
+                g.src=BASE_URL+"/packs/js/sdk.js";
+                g.async = true;
+                s.parentNode.insertBefore(g,s);
+                g.onload=function(){
+                  if (window.chatwootSDK) {
+                    window.chatwootSDK.run({
+                      websiteToken: 'NJzYTHcT7937oMjf8Kjng6UQ',
+                      baseUrl: BASE_URL
+                    });
+                  }
                 }
               }
-            }
-            
-            // Load when browser is idle or after 3 seconds
-            if ('requestIdleCallback' in window) {
-              requestIdleCallback(initChatwoot, { timeout: 3000 });
-            } else {
-              setTimeout(initChatwoot, 3000);
+              
+              // Load when browser is idle or after 3 seconds
+              if ('requestIdleCallback' in window) {
+                requestIdleCallback(initChatwoot, { timeout: 3000 });
+              } else {
+                setTimeout(initChatwoot, 3000);
+              }
             }
           `}
         </Script>

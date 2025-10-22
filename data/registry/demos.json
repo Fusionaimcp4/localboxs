@@ -1028,5 +1028,236 @@
       "phone": ""
     },
     "created_at": "2025-10-20T16:26:19.908Z"
+  },
+  "starsling-dev-d89486ad": {
+    "slug": "starsling-dev-d89486ad",
+    "business": "starsling.dev",
+    "url": "https://www.starsling.dev",
+    "system_message_file": "./public/system_messages/n8n_System_Message_starsling-dev-d89486ad.md",
+    "demo_url": "http://localhost:3000/demo/starsling-dev-d89486ad",
+    "chatwoot": {
+      "inbox_id": 135,
+      "website_token": "DtAkkPjru8458KyAUTtG5rEq"
+    },
+    "workflow_duplication": "success",
+    "agent_bot": {
+      "id": 133,
+      "access_token": "t2t7fPcGNFhom7Y6Ew8MSxyP"
+    },
+    "lead": {
+      "name": "admin user1",
+      "email": "service@mcp4.ai",
+      "company": "",
+      "phone": ""
+    },
+    "created_at": "2025-10-21T14:44:39.098Z"
+  },
+  "starsling-dev-22617a77": {
+    "slug": "starsling-dev-22617a77",
+    "business": "starsling.dev",
+    "url": "https://starsling.dev",
+    "system_message_file": "./public/system_messages/n8n_System_Message_starsling-dev-22617a77.md",
+    "demo_url": "http://localhost:3000/demo/starsling-dev-22617a77",
+    "chatwoot": {
+      "inbox_id": 136,
+      "website_token": "oZtok4g9hyeiHvaGwLTTzXQj"
+    },
+    "workflow_duplication": "success",
+    "agent_bot": {
+      "id": 134,
+      "access_token": "v8TCm5fvnRniKj88J5yocnnu"
+    },
+    "lead": {
+      "name": "admin user1",
+      "email": "service@mcp4.ai",
+      "company": "",
+      "phone": ""
+    },
+    "created_at": "2025-10-21T19:06:05.084Z"
+  },
+  "ethiochicken-com-1bf6e916": {
+    "slug": "ethiochicken-com-1bf6e916",
+    "business": "ethiochicken.com",
+    "url": "https://www.ethiochicken.com/",
+    "system_message_file": "./public/system_messages/n8n_System_Message_ethiochicken-com-1bf6e916.md",
+    "demo_url": "http://localhost:3000/demo/ethiochicken-com-1bf6e916",
+    "chatwoot": {
+      "inbox_id": 137,
+      "website_token": "aiwBytbWxqEg1jR3f1mawTQb"
+    },
+    "workflow_duplication": "success",
+    "agent_bot": {
+      "id": 135,
+      "access_token": "eE7EA5MpsLSQQ5bvF9KSuR19"
+    },
+    "lead": {
+      "name": "admin user1",
+      "email": "service@mcp4.ai",
+      "company": "",
+      "phone": ""
+    },
+    "created_at": "2025-10-21T19:43:11.692Z"
+  },
+  "ethiochicken-com-92c32587": {
+    "slug": "ethiochicken-com-92c32587",
+    "business": "ethiochicken.com",
+    "url": "https://ethiochicken.com",
+    "system_message_file": "./public/system_messages/n8n_System_Message_ethiochicken-com-92c32587.md",
+    "demo_url": "http://localhost:3000/demo/ethiochicken-com-92c32587",
+    "chatwoot": {
+      "inbox_id": 139,
+      "website_token": "Mb4PUUk3MtgwsCdfuGUg5FUC"
+    },
+    "workflow_duplication": "success",
+    "agent_bot": {
+      "id": 137,
+      "access_token": "XieoP9FMJ1SbgWA1GrbCMzAk"
+    },
+    "lead": {
+      "name": "admin user1",
+      "email": "service@mcp4.ai",
+      "company": "",
+      "phone": ""
+    },
+    "created_at": "2025-10-21T19:52:58.461Z",
+    "updated_at": "2025-10-21T20:12:22.041Z"
+  },
+  "fin-ai-210d7a58": {
+    "slug": "fin-ai-210d7a58",
+    "business": "fin.ai",
+    "url": "https://fin.ai",
+    "system_message_file": "./public/system_messages/n8n_System_Message_fin-ai-210d7a58.md",
+    "demo_url": "http://localhost:3000/demo/fin-ai-210d7a58",
+    "chatwoot": {
+      "inbox_id": 140,
+      "website_token": "AkyjMKM9qbix4pBeBg1EhLgx"
+    },
+    "workflow_duplication": "success",
+    "agent_bot": {
+      "id": 138,
+      "access_token": "d4jELyKZy6QLuUZKSng1y5hR"
+    },
+    "lead": {
+      "name": "sost user",
+      "email": "sost@sost.work",
+      "company": "",
+      "phone": ""
+    },
+    "created_at": "2025-10-21T21:30:37.898Z"
+  },
+  "fin-ai-86ee5cf8": {
+    "slug": "fin-ai-86ee5cf8",
+    "business": "fin.ai",
+    "url": "http://fin.ai/",
+    "system_message_file": "./public/system_messages/n8n_System_Message_fin-ai-86ee5cf8.md",
+    "demo_url": "http://localhost:3000/demo/fin-ai-86ee5cf8",
+    "chatwoot": {
+      "inbox_id": 142,
+      "website_token": "EAGjnVsq4Ra7wJXRwSN2cfSu"
+    },
+    "agent_bot": {
+      "id": 140,
+      "access_token": "7d2mS1V2vHj4M6JFMEJspvdc"
+    },
+    "lead": {
+      "name": "sost user",
+      "email": "sost@sost.work",
+      "company": "",
+      "phone": ""
+    },
+    "created_at": "2025-10-21T21:49:40.578Z",
+    "updated_at": "2025-10-21T21:58:17.520Z"
+  },
+  "bizee-com-4cf4a21e": {
+    "slug": "bizee-com-4cf4a21e",
+    "business": "bizee.com",
+    "url": "https://bizee.com/",
+    "system_message_file": "./public/system_messages/n8n_System_Message_bizee-com-4cf4a21e.md",
+    "demo_url": "http://localhost:3000/demo/bizee-com-4cf4a21e",
+    "chatwoot": {
+      "inbox_id": 143,
+      "website_token": "xKyxQ9Nsp9hYcNcvu31eXart"
+    },
+    "workflow_duplication": "success",
+    "agent_bot": {
+      "id": 141,
+      "access_token": "ULN6JMPpLYVRAhKAMgayW5yH"
+    },
+    "lead": {
+      "name": "yilak kidane",
+      "email": "yilak@sost.work",
+      "company": "",
+      "phone": ""
+    },
+    "created_at": "2025-10-21T22:24:24.534Z"
+  },
+  "formspree-io-517867f7": {
+    "slug": "formspree-io-517867f7",
+    "business": "formspree.io",
+    "url": "https://formspree.io/",
+    "system_message_file": "./public/system_messages/n8n_System_Message_formspree-io-517867f7.md",
+    "demo_url": "http://localhost:3000/demo/formspree-io-517867f7",
+    "chatwoot": {
+      "inbox_id": 144,
+      "website_token": "4zDnxdxE8h69RfvVXtZ4zF2E"
+    },
+    "workflow_duplication": "success",
+    "agent_bot": {
+      "id": 142,
+      "access_token": "aFR6jUXSjKip6tt6KG9C5WBJ"
+    },
+    "lead": {
+      "name": "admin user1",
+      "email": "service@mcp4.ai",
+      "company": "",
+      "phone": ""
+    },
+    "created_at": "2025-10-21T23:26:34.573Z"
+  },
+  "spacedev-io-7d680886": {
+    "slug": "spacedev-io-7d680886",
+    "business": "spacedev.io",
+    "url": "https://spacedev.io",
+    "system_message_file": "./public/system_messages/n8n_System_Message_spacedev-io-7d680886.md",
+    "demo_url": "http://localhost:3000/demo/spacedev-io-7d680886",
+    "chatwoot": {
+      "inbox_id": 146,
+      "website_token": "8sw8skXD8A7PfS5iff52SbC9"
+    },
+    "workflow_duplication": "success",
+    "agent_bot": {
+      "id": 144,
+      "access_token": "DHcdjYyw7ERuHV6cWJXJowFf"
+    },
+    "lead": {
+      "name": "BTI USER",
+      "email": "contact@lbtil.com",
+      "company": "",
+      "phone": ""
+    },
+    "created_at": "2025-10-22T04:49:31.471Z"
+  },
+  "omisoft-net-c0683bf0": {
+    "slug": "omisoft-net-c0683bf0",
+    "business": "omisoft.net",
+    "url": "https://omisoft.net",
+    "system_message_file": "./public/system_messages/n8n_System_Message_omisoft-net-c0683bf0.md",
+    "demo_url": "http://localhost:3000/demo/omisoft-net-c0683bf0",
+    "chatwoot": {
+      "inbox_id": 147,
+      "website_token": "t1JM4fhr6KDDXJnD2UcE2tjH"
+    },
+    "workflow_duplication": "success",
+    "agent_bot": {
+      "id": 145,
+      "access_token": "U1PySfdquW1ktYWN4Wfx863V"
+    },
+    "lead": {
+      "name": "BTI USER",
+      "email": "contact@lbtil.com",
+      "company": "",
+      "phone": ""
+    },
+    "created_at": "2025-10-22T05:24:14.343Z"
   }
 }

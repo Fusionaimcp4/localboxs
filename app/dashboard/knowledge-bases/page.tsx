@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { Plus, Database, FileText, Zap, AlertCircle, X } from "lucide-react";
+import { notifications } from "@/lib/notifications";
 
 interface KnowledgeBase {
   id: string;
@@ -70,11 +71,11 @@ export default function KnowledgeBasesPage() {
         setShowCreateModal(false);
       } else {
         const error = await response.json();
-        alert(`Failed to create knowledge base: ${error.error}`);
+        notifications.error(`Failed to create knowledge base: ${error.error}`);
       }
     } catch (error) {
       console.error('Failed to create knowledge base:', error);
-      alert('Failed to create knowledge base. Please try again.');
+      notifications.error('Failed to create knowledge base. Please try again.');
     }
   };
 
@@ -277,7 +278,7 @@ function CreateKBModal({
     e.preventDefault();
     
     if (!name.trim()) {
-      alert('Please enter a name');
+      notifications.warning('Please enter a name');
       return;
     }
 
