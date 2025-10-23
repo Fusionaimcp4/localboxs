@@ -15,6 +15,9 @@ const nextConfig = {
   trailingSlash: false,
   skipTrailingSlashRedirect: true,
   
+  // Explicitly disable static export
+  distDir: '.next',
+  
   // Image optimizations
   images: {
     unoptimized: true,
