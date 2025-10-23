@@ -9,8 +9,8 @@ const nextConfig = {
     ignoreBuildErrors: true, // Skip TypeScript checks during builds
   },
 
-  // ✅ Use hybrid server rendering (NOT static export)
-  output: 'standalone',
+  // ✅ Use standard Next.js build (not standalone)
+  // output: 'standalone',
 
   // ✅ Prevent Next.js from treating routes as static export
   trailingSlash: false,
