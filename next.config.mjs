@@ -8,14 +8,15 @@ const nextConfig = {
     ignoreBuildErrors: true, // Skip TypeScript checks during builds for faster dev
   },
   
+  // Output configuration for server deployment
+  output: 'standalone',
+  
   // Disable static export to avoid build-time database requirements
   trailingSlash: false,
   skipTrailingSlashRedirect: true,
   
   // Disable static generation completely
   // Force all pages to be dynamic (no static generation)
-  
-  // Disable static optimization entirely
   staticPageGenerationTimeout: 0,
   
   // Force dynamic rendering for all pages
@@ -31,19 +32,6 @@ const nextConfig = {
     ],
     // Disable static generation
     staticGenerationRetryCount: 0,
-  },
-  
-  // Experimental features
-  experimental: {
-    optimizePackageImports: [
-      'lucide-react', 
-      '@radix-ui/react-icons',
-      '@radix-ui/react-accordion',
-      '@radix-ui/react-dialog',
-      '@radix-ui/react-dropdown-menu',
-      '@radix-ui/react-tabs',
-      '@radix-ui/react-toast'
-    ],
   },
   
   // Image optimizations
