@@ -9,10 +9,10 @@ const nextConfig = {
     ignoreBuildErrors: true, // Skip TypeScript checks during builds
   },
 
-  // ✅ Use standard Next.js build (not standalone)
-  // output: 'standalone',
+  // ✅ Standard standalone build for Docker (enables runtime server rendering)
+  output: 'standalone',
 
-  // ✅ Prevent Next.js from treating routes as static export
+  // ✅ Prevent static export attempts
   trailingSlash: false,
   skipTrailingSlashRedirect: true,
 
@@ -63,13 +63,25 @@ const nextConfig = {
     return config;
   },
 
-  // ✅ Explicitly allow hybrid rendering for dynamic routes
+  // ✅ Allow hybrid rendering and dynamic routes safely
   experimental: {
     typedRoutes: false,
     serverActions: {
       allowedOrigins: ['localhost:3000', 'localboxs.com'],
     },
     externalDir: true,
+    optimizeCss: false, // Prevent Next from failing on CSS optimization
+  },
+
+  // ✅ Ensure dynamic routes don’t break during static export
+  outputFileTracingIncludes: {
+    '/': ['./**/*'],
+  },
+
+  // ✅ Force Next.js to treat build as runtime-capable
+  generateBuildId: async () => {
+    process.env.__NEXT_PRIVATE_PREBUNDLED_REACT = 'true';
+    return 'localboxs-build';
   },
 };
 
