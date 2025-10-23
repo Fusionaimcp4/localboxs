@@ -42,17 +42,14 @@ COPY --from=builder /app/public ./public
 RUN mkdir .next
 RUN chown nextjs:nodejs .next
 
-# Copy the built application
-COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
+# Automatically leverage output traces to reduce image size
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 COPY --from=builder --chown=nextjs:nodejs /app/public ./public
-COPY --from=builder --chown=nextjs:nodejs /app/package.json ./package.json
 
 # Copy Prisma schema and generated client
 COPY --from=builder --chown=nextjs:nodejs /app/prisma ./prisma
 COPY --from=builder --chown=nextjs:nodejs /app/node_modules/.prisma ./node_modules/.prisma
-
-# Copy production dependencies
-COPY --from=deps --chown=nextjs:nodejs /app/node_modules ./node_modules
 
 # Copy environment template
 COPY --from=builder --chown=nextjs:nodejs /app/env.example ./env.example
@@ -68,4 +65,4 @@ ENV HOSTNAME="0.0.0.0"
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
   CMD curl -f http://localhost:3000/api/health || exit 1
 
-CMD ["npm", "start"]
+CMD ["node", "server.js"]

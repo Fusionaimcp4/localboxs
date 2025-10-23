@@ -9,7 +9,7 @@ const nextConfig = {
   },
   
   // Output configuration for server deployment
-  // output: 'standalone', // Temporarily disabled due to build issues
+  output: 'standalone',
   
   // Disable static export to avoid conflicts with standalone output
   trailingSlash: false,
@@ -29,10 +29,17 @@ const nextConfig = {
       '@radix-ui/react-tabs',
       '@radix-ui/react-toast'
     ],
+    // Skip static generation
+    skipTrailingSlashRedirect: true,
   },
   
   // Disable static optimization entirely
   staticPageGenerationTimeout: 0,
+  
+  // Disable static generation for all routes
+  async rewrites() {
+    return [];
+  },
   
   // Image optimizations
   images: {
