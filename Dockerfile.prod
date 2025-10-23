@@ -52,7 +52,9 @@
   
   # Copy Prisma Client and schema
   COPY --from=builder --chown=nextjs:nodejs /app/prisma ./prisma
-  COPY --from=builder --chown=nextjs:nodejs /app/.prisma ./.prisma
+  
+  # Regenerate Prisma Client for Alpine Linux
+  RUN npx prisma generate
   
   # Switch to non-root user
   USER nextjs
