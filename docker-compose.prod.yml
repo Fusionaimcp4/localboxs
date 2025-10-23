@@ -52,7 +52,7 @@ services:
     environment:
       - POSTGRES_DB=${POSTGRES_DB:-localboxs}
       - POSTGRES_USER=${POSTGRES_USER:-localboxs}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
