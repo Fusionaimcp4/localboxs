@@ -1,0 +1,213 @@
+ > [app builder 6/6] RUN npm run build:
+0.578
+0.578 > localboxs@1.0.0 build
+0.578 > next build --no-lint
+0.578
+1.431  ⚠ Linting is disabled.
+1.783   ▲ Next.js 14.2.15
+1.783   - Environments: .env
+1.784   - Experiments (use with caution):
+1.784     · externalDir
+1.784
+1.920    Creating an optimized production build ...
+2.108  ⚠ Found lockfile missing swc dependencies, patching...
+3.821  ⚠ Lockfile was successfully patched, please run "npm install" to ensure @next/swc dependencies are downloaded
+58.53  ✓ Compiled successfully
+58.53    Skipping validation of types
+59.10    Collecting page data ...
+64.42    Generating static pages (0/70) ...
+65.76 [2025-10-23T21:24:16.923Z] ERROR: Failed to fetch system message template
+66.25 2FA setup error: n [Error]: Dynamic server usage: Route /api/auth/2fa/setup couldn't be rendered statically because it used `headers`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error
+66.25     at l (/app/.next/server/chunks/7787.js:1:37156)
+66.25     at u (/app/.next/server/chunks/2912.js:25:127235)
+66.25     at s (/app/.next/server/chunks/2912.js:25:20520)
+66.25     at f (/app/.next/server/app/api/auth/2fa/setup/route.js:1:2546)
+66.25     at /app/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:6:36963
+66.25     at /app/node_modules/next/dist/server/lib/trace/tracer.js:140:36
+66.25     at NoopContextManager.with (/app/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:7062)
+66.25     at ContextAPI.with (/app/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:518)
+66.25     at NoopTracer.startActiveSpan (/app/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18093)
+66.25     at ProxyTracer.startActiveSpan (/app/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18854) {
+66.25   description: "Route /api/auth/2fa/setup couldn't be rendered statically because it used `headers`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error",
+66.25   digest: 'DYNAMIC_SERVER_USAGE'
+66.25 }
+66.52    Generating static pages (17/70)
+66.55 Demos API error: n [Error]: Dynamic server usage: Route /api/dashboard/demos couldn't be rendered statically because it used `headers`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error
+66.55     at l (/app/.next/server/chunks/7787.js:1:37156)
+66.55     at u (/app/.next/server/chunks/2912.js:25:127235)
+66.55     at s (/app/.next/server/chunks/2912.js:25:20520)
+66.55     at l (/app/.next/server/app/api/dashboard/demos/route.js:1:2082)
+66.55     at /app/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:6:36963
+66.55     at /app/node_modules/next/dist/server/lib/trace/tracer.js:140:36
+66.55     at NoopContextManager.with (/app/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:7062)
+66.55     at ContextAPI.with (/app/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:518)
+66.55     at NoopTracer.startActiveSpan (/app/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18093)
+66.55     at ProxyTracer.startActiveSpan (/app/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18854) {
+66.55   description: "Route /api/dashboard/demos couldn't be rendered statically because it used `headers`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error",
+66.55   digest: 'DYNAMIC_SERVER_USAGE'
+66.55 }
+66.55 Failed to fetch Fusion usage data: n [Error]: Dynamic server usage: Route /api/dashboard/fusion/usage couldn't be rendered statically because it used `headers`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error
+66.55     at l (/app/.next/server/chunks/7787.js:1:37156)
+66.55     at u (/app/.next/server/chunks/2912.js:25:127235)
+66.55     at s (/app/.next/server/chunks/2912.js:25:20520)
+66.55     at p (/app/.next/server/app/api/dashboard/fusion/usage/route.js:1:2093)
+66.55     at /app/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:6:36963
+66.55     at /app/node_modules/next/dist/server/lib/trace/tracer.js:140:36
+66.55     at NoopContextManager.with (/app/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:7062)
+66.55     at ContextAPI.with (/app/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:518)
+66.55     at NoopTracer.startActiveSpan (/app/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18093)
+66.55     at ProxyTracer.startActiveSpan (/app/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18854) {
+66.55   description: "Route /api/dashboard/fusion/usage couldn't be rendered statically because it used `headers`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error",
+66.55   digest: 'DYNAMIC_SERVER_USAGE'
+66.55 }
+66.71 Failed to fetch Fusion models: n [Error]: Dynamic server usage: Route /api/dashboard/models couldn't be rendered statically because it used `headers`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error
+66.71     at l (/app/.next/server/chunks/7787.js:1:37156)
+66.71     at u (/app/.next/server/chunks/2912.js:25:127235)
+66.71     at s (/app/.next/server/chunks/2912.js:25:20520)
+66.71     at d (/app/.next/server/app/api/dashboard/models/route.js:1:2082)
+66.71     at /app/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:6:36963
+66.71     at /app/node_modules/next/dist/server/lib/trace/tracer.js:140:36
+66.71     at NoopContextManager.with (/app/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:7062)
+66.71     at ContextAPI.with (/app/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:518)
+66.71     at NoopTracer.startActiveSpan (/app/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18093)
+66.71     at ProxyTracer.startActiveSpan (/app/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18854) {
+66.71   description: "Route /api/dashboard/models couldn't be rendered statically because it used `headers`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error",
+66.71   digest: 'DYNAMIC_SERVER_USAGE'
+66.71 }
+66.72 User dashboard API error: n [Error]: Dynamic server usage: Route /api/dashboard couldn't be rendered statically because it used `headers`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error
+66.72     at l (/app/.next/server/chunks/7787.js:1:37156)
+66.72     at u (/app/.next/server/chunks/2912.js:25:127235)
+66.72     at s (/app/.next/server/chunks/2912.js:25:20520)
+66.72     at l (/app/.next/server/app/api/dashboard/route.js:1:2081)
+66.72     at /app/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:6:36963
+66.72     at /app/node_modules/next/dist/server/lib/trace/tracer.js:140:36
+66.72     at NoopContextManager.with (/app/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:7062)
+66.72     at ContextAPI.with (/app/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:518)
+66.72     at NoopTracer.startActiveSpan (/app/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18093)
+66.72     at ProxyTracer.startActiveSpan (/app/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18854) {
+66.72   description: "Route /api/dashboard couldn't be rendered statically because it used `headers`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error",
+66.72   digest: 'DYNAMIC_SERVER_USAGE'
+66.72 }
+66.75 System messages API error: n [Error]: Dynamic server usage: Route /api/dashboard/system-messages couldn't be rendered statically because it used `headers`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error
+66.75     at l (/app/.next/server/chunks/7787.js:1:37156)
+66.75     at u (/app/.next/server/chunks/2912.js:25:127235)
+66.75     at s (/app/.next/server/chunks/2912.js:25:20520)
+66.75     at l (/app/.next/server/app/api/dashboard/system-messages/route.js:1:2082)
+66.75     at /app/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:6:36963
+66.75     at /app/node_modules/next/dist/server/lib/trace/tracer.js:140:36
+66.75     at NoopContextManager.with (/app/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:7062)
+66.75     at ContextAPI.with (/app/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:518)
+66.75     at NoopTracer.startActiveSpan (/app/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18093)
+66.75     at ProxyTracer.startActiveSpan (/app/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18854) {
+66.75   description: "Route /api/dashboard/system-messages couldn't be rendered statically because it used `headers`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error",
+66.75   digest: 'DYNAMIC_SERVER_USAGE'
+66.75 }
+66.77 Failed to fetch usage stats: n [Error]: Dynamic server usage: Route /api/dashboard/usage couldn't be rendered statically because it used `headers`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error
+66.77     at l (/app/.next/server/chunks/7787.js:1:37156)
+66.77     at u (/app/.next/server/chunks/2912.js:25:127235)
+66.77     at s (/app/.next/server/chunks/2912.js:25:20520)
+66.77     at x (/app/.next/server/app/api/dashboard/usage/route.js:1:2081)
+66.77     at /app/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:6:36963
+66.77     at /app/node_modules/next/dist/server/lib/trace/tracer.js:140:36
+66.77     at NoopContextManager.with (/app/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:7062)
+66.77     at ContextAPI.with (/app/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:518)
+66.77     at NoopTracer.startActiveSpan (/app/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18093)
+66.77     at ProxyTracer.startActiveSpan (/app/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18854) {
+66.77   description: "Route /api/dashboard/usage couldn't be rendered statically because it used `headers`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error",
+66.77   digest: 'DYNAMIC_SERVER_USAGE'
+66.77 }
+66.77 Failed to fetch tier limits: n [Error]: Dynamic server usage: Route /api/dashboard/tier-limits couldn't be rendered statically because it used `headers`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error
+66.77     at l (/app/.next/server/chunks/7787.js:1:37156)
+66.77     at u (/app/.next/server/chunks/2912.js:25:127235)
+66.77     at s (/app/.next/server/chunks/2912.js:25:20520)
+66.77     at x (/app/.next/server/app/api/dashboard/tier-limits/route.js:1:2082)
+66.77     at /app/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:6:36963
+66.77     at /app/node_modules/next/dist/server/lib/trace/tracer.js:140:36
+66.77     at NoopContextManager.with (/app/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:7062)
+66.77     at ContextAPI.with (/app/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:518)
+66.77     at NoopTracer.startActiveSpan (/app/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18093)
+66.77     at ProxyTracer.startActiveSpan (/app/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18854) {
+66.77   description: "Route /api/dashboard/tier-limits couldn't be rendered statically because it used `headers`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error",
+66.77   digest: 'DYNAMIC_SERVER_USAGE'
+66.77 }
+66.80 [Workflows] Error: n [Error]: Dynamic server usage: Route /api/dashboard/workflows couldn't be rendered statically because it used `headers`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error
+66.80     at l (/app/.next/server/chunks/7787.js:1:37156)
+66.80     at u (/app/.next/server/chunks/2912.js:25:127235)
+66.80     at s (/app/.next/server/chunks/2912.js:25:20520)
+66.80     at c (/app/.next/server/app/api/dashboard/workflows/route.js:1:2110)
+66.80     at /app/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:6:36963
+66.80     at /app/node_modules/next/dist/server/lib/trace/tracer.js:140:36
+66.80     at NoopContextManager.with (/app/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:7062)
+66.80     at ContextAPI.with (/app/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:518)
+66.80     at NoopTracer.startActiveSpan (/app/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18093)
+66.80     at ProxyTracer.startActiveSpan (/app/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18854) {
+66.80   description: "Route /api/dashboard/workflows couldn't be rendered statically because it used `headers`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error",
+66.80   digest: 'DYNAMIC_SERVER_USAGE'
+66.80 }
+66.83    Generating static pages (34/70)
+67.43  ⨯ useSearchParams() should be wrapped in a suspense boundary at page "/auth/reset-password". Read more: https://nextjs.org/docs/messages/missing-suspense-with-csr-bailout
+67.43     at i (/app/.next/server/chunks/3510.js:1:36500)
+67.43     at c (/app/.next/server/chunks/3510.js:1:47482)
+67.43     at d (/app/.next/server/app/auth/reset-password/page.js:1:1951)
+67.43     at nj (/app/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:46251)
+67.43     at nM (/app/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:47571)
+67.43     at nN (/app/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:64546)
+67.43     at nI (/app/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:47010)
+67.43     at nM (/app/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:47717)
+67.43     at nM (/app/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:61546)
+67.43     at nN (/app/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:64546)
+67.43
+67.43 Error occurred prerendering page "/auth/reset-password". Read more: https://nextjs.org/docs/messages/prerender-error
+67.43
+67.51  ⨯ useSearchParams() should be wrapped in a suspense boundary at page "/auth/signup". Read more: https://nextjs.org/docs/messages/missing-suspense-with-csr-bailout
+67.51     at i (/app/.next/server/chunks/3510.js:1:36500)
+67.51     at c (/app/.next/server/chunks/3510.js:1:47482)
+67.51     at Y (/app/.next/server/chunks/287.js:1:10545)
+67.51     at nj (/app/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:46251)
+67.51     at nM (/app/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:47571)
+67.51     at nN (/app/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:64546)
+67.51     at nI (/app/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:47010)
+67.51     at nM (/app/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:47717)
+67.51     at nN (/app/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:64546)
+67.51     at nI (/app/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:47010)
+67.51
+67.51 Error occurred prerendering page "/auth/signup". Read more: https://nextjs.org/docs/messages/prerender-error
+67.51
+67.51    Generating static pages (52/70)
+67.53  ⨯ useSearchParams() should be wrapped in a suspense boundary at page "/auth/signin". Read more: https://nextjs.org/docs/messages/missing-suspense-with-csr-bailout
+67.53     at i (/app/.next/server/chunks/3510.js:1:36500)
+67.53     at c (/app/.next/server/chunks/3510.js:1:47482)
+67.53     at i (/app/.next/server/app/auth/signin/page.js:1:1725)
+67.53     at nj (/app/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:46251)
+67.53     at nM (/app/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:47571)
+67.53     at nN (/app/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:64546)
+67.53     at nI (/app/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:47010)
+67.53     at nM (/app/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:47717)
+67.53     at nM (/app/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:61546)
+67.53     at nN (/app/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:64546)
+67.53
+67.53 Error occurred prerendering page "/auth/signin". Read more: https://nextjs.org/docs/messages/prerender-error
+67.53
+67.60  ⨯ useSearchParams() should be wrapped in a suspense boundary at page "/auth/verify-2fa". Read more: https://nextjs.org/docs/messages/missing-suspense-with-csr-bailout
+67.60     at i (/app/.next/server/chunks/3510.js:1:36500)
+67.60     at c (/app/.next/server/chunks/3510.js:1:47482)
+67.60     at d (/app/.next/server/app/auth/verify-2fa/page.js:1:1862)
+67.60     at nj (/app/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:46251)
+67.60     at nM (/app/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:47571)
+67.60     at nN (/app/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:64546)
+67.60     at nI (/app/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:47010)
+67.60     at nM (/app/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:47717)
+67.60     at nM (/app/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:61546)
+67.60     at nN (/app/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:64546)
+67.60
+67.60 Error occurred prerendering page "/auth/verify-2fa". Read more: https://nextjs.org/docs/messages/prerender-error
+67.60
+68.65  ✓ Generating static pages (70/70)
+68.66
+68.66 > Export encountered errors on following paths:
+68.66   /auth/reset-password/page: /auth/reset-password
+68.66   /auth/signin/page: /auth/signin
+68.66   /auth/signup/page: /auth/signup
+68.66   /auth/verify-2fa/page: /auth/verify-2fa
+------
+failed to solve: process "/bin/sh -c npm run build" did not complete successfully: exit code: 1
