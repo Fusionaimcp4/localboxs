@@ -37,6 +37,9 @@
   ENV NODE_ENV=production
   ENV NEXT_TELEMETRY_DISABLED=1
   
+  # Install dependencies for Prisma
+  RUN apk add --no-cache libc6-compat openssl
+  
   # Create non-root user
   RUN addgroup --system --gid 1001 nodejs \
    && adduser --system --uid 1001 nextjs
@@ -46,6 +49,10 @@
   COPY --from=builder --chown=nextjs:nodejs /app/public ./public
   COPY --from=builder --chown=nextjs:nodejs /app/package*.json ./
   COPY --from=builder --chown=nextjs:nodejs /app/node_modules ./node_modules
+  
+  # Copy Prisma Client and schema
+  COPY --from=builder --chown=nextjs:nodejs /app/prisma ./prisma
+  COPY --from=builder --chown=nextjs:nodejs /app/.prisma ./.prisma
   
   # Switch to non-root user
   USER nextjs
