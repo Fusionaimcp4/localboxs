@@ -8,6 +8,13 @@ const nextConfig = {
     ignoreBuildErrors: true, // Skip TypeScript checks during builds for faster dev
   },
   
+  // Skip static optimization for pages with dynamic content
+  trailingSlash: false,
+  skipTrailingSlashRedirect: true,
+  
+  // Skip static generation for auth pages that use search params
+  // Note: Pages using useSearchParams() will be dynamically rendered
+  
   // Image optimizations
   images: {
     unoptimized: true,
@@ -68,6 +75,8 @@ const nextConfig = {
       '@radix-ui/react-tabs',
       '@radix-ui/react-toast'
     ],
+    // Disable static generation retry to avoid useSearchParams issues
+    staticGenerationRetryCount: 0,
   },
   
   // Webpack optimizations for development
