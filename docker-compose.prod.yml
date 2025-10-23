@@ -6,11 +6,12 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        - DATABASE_URL=postgresql://localboxs:${POSTGRES_PASSWORD}@postgres:5432/localboxs
+        - DATABASE_URL=postgresql://localboxs:${POSTGRES_PASSWORD:-postgres}@postgres:5432/localboxs
     ports:
       - "3200:3000"
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
     environment:
       - NODE_ENV=production
       - DATABASE_URL=${DATABASE_URL}
@@ -38,9 +39,6 @@ services:
       - TURNSTILE_SECRET_KEY=${TURNSTILE_SECRET_KEY}
       - REDIS_URL=${REDIS_URL}
       - DEMO_DOMAIN=${DEMO_DOMAIN}
-    depends_on:
-      postgres:
-        condition: service_healthy
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
@@ -48,24 +46,15 @@ services:
       timeout: 10s
       retries: 3
       start_period: 40s
-    deploy:
-      resources:
-        limits:
-          memory: 1G
-          cpus: '0.5'
-        reservations:
-          memory: 512M
-          cpus: '0.25'
 
   postgres:
     image: postgres:15-alpine
     environment:
       - POSTGRES_DB=${POSTGRES_DB:-localboxs}
       - POSTGRES_USER=${POSTGRES_USER:-localboxs}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./backups:/backups
     ports:
       - "5433:5432"
     restart: unless-stopped
@@ -74,53 +63,6 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-    deploy:
-      resources:
-        limits:
-          memory: 512M
-          cpus: '0.25'
-        reservations:
-          memory: 256M
-          cpus: '0.1'
-
-  # Optional: Redis for caching and sessions
-  redis:
-    image: redis:7-alpine
-    command: redis-server --appendonly yes
-    volumes:
-      - redis_data:/data
-    ports:
-      - "6379:6379"
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 10s
-      timeout: 3s
-      retries: 3
-    deploy:
-      resources:
-        limits:
-          memory: 256M
-          cpus: '0.1'
-
-  # Optional: Nginx reverse proxy
-  nginx:
-    image: nginx:alpine
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./ssl:/etc/nginx/ssl:ro
-    depends_on:
-      - app
-    restart: unless-stopped
-    deploy:
-      resources:
-        limits:
-          memory: 128M
-          cpus: '0.1'
 
 volumes:
   postgres_data:
-  redis_data:

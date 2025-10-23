@@ -15,11 +15,19 @@ fi
 # Load environment variables
 source .env
 
-echo "📊 Starting PostgreSQL database..."
+echo "📊 Starting Docker PostgreSQL database on port 5433..."
 docker-compose -f docker-compose.prod.yml up -d postgres
 
 echo "⏳ Waiting for database to be ready..."
-sleep 15
+# Wait for database to be healthy
+for i in {1..30}; do
+  if docker-compose -f docker-compose.prod.yml ps postgres | grep -q "healthy"; then
+    echo "✅ Database is ready!"
+    break
+  fi
+  echo "⏳ Waiting for database... ($i/30)"
+  sleep 2
+done
 
 echo "🔄 Running database migrations..."
 export DATABASE_URL="postgresql://localboxs:${POSTGRES_PASSWORD:-postgres}@localhost:5433/localboxs"

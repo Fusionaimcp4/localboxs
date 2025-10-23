@@ -25,7 +25,7 @@ ENV DATABASE_URL=$DATABASE_URL
 # Generate Prisma client
 RUN npx prisma generate
 
-# Build the application with database available
+# Build the application with existing database available
 RUN npm run build
 
 # Production image, copy all the files and run next
