@@ -1,51 +1,44 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Development optimizations
+  // ✅ Strict production configuration for Docker / server deployment
+
   eslint: {
-    ignoreDuringBuilds: true, // Skip ESLint during builds for faster dev
+    ignoreDuringBuilds: true, // Skip ESLint during builds
   },
   typescript: {
-    ignoreBuildErrors: true, // Skip TypeScript checks during builds for faster dev
+    ignoreBuildErrors: true, // Skip TypeScript checks during builds
   },
-  
-  // Output configuration for server deployment
+
+  // ✅ Use hybrid server rendering (NOT static export)
   output: 'standalone',
-  
-  // Disable static export to avoid build-time database requirements
+
+  // ✅ Prevent Next.js from treating routes as static export
   trailingSlash: false,
   skipTrailingSlashRedirect: true,
-  
-  // Image optimizations
+
+  // ✅ Image optimization
   images: {
     unoptimized: true,
     domains: ['localhost', 'localboxs.com'],
     formats: ['image/webp', 'image/avif'],
   },
-  
-  // Performance optimizations
+
+  // ✅ Core performance and security
   compress: true,
   poweredByHeader: false,
-  
-  // Security headers (simplified for dev)
+
   async headers() {
     return [
       {
         source: '/(.*)',
         headers: [
-          {
-            key: 'X-Frame-Options',
-            value: 'DENY',
-          },
-          {
-            key: 'X-Content-Type-Options',
-            value: 'nosniff',
-          },
+          { key: 'X-Frame-Options', value: 'DENY' },
+          { key: 'X-Content-Type-Options', value: 'nosniff' },
         ],
       },
     ];
   },
-  
-  // Redirects for SEO
+
   async redirects() {
     return [
       {
@@ -55,22 +48,29 @@ const nextConfig = {
       },
     ];
   },
-  
-  // Environment variables
+
+  // ✅ Environment variables passthrough
   env: {
     CUSTOM_KEY: process.env.CUSTOM_KEY,
   },
-  
-  // Webpack optimizations for development
-  webpack: (config, { dev, isServer }) => {
-    // Externalize heavy packages for server-side only
+
+  // ✅ Webpack configuration (keep lightweight)
+  webpack: (config, { isServer }) => {
     if (isServer) {
       config.externals = config.externals || [];
       config.externals.push('mammoth', 'canvas', 'pdf-parse');
     }
-    
     return config;
   },
-}
 
-export default nextConfig
+  // ✅ Explicitly allow hybrid rendering for dynamic routes
+  experimental: {
+    typedRoutes: false,
+    serverActions: {
+      allowedOrigins: ['localhost:3000', 'localboxs.com'],
+    },
+    externalDir: true,
+  },
+};
+
+export default nextConfig;
