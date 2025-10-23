@@ -4,9 +4,9 @@ services:
   app:
     build: 
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.prod
       args:
-        - DATABASE_URL=postgresql://localboxs:${POSTGRES_PASSWORD:-postgres}@postgres:5432/localboxs
+        - DATABASE_URL=${DATABASE_URL}
     ports:
       - "3200:3000"
     depends_on:
@@ -51,7 +51,7 @@ services:
     image: postgres:15-alpine
     environment:
       POSTGRES_DB: localboxs
-      POSTGRES_USER: localboxs
+      POSTGRES_USER: postgres
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
       - postgres_data:/var/lib/postgresql/data
@@ -59,7 +59,7 @@ services:
       - "5433:5432"
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U localboxs -d localboxs"]
+      test: ["CMD-SHELL", "pg_isready -U postgres -d localboxs"]
       interval: 10s
       timeout: 5s
       retries: 5

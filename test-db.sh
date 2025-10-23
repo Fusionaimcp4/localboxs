@@ -9,8 +9,10 @@ if [ -f .env ]; then
     source .env
 fi
 
-# Set database URL
-export DATABASE_URL="postgresql://postgres:${POSTGRES_PASSWORD:-postgres}@localhost:5432/localboxs"
+# Use DATABASE_URL from .env or set default
+if [ -z "$DATABASE_URL" ]; then
+    export DATABASE_URL="postgresql://postgres:${POSTGRES_PASSWORD:-postgres}@localhost:5433/localboxs"
+fi
 
 echo "📊 Database URL: $DATABASE_URL"
 
