@@ -18,11 +18,15 @@ COPY package.json package-lock.json* ./
 RUN npm install --legacy-peer-deps && npm cache clean --force
 COPY . .
 
+# Accept database URL as build argument
+ARG DATABASE_URL
+ENV DATABASE_URL=$DATABASE_URL
+
 # Generate Prisma client
 RUN npx prisma generate
 
-# Build the application
-RUN NEXT_DISABLE_STATIC_EXPORT=1 npm run build
+# Build the application with database available
+RUN npm run build
 
 # Production image, copy all the files and run next
 FROM base AS runner

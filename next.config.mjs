@@ -15,6 +15,24 @@ const nextConfig = {
   // Disable static generation completely
   // Force all pages to be dynamic (no static generation)
   
+  // Disable static optimization entirely
+  staticPageGenerationTimeout: 0,
+  
+  // Force dynamic rendering for all pages
+  experimental: {
+    optimizePackageImports: [
+      'lucide-react', 
+      '@radix-ui/react-icons',
+      '@radix-ui/react-accordion',
+      '@radix-ui/react-dialog',
+      '@radix-ui/react-dropdown-menu',
+      '@radix-ui/react-tabs',
+      '@radix-ui/react-toast'
+    ],
+    // Disable static generation
+    staticGenerationRetryCount: 0,
+  },
+  
   // Experimental features
   experimental: {
     optimizePackageImports: [

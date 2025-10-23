@@ -5,8 +5,12 @@ services:
     build: 
       context: .
       dockerfile: Dockerfile
+      args:
+        - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/localboxs
     ports:
       - "3200:3000"
+    depends_on:
+      - postgres
     environment:
       - NODE_ENV=production
       - DATABASE_URL=${DATABASE_URL}
