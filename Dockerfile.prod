@@ -53,6 +53,9 @@
   # Copy Prisma Client and schema
   COPY --from=builder --chown=nextjs:nodejs /app/prisma ./prisma
   
+  # Copy email templates
+  COPY --from=builder --chown=nextjs:nodejs /app/emails ./emails
+  
   # Regenerate Prisma Client for Alpine Linux
   RUN npx prisma generate
   
