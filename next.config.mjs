@@ -70,6 +70,7 @@ const nextConfig = {
       allowedOrigins: ['localhost:3000', 'localboxs.com'],
     },
     externalDir: true,
+    staticGenerationRetryCount: 0,
   },
 };
 
