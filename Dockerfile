@@ -14,7 +14,8 @@ RUN npm install --omit=dev --legacy-peer-deps && npm cache clean --force
 # Rebuild the source code only when needed
 FROM base AS builder
 WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
+COPY package.json package-lock.json* ./
+RUN npm install --legacy-peer-deps && npm cache clean --force
 COPY . .
 
 # Generate Prisma client
