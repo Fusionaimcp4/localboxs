@@ -29,14 +29,15 @@ const nextConfig = {
       '@radix-ui/react-tabs',
       '@radix-ui/react-toast'
     ],
-    // Disable static generation to avoid useSearchParams issues
-    staticGenerationRetryCount: 0,
   },
+  
+  // Disable static optimization entirely
+  staticPageGenerationTimeout: 0,
   
   // Image optimizations
   images: {
     unoptimized: true,
-    domains: ['localhost', 'your-domain.com'],
+    domains: ['localhost', 'localboxs.com'],
     formats: ['image/webp', 'image/avif'],
   },
   
