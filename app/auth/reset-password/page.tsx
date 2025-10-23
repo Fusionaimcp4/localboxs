@@ -1,11 +1,12 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { motion } from "framer-motion";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 
-export default function ResetPasswordPage() {
+// Component that handles search params
+function ResetPasswordForm() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -76,6 +77,108 @@ export default function ResetPasswordPage() {
   };
 
   return (
+    <div className="bg-zinc-900/60 rounded-3xl border border-zinc-800 p-8">
+      <div className="text-center mb-8">
+        <h1 className="text-3xl font-bold mb-2">Set New Password</h1>
+        <p className="text-zinc-400">Enter and confirm your new password.</p>
+      </div>
+
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <div>
+          <label className="block text-sm font-medium text-zinc-200 mb-2">
+            New Password
+          </label>
+          <input
+            type="password"
+            required
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="w-full rounded-2xl bg-zinc-900/60 border border-zinc-700 focus:border-zinc-500 outline-none px-4 py-3 text-zinc-100 placeholder-zinc-500"
+            placeholder="Enter new password"
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-zinc-200 mb-2">
+            Confirm New Password
+          </label>
+          <input
+            type="password"
+            required
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            className="w-full rounded-2xl bg-zinc-900/60 border border-zinc-700 focus:border-zinc-500 outline-none px-4 py-3 text-zinc-100 placeholder-zinc-500"
+            placeholder="Confirm new password"
+          />
+        </div>
+
+        {message && (
+          <div className="bg-green-500/10 border border-green-500/20 rounded-2xl p-4">
+            <p className="text-green-400 text-sm">{message}</p>
+          </div>
+        )}
+        {error && (
+          <div className="bg-red-500/10 border border-red-500/20 rounded-2xl p-4">
+            <p className="text-red-400 text-sm">{error}</p>
+          </div>
+        )}
+
+        <button
+          type="submit"
+          disabled={isLoading || !token || !userId}
+          className="w-full rounded-2xl bg-emerald-500 hover:bg-emerald-600 disabled:bg-zinc-700 disabled:cursor-not-allowed text-white font-semibold px-6 py-4 transition-colors duration-200 flex items-center justify-center gap-2"
+        >
+          {isLoading ? (
+            <>
+              <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+              Resetting password...
+            </>
+          ) : (
+            "Reset Password"
+          )}
+        </button>
+      </form>
+
+      <div className="mt-6 text-center">
+        <p className="text-zinc-400">
+          <Link
+            href="/auth/signin"
+            className="text-emerald-400 hover:text-emerald-300 transition-colors"
+          >
+            Back to Sign in
+          </Link>
+        </p>
+      </div>
+    </div>
+  );
+}
+
+// Loading fallback component
+function ResetPasswordLoading() {
+  return (
+    <div className="bg-zinc-900/60 rounded-3xl border border-zinc-800 p-8">
+      <div className="text-center mb-8">
+        <h1 className="text-3xl font-bold mb-2">Set New Password</h1>
+        <p className="text-zinc-400">Loading...</p>
+      </div>
+      <div className="space-y-6">
+        <div className="animate-pulse">
+          <div className="h-4 bg-zinc-700 rounded mb-2"></div>
+          <div className="h-12 bg-zinc-800 rounded-2xl"></div>
+        </div>
+        <div className="animate-pulse">
+          <div className="h-4 bg-zinc-700 rounded mb-2"></div>
+          <div className="h-12 bg-zinc-800 rounded-2xl"></div>
+        </div>
+        <div className="h-12 bg-zinc-800 rounded-2xl animate-pulse"></div>
+      </div>
+    </div>
+  );
+}
+
+// Main page component
+export default function ResetPasswordPage() {
+  return (
     <div className="min-h-screen bg-gradient-to-b from-zinc-950 to-zinc-900 text-zinc-100 flex items-center justify-center">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -83,79 +186,9 @@ export default function ResetPasswordPage() {
         transition={{ duration: 0.6 }}
         className="w-full max-w-md"
       >
-        <div className="bg-zinc-900/60 rounded-3xl border border-zinc-800 p-8">
-          <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold mb-2">Set New Password</h1>
-            <p className="text-zinc-400">Enter and confirm your new password.</p>
-          </div>
-
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div>
-              <label className="block text-sm font-medium text-zinc-200 mb-2">
-                New Password
-              </label>
-              <input
-                type="password"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full rounded-2xl bg-zinc-900/60 border border-zinc-700 focus:border-zinc-500 outline-none px-4 py-3 text-zinc-100 placeholder-zinc-500"
-                placeholder="Enter new password"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-zinc-200 mb-2">
-                Confirm New Password
-              </label>
-              <input
-                type="password"
-                required
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                className="w-full rounded-2xl bg-zinc-900/60 border border-zinc-700 focus:border-zinc-500 outline-none px-4 py-3 text-zinc-100 placeholder-zinc-500"
-                placeholder="Confirm new password"
-              />
-            </div>
-
-            {message && (
-              <div className="bg-green-500/10 border border-green-500/20 rounded-2xl p-4">
-                <p className="text-green-400 text-sm">{message}</p>
-              </div>
-            )}
-            {error && (
-              <div className="bg-red-500/10 border border-red-500/20 rounded-2xl p-4">
-                <p className="text-red-400 text-sm">{error}</p>
-              </div>
-            )}
-
-            <button
-              type="submit"
-              disabled={isLoading || !token || !userId}
-              className="w-full rounded-2xl bg-emerald-500 hover:bg-emerald-600 disabled:bg-zinc-700 disabled:cursor-not-allowed text-white font-semibold px-6 py-4 transition-colors duration-200 flex items-center justify-center gap-2"
-            >
-              {isLoading ? (
-                <>
-                  <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                  Resetting password...
-                </>
-              ) : (
-                "Reset Password"
-              )}
-            </button>
-          </form>
-
-          <div className="mt-6 text-center">
-            <p className="text-zinc-400">
-              <Link
-                href="/auth/signin"
-                className="text-emerald-400 hover:text-emerald-300 transition-colors"
-              >
-                Back to Sign in
-              </Link>
-            </p>
-          </div>
-        </div>
+        <Suspense fallback={<ResetPasswordLoading />}>
+          <ResetPasswordForm />
+        </Suspense>
       </motion.div>
     </div>
   );

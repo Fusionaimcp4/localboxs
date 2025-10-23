@@ -106,6 +106,17 @@ export function SignInForm({ onSuccess }: SignInFormProps) {
           />
         </div>
 
+        <div className="text-right">
+          <button
+            type="button"
+            onClick={() => router.push('/auth/forgot-password')}
+            className="text-sm text-emerald-400 hover:text-emerald-300 transition-colors"
+            disabled={isLoading}
+          >
+            Forgot your password?
+          </button>
+        </div>
+
         <Button
           type="submit"
           className="w-full bg-emerald-600 hover:bg-emerald-700 text-white"
