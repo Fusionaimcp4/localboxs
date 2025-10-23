@@ -18,6 +18,21 @@ const nextConfig = {
   // Explicitly disable static export
   distDir: '.next',
   
+  // Disable static generation for pages with useSearchParams
+  experimental: {
+    optimizePackageImports: [
+      'lucide-react', 
+      '@radix-ui/react-icons',
+      '@radix-ui/react-accordion',
+      '@radix-ui/react-dialog',
+      '@radix-ui/react-dropdown-menu',
+      '@radix-ui/react-tabs',
+      '@radix-ui/react-toast'
+    ],
+    // Disable static generation to avoid useSearchParams issues
+    staticGenerationRetryCount: 0,
+  },
+  
   // Image optimizations
   images: {
     unoptimized: true,
@@ -62,19 +77,6 @@ const nextConfig = {
   // Environment variables
   env: {
     CUSTOM_KEY: process.env.CUSTOM_KEY,
-  },
-  
-  // Experimental features for better performance
-  experimental: {
-    optimizePackageImports: [
-      'lucide-react', 
-      '@radix-ui/react-icons',
-      '@radix-ui/react-accordion',
-      '@radix-ui/react-dialog',
-      '@radix-ui/react-dropdown-menu',
-      '@radix-ui/react-tabs',
-      '@radix-ui/react-toast'
-    ],
   },
   
   // Webpack optimizations for development
