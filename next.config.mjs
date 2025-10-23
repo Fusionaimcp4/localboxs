@@ -8,12 +8,12 @@ const nextConfig = {
     ignoreBuildErrors: true, // Skip TypeScript checks during builds for faster dev
   },
   
-  // Skip static optimization for pages with dynamic content
+  // Output configuration for server deployment
+  output: 'standalone',
+  
+  // Disable static export to avoid conflicts with standalone output
   trailingSlash: false,
   skipTrailingSlashRedirect: true,
-  
-  // Skip static generation for auth pages that use search params
-  // Note: Pages using useSearchParams() will be dynamically rendered
   
   // Image optimizations
   images: {
@@ -60,9 +60,6 @@ const nextConfig = {
   env: {
     CUSTOM_KEY: process.env.CUSTOM_KEY,
   },
-  
-  // Output configuration for server deployment
-  output: 'standalone',
   
   // Experimental features for better performance
   experimental: {
