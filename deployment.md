@@ -9,125 +9,97 @@ This guide provides step-by-step instructions for deploying LocalBoxs using Dock
 - Domain name pointing to your server (optional but recommended)
 - SSL certificate (if using HTTPS)
 
-## Quick Start
+## Fresh Deployment (No Existing Database)
 
-### 1. Clone the Repository
+If you're deploying LocalBoxs for the first time with no existing database:
+
+### 1. Clone and Setup
 
 ```bash
 git clone https://github.com/your-username/localboxs.git
 cd localboxs
-```
-
-### 2. Environment Configuration
-
-Copy the environment template and configure your variables:
-
-```bash
 cp env.example .env
 ```
 
-Edit the `.env` file with your actual values:
+### 2. Configure Environment for localboxs.com
 
-```bash
-nano .env
-```
-
-**Required Environment Variables:**
+Edit `.env` file with your domain:
 
 ```env
-# Database
-DATABASE_URL="postgresql://localboxs:your_password@postgres:5432/localboxs"
+# Database (will be created automatically)
+DATABASE_URL="postgresql://localboxs:your_secure_password@postgres:5432/localboxs"
 POSTGRES_DB=localboxs
 POSTGRES_USER=localboxs
 POSTGRES_PASSWORD=your_secure_password
 
-# NextAuth
+# Authentication
 NEXTAUTH_SECRET=your_nextauth_secret_key
-NEXTAUTH_URL=https://your-domain.com
-NEXT_PUBLIC_APP_URL=https://your-domain.com
-NEXT_PUBLIC_BASE_URL=https://your-domain.com
+NEXTAUTH_URL=https://localboxs.com
+NEXT_PUBLIC_APP_URL=https://localboxs.com
+NEXT_PUBLIC_BASE_URL=https://localboxs.com
 
-# Chatwoot Integration
-NEXT_PUBLIC_CHATWOOT_BASE_URL=https://your-chatwoot-instance.com
+# Your existing integrations
+OPENAI_API_KEY=your_openai_api_key
 CHATWOOT_BASE_URL=https://your-chatwoot-instance.com
 CHATWOOT_ACCOUNT_ID=your_account_id
 CHATWOOT_API_KEY=your_api_key
-
-# N8N Integration
 N8N_BASE_URL=https://your-n8n-instance.com
 N8N_API_KEY=your_n8n_api_key
-N8N_DUPLICATE_ENDPOINT=https://your-n8n-instance.com/api/v1/workflows/duplicate
-
-# OpenAI
-OPENAI_API_KEY=your_openai_api_key
-
-# Fusion API
 FUSION_BASE_URL=https://your-fusion-instance.com
 FUSION_API_KEY=your_fusion_api_key
 
-# Email Configuration
+# Email configuration
 EMAIL_SERVER_HOST=smtp.your-provider.com
 EMAIL_SERVER_PORT=587
-EMAIL_SERVER_USER=your_email@domain.com
+EMAIL_SERVER_USER=your_email@localboxs.com
 EMAIL_SERVER_PASSWORD=your_email_password
-EMAIL_FROM=your_email@domain.com
+EMAIL_FROM=your_email@localboxs.com
 
 # Security
 ENCRYPTION_KEY=your_32_character_encryption_key
 NEXT_PUBLIC_TURNSTILE_SITE_KEY=your_turnstile_site_key
 TURNSTILE_SECRET_KEY=your_turnstile_secret_key
-
-# Optional
-REDIS_URL=redis://redis:6379
-DEMO_DOMAIN=your-demo-domain.com
 ```
 
-### 3. Generate Encryption Key
-
-Generate a secure encryption key:
+### 3. Deploy with Docker
 
 ```bash
-npm run generate-encryption-key
+# Deploy the application
+./deploy.sh prod
+
+# Or manually
+docker-compose -f docker-compose.prod.yml up -d
 ```
 
-Copy the generated key to your `.env` file.
+### 4. Update Nginx Configuration
 
-### 4. Deploy with Docker Compose
+Your nginx is already configured for port 3200, which is perfect! The Docker setup will run on port 3200.
+
+If you need to update your nginx config, use the template in `nginx-localboxs.conf`:
 
 ```bash
-# Build and start the services
-docker-compose up -d
-
-# View logs
-docker-compose logs -f
-
-# Check service status
-docker-compose ps
+# Copy the nginx configuration
+sudo cp nginx-localboxs.conf /etc/nginx/sites-available/localboxs
+sudo ln -s /etc/nginx/sites-available/localboxs /etc/nginx/sites-enabled/
+sudo nginx -t
+sudo systemctl reload nginx
 ```
 
-### 5. Database Migration
-
-Run the database migrations:
+### 5. Verify Deployment
 
 ```bash
-# Execute migrations inside the container
-docker-compose exec app npx prisma migrate deploy
+# Check application health
+curl http://localhost:3200/api/health
 
-# Or run a one-time migration
-docker-compose exec app npx prisma db push
+# Check via your domain
+curl https://localboxs.com/api/health
 ```
 
-### 6. Verify Deployment
+### 6. Access Your Application
 
-Check if the application is running:
-
-```bash
-# Health check
-curl http://localhost:3000/api/health
-
-# Or visit in browser
-http://your-server-ip:3000
-```
+- **Main Application**: https://localboxs.com
+- **Admin Panel**: https://localboxs.com/admin
+- **Health Check**: https://localboxs.com/api/health
 
 ## Production Deployment
 
@@ -152,7 +124,7 @@ server {
     server_name your-domain.com;
 
     location / {
-        proxy_pass http://localhost:3000;
+        proxy_pass http://localhost:3200;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection 'upgrade';
@@ -261,7 +233,7 @@ docker-compose exec app npx prisma generate
 docker-compose exec app sh
 
 # Check application health
-curl http://localhost:3000/api/health
+curl http://localhost:3200/api/health
 
 # View application logs
 docker-compose logs -f app

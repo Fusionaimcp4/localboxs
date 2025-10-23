@@ -53,7 +53,7 @@ DATABASE_URL="postgresql://user:password@localhost:5432/localboxs"
 
 # Authentication
 NEXTAUTH_SECRET="your-secret-key"
-NEXTAUTH_URL="http://localhost:3000"
+NEXTAUTH_URL="http://localhost:3200"
 
 # OpenAI
 OPENAI_API_KEY="your-openai-key"

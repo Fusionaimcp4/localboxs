@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# LocalBoxs Docker Deployment Script
-# This script automates the deployment process
+# LocalBoxs.com Deployment Script
+# Specifically configured for localboxs.com with port 3200
 
 set -e
 
@@ -11,13 +11,8 @@ GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
-# Configuration
-COMPOSE_FILE="docker-compose.yml"
-PROD_COMPOSE_FILE="docker-compose.prod.yml"
-ENV_FILE=".env"
-
-echo -e "${GREEN}🚀 LocalBoxs Docker Deployment Script${NC}"
-echo "=================================="
+echo -e "${GREEN}🚀 LocalBoxs.com Deployment Script${NC}"
+echo "====================================="
 
 # Function to print colored output
 print_status() {
@@ -49,7 +44,7 @@ check_docker() {
 
 # Check if .env file exists
 check_env() {
-    if [ ! -f "$ENV_FILE" ]; then
+    if [ ! -f ".env" ]; then
         print_warning ".env file not found. Creating from template..."
         if [ -f "env.example" ]; then
             cp env.example .env
@@ -80,42 +75,34 @@ generate_encryption_key() {
     fi
 }
 
-# Build and start services
+# Deploy the application
 deploy() {
-    local use_prod=${1:-false}
-    local compose_file=$COMPOSE_FILE
-    
-    if [ "$use_prod" = true ]; then
-        compose_file=$PROD_COMPOSE_FILE
-        print_status "Using production configuration"
-    fi
-    
-    print_status "Building and starting services..."
+    print_status "Deploying LocalBoxs for localboxs.com..."
     
     # Stop existing services
-    docker-compose -f $compose_file down 2>/dev/null || true
+    docker-compose -f docker-compose.prod.yml down 2>/dev/null || true
     
     # Build and start
-    docker-compose -f $compose_file up -d --build
+    docker-compose -f docker-compose.prod.yml up -d --build
     
     print_status "Services started successfully"
 }
 
-# Run database migrations
-run_migrations() {
-    print_status "Running database migrations..."
+# Run database setup
+setup_database() {
+    print_status "Setting up database..."
     
     # Wait for database to be ready
     echo "Waiting for database to be ready..."
-    sleep 10
+    sleep 15
     
     # Run migrations
-    docker-compose exec -T app npx prisma migrate deploy || {
+    docker-compose -f docker-compose.prod.yml exec -T app npx prisma migrate deploy || {
         print_warning "Migration failed, trying db push..."
-        docker-compose exec -T app npx prisma db push
+        docker-compose -f docker-compose.prod.yml exec -T app npx prisma db push
     }
     
-    print_status "Database migrations completed"
+    print_status "Database setup completed"
 }
 
 # Health check
@@ -123,19 +110,19 @@ health_check() {
     print_status "Performing health check..."
     
     # Wait for services to start
-    sleep 15
+    sleep 20
     
     # Check application health
     if curl -f http://localhost:3200/api/health > /dev/null 2>&1; then
         print_status "Application is healthy"
     else
         print_error "Application health check failed"
-        print_warning "Check logs with: docker-compose logs -f app"
+        print_warning "Check logs with: docker-compose -f docker-compose.prod.yml logs -f app"
         return 1
     fi
     
     # Check database health
-    if docker-compose exec -T postgres pg_isready -U localboxs > /dev/null 2>&1; then
+    if docker-compose -f docker-compose.prod.yml exec -T postgres pg_isready -U localboxs > /dev/null 2>&1; then
         print_status "Database is healthy"
     else
         print_error "Database health check failed"
@@ -146,59 +133,38 @@ health_check() {
 # Show deployment info
 show_info() {
     echo ""
-    echo -e "${GREEN}🎉 Deployment Complete!${NC}"
-    echo "========================"
+    echo -e "${GREEN}🎉 LocalBoxs.com Deployment Complete!${NC}"
+    echo "====================================="
     echo ""
-    echo "Application URL: http://localhost:3200"
-    echo "Health Check: http://localhost:3200/api/health"
+    echo "Your LocalBoxs application is now running at:"
+    echo "  🌐 Main Application: https://localboxs.com"
+    echo "  🔧 Admin Panel: https://localboxs.com/admin"
+    echo "  ❤️ Health Check: https://localboxs.com/api/health"
+    echo ""
+    echo "Direct server access:"
+    echo "  📡 Application: http://localhost:3200"
+    echo "  ❤️ Health Check: http://localhost:3200/api/health"
     echo ""
     echo "Useful commands:"
-    echo "  View logs: docker-compose logs -f"
-    echo "  Stop services: docker-compose down"
-    echo "  Restart: docker-compose restart"
-    echo "  Database access: docker-compose exec postgres psql -U localboxs -d localboxs"
+    echo "  📋 View logs: docker-compose -f docker-compose.prod.yml logs -f"
+    echo "  🛑 Stop services: docker-compose -f docker-compose.prod.yml down"
+    echo "  🔄 Restart: docker-compose -f docker-compose.prod.yml restart"
+    echo "  🗄️ Database access: docker-compose -f docker-compose.prod.yml exec postgres psql -U localboxs -d localboxs"
+    echo ""
+    echo "Your nginx configuration is already set up for port 3200!"
+    echo "The application should be accessible via https://localboxs.com"
     echo ""
 }
 
 # Main deployment function
 main() {
-    local mode=${1:-"dev"}
-    
-    case $mode in
-        "dev")
-            echo "Deploying in development mode..."
-            check_docker
-            check_env
-            generate_encryption_key
-            deploy false
-            run_migrations
-            health_check && show_info
-            ;;
-        "prod")
-            echo "Deploying in production mode..."
-            check_docker
-            check_env
-            generate_encryption_key
-            deploy true
-            run_migrations
-            health_check && show_info
-            ;;
-        "update")
-            echo "Updating existing deployment..."
-            check_docker
-            deploy false
-            run_migrations
-            health_check && show_info
-            ;;
-        *)
-            echo "Usage: $0 [dev|prod|update]"
-            echo "  dev   - Deploy in development mode (default)"
-            echo "  prod  - Deploy in production mode"
-            echo "  update - Update existing deployment"
-            exit 1
-            ;;
-    esac
+    check_docker
+    check_env
+    generate_encryption_key
+    deploy
+    setup_database
+    health_check && show_info
 }
 
-# Run main function with arguments
+# Run main function
 main "$@"
