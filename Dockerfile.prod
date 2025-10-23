@@ -25,6 +25,9 @@
   # Generate Prisma client
   RUN npx prisma generate
   
+  # Prevent DB connection during build
+  ENV SKIP_DATABASE=true
+  
   # Build application (no DB connection required here)
   RUN npm run build
   
