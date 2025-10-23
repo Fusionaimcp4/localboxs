@@ -8,17 +8,14 @@ const nextConfig = {
     ignoreBuildErrors: true, // Skip TypeScript checks during builds for faster dev
   },
   
-  // Output configuration for server deployment
-  output: 'standalone',
-  
-  // Disable static export to avoid conflicts with standalone output
+  // Disable static export to avoid build-time database requirements
   trailingSlash: false,
   skipTrailingSlashRedirect: true,
   
-  // Explicitly disable static export
-  distDir: '.next',
+  // Disable static generation completely
+  // Force all pages to be dynamic (no static generation)
   
-  // Disable static generation for pages with useSearchParams
+  // Experimental features
   experimental: {
     optimizePackageImports: [
       'lucide-react', 
@@ -29,16 +26,6 @@ const nextConfig = {
       '@radix-ui/react-tabs',
       '@radix-ui/react-toast'
     ],
-    // Skip static generation
-    skipTrailingSlashRedirect: true,
-  },
-  
-  // Disable static optimization entirely
-  staticPageGenerationTimeout: 0,
-  
-  // Disable static generation for all routes
-  async rewrites() {
-    return [];
   },
   
   // Image optimizations
