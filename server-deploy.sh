@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# LocalBoxs Production Deployment Script
-# This script builds the application with database available
+# LocalBoxs Server Deployment Script
+# This script is run ON THE SERVER after pulling from GitHub
 
-echo "🚀 Starting LocalBoxs Production Deployment..."
+echo "🚀 Starting LocalBoxs Server Deployment..."
 
 # Check if .env file exists
 if [ ! -f .env ]; then
@@ -19,7 +19,7 @@ echo "📊 Starting PostgreSQL database..."
 docker-compose -f docker-compose.prod.yml up -d postgres
 
 echo "⏳ Waiting for database to be ready..."
-sleep 10
+sleep 15
 
 echo "🔄 Running database migrations..."
 export DATABASE_URL="postgresql://localboxs:${POSTGRES_PASSWORD:-postgres}@localhost:5433/localboxs"
@@ -31,7 +31,7 @@ docker-compose -f docker-compose.prod.yml build --no-cache app
 echo "🚀 Starting application..."
 docker-compose -f docker-compose.prod.yml up -d
 
-echo "✅ Deployment completed successfully!"
+echo "✅ Server deployment completed successfully!"
 echo "🌐 Application is running at: http://localhost:3200"
 echo "📊 Database is running on port 5433"
 

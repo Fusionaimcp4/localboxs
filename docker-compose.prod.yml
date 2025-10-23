@@ -6,7 +6,7 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/localboxs
+        - DATABASE_URL=postgresql://localboxs:${POSTGRES_PASSWORD}@postgres:5432/localboxs
     ports:
       - "3200:3000"
     depends_on:
@@ -67,7 +67,7 @@ services:
       - postgres_data:/var/lib/postgresql/data
       - ./backups:/backups
     ports:
-      - "5432:5432"
+      - "5433:5432"
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-localboxs} -d ${POSTGRES_DB:-localboxs}"]

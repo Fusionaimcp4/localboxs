@@ -8,9 +8,9 @@ echo "🚀 Starting LocalBoxs build with database..."
 echo "📊 Starting PostgreSQL database..."
 docker run -d --name localboxs-build-db \
   -e POSTGRES_DB=localboxs \
-  -e POSTGRES_USER=postgres \
+  -e POSTGRES_USER=localboxs \
   -e POSTGRES_PASSWORD=postgres \
-  -p 5432:5432 \
+  -p 5433:5432 \
   postgres:15-alpine
 
 # Wait for database to be ready
@@ -18,7 +18,7 @@ echo "⏳ Waiting for database to be ready..."
 sleep 10
 
 # Set database URL for build
-export DATABASE_URL="postgresql://postgres:postgres@localhost:5432/localboxs"
+export DATABASE_URL="postgresql://localboxs:postgres@localhost:5433/localboxs"
 
 # Run database migrations
 echo "🔄 Running database migrations..."
