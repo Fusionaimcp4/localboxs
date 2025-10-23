@@ -9,7 +9,7 @@ const nextConfig = {
   },
   
   // Output configuration for server deployment
-  output: 'standalone',
+  // output: 'standalone', // Temporarily disabled due to build issues
   
   // Disable static export to avoid conflicts with standalone output
   trailingSlash: false,
@@ -75,8 +75,6 @@ const nextConfig = {
       '@radix-ui/react-tabs',
       '@radix-ui/react-toast'
     ],
-    // Disable static generation retry to avoid useSearchParams issues
-    staticGenerationRetryCount: 0,
   },
   
   // Webpack optimizations for development
