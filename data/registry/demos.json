@@ -1260,5 +1260,51 @@
       "phone": ""
     },
     "created_at": "2025-10-22T05:24:14.343Z"
+  },
+  "startup-ai-700411b1": {
+    "slug": "startup-ai-700411b1",
+    "business": "startup.ai",
+    "url": "https://startup.ai",
+    "system_message_file": "./public/system_messages/n8n_System_Message_startup-ai-700411b1.md",
+    "demo_url": "http://localhost:3000/demo/startup-ai-700411b1",
+    "chatwoot": {
+      "inbox_id": 150,
+      "website_token": "7BVoTqZcqmNvAA3pRYNp9nvV"
+    },
+    "workflow_duplication": "success",
+    "agent_bot": {
+      "id": 148,
+      "access_token": "2t8mQfX4LsygVawybYsiyBFX"
+    },
+    "lead": {
+      "name": "test user1",
+      "email": "info@mcp4.ai",
+      "company": "",
+      "phone": ""
+    },
+    "created_at": "2025-10-24T14:04:59.871Z"
+  },
+  "ninetwothree-co-ef08b94d": {
+    "slug": "ninetwothree-co-ef08b94d",
+    "business": "ninetwothree.co",
+    "url": "https://www.ninetwothree.co",
+    "system_message_file": "./public/system_messages/n8n_System_Message_ninetwothree-co-ef08b94d.md",
+    "demo_url": "http://localhost:3000/demo/ninetwothree-co-ef08b94d",
+    "chatwoot": {
+      "inbox_id": 151,
+      "website_token": "mNf2BAy83CtSyXiQt2fjdr89"
+    },
+    "workflow_duplication": "success",
+    "agent_bot": {
+      "id": 149,
+      "access_token": "HaKYN85dH4sNYuB1pgUNwh6W"
+    },
+    "lead": {
+      "name": "test user1",
+      "email": "info@mcp4.ai",
+      "company": "",
+      "phone": ""
+    },
+    "created_at": "2025-10-24T14:22:08.439Z"
   }
 }

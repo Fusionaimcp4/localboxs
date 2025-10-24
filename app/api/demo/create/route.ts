@@ -10,6 +10,7 @@ import { getPublishedSystemMessageTemplate } from '@/lib/system-message-template
 import { duplicateWorkflowViaWebhook } from '@/lib/n8n-webhook';
 import { createAgentBot, assignBotToInbox } from '@/lib/chatwoot_admin';
 import { n8nCredentialService } from '@/lib/n8n-credentials';
+import { ensureFusionSubAccount } from '@/lib/fusion-sub-accounts';
 import { promises as fs } from 'fs';
 import crypto from 'crypto';
 import path from 'path';
@@ -96,8 +97,20 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    if (!prisma) {
+      return NextResponse.json(
+        { error: 'Database not available' },
+        { status: 503 }
+      );
+    }
+
     const userId = session.user.id;
     const payload: CreateDemoPayload = await request.json();
+    
+    // Ensure Fusion sub-account exists before demo creation
+    // This works for both email/password users and OAuth users
+    console.log(`🔄 [Demo Create] Ensuring Fusion sub-account for user: ${userId}`);
+    await ensureFusionSubAccount(userId);
     
     // Check tier limits before proceeding
     const usageCheck = await canPerformAction(userId, 'create_demo');

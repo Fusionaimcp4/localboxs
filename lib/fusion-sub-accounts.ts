@@ -272,3 +272,65 @@ export class FusionSubAccountService {
     }
   }
 }
+
+/**
+ * Ensure Fusion sub-account exists for a user
+ * This function is called during demo creation to ensure all users have Fusion sub-accounts
+ * Works for both email/password users and OAuth users
+ */
+export async function ensureFusionSubAccount(userId: string): Promise<void> {
+  try {
+    console.log(`🔍 [Fusion] Checking Fusion sub-account for user: ${userId}`);
+    
+    // Import prisma here to avoid circular dependencies
+    const { prisma } = await import('@/lib/prisma');
+    
+    // Get user from database
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { id: true, email: true, fusionSubAccountId: true }
+    });
+
+    if (!user) {
+      console.error(`❌ [Fusion] User not found: ${userId}`);
+      return;
+    }
+
+    // Skip if already has Fusion sub-account
+    if (user.fusionSubAccountId) {
+      console.log(`✅ [Fusion] User ${userId} already has Fusion sub-account: ${user.fusionSubAccountId}`);
+      return;
+    }
+
+    console.log(`🔄 [Fusion] User ${userId} (${user.email}) needs Fusion sub-account creation`);
+
+    // Check for existing sub-account
+    const existingSubAccount = await FusionSubAccountService.findExistingSubAccount(user.email);
+    
+    if (existingSubAccount) {
+      // Link to existing sub-account
+      await prisma.user.update({
+        where: { id: userId },
+        data: { fusionSubAccountId: String(existingSubAccount.id) }
+      });
+      console.log(`✅ [Fusion] Linked existing Fusion sub-account for user ${userId}: ${existingSubAccount.id}`);
+    } else {
+      // Create new sub-account
+      console.log(`🆕 [Fusion] Creating new Fusion sub-account for user ${userId}`);
+      const fusionSubAccount = await FusionSubAccountService.createSubAccount({
+        id: user.id,
+        email: user.email
+      });
+
+      await prisma.user.update({
+        where: { id: userId },
+        data: { fusionSubAccountId: String(fusionSubAccount.id) }
+      });
+      console.log(`✅ [Fusion] Created Fusion sub-account for user ${userId}: ${fusionSubAccount.id}`);
+    }
+  } catch (error) {
+    console.error(`❌ [Fusion] Failed to ensure Fusion sub-account for user ${userId}:`, error);
+    // Don't throw - let demo creation continue even if Fusion fails
+    console.log(`⚠️ [Fusion] Demo creation will continue despite Fusion sub-account creation failure`);
+  }
+}

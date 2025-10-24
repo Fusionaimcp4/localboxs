@@ -243,7 +243,7 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token, user, trigger, session }) {
       // Always fetch the latest user data to ensure up-to-date verification status
       const dbUser = await prisma?.user.findUnique({
-        where: { email: token.email || user?.email }, // Use email instead of id
+        where: { email: (token.email || user?.email) as string }, // Use email instead of id
         select: { 
           id: true, 
           role: true, 
