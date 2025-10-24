@@ -53,7 +53,7 @@ declare module 'next-auth/jwt' {
 
 export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET, // Explicitly provide the secret
-  adapter: PrismaAdapter(prisma) as any, // Cast for compatibility with NextAuth types
+  // adapter: PrismaAdapter(prisma) as any, // Temporarily disabled due to field mapping issues
   providers: [
     CredentialsProvider({
       name: 'credentials',
@@ -189,13 +189,48 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async signIn({ user, account, profile }) {
       try {
-        // Allow OAuth sign-ins
+        // Handle OAuth sign-ins
         if (account?.provider === 'google') {
           console.log('[Auth] Google OAuth signIn:', { 
             user: { id: user.id, email: user.email, name: user.name },
             account: { provider: account.provider, type: account.type },
             profile: { email: profile?.email, name: profile?.name }
           });
+          
+          // Create or update user in database
+          if (user.email) {
+            const existingUser = await prisma?.user.findUnique({
+              where: { email: user.email }
+            });
+            
+            if (!existingUser) {
+              // Create new user
+              await prisma?.user.create({
+                data: {
+                  email: user.email,
+                  name: user.name || profile?.name || '',
+                  emailVerified: new Date(), // OAuth users are verified
+                  isVerified: true,
+                  role: 'USER',
+                  subscriptionTier: 'FREE',
+                  subscriptionStatus: 'ACTIVE'
+                }
+              });
+              console.log('[Auth] Created new Google OAuth user:', user.email);
+            } else {
+              // Update existing user
+              await prisma?.user.update({
+                where: { email: user.email },
+                data: {
+                  emailVerified: new Date(),
+                  isVerified: true,
+                  lastLoginAt: new Date()
+                }
+              });
+              console.log('[Auth] Updated existing Google OAuth user:', user.email);
+            }
+          }
+          
           return true;
         }
         // For credentials provider, the authorize function handles validation
