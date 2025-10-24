@@ -93,19 +93,19 @@ export const authOptions: NextAuthOptions = {
         }
 
         // Captcha verification (if enabled and required after N failures)
-        const failedLoginCount = (await prisma.user.findUnique({ where: { email: credentials.email } }))?.failedLoginCount || 0;
+        const failedLoginCount = (await prisma?.user.findUnique({ where: { email: credentials.email } }))?.failedLoginCount || 0;
         const lockoutAfterFailed = parseInt(process.env.LOCKOUT_AFTER_FAILED || '5');
         if (process.env.CAPTCHA_ENABLED === 'true' && failedLoginCount >= lockoutAfterFailed) {
           if (!credentials.captcha || !await verifyTurnstile(credentials.captcha, ip as string)) {
             console.warn(`[Auth] Captcha verification failed for ${credentials.email} (IP: ${ip})`);
             // Increment failed login count
-            await prisma.user.update({ where: { email: credentials.email }, data: { failedLoginCount: { increment: 1 } } });
+            await prisma?.user.update({ where: { email: credentials.email }, data: { failedLoginCount: { increment: 1 } } });
             throw new Error('Captcha verification failed. Please try again.');
           }
         }
 
         try {
-          const user = await prisma.user.findUnique({
+          const user = await prisma?.user.findUnique({
             where: {
               email: credentials.email
             }
@@ -114,7 +114,7 @@ export const authOptions: NextAuthOptions = {
           if (!user || !user.password) {
             // Increment failed login count only if user exists but password doesn't match
             if (user) {
-              await prisma.user.update({ where: { email: credentials.email }, data: { failedLoginCount: { increment: 1 } } });
+              await prisma?.user.update({ where: { email: credentials.email }, data: { failedLoginCount: { increment: 1 } } });
             }
             throw new Error('Invalid email or password');
           }
@@ -123,12 +123,12 @@ export const authOptions: NextAuthOptions = {
 
           if (!isPasswordValid) {
             // Increment failed login count
-            await prisma.user.update({ where: { email: credentials.email }, data: { failedLoginCount: { increment: 1 } } });
+            await prisma?.user.update({ where: { email: credentials.email }, data: { failedLoginCount: { increment: 1 } } });
             throw new Error('Invalid email or password');
           }
 
           // Reset failed login count and update last login details on success
-          await prisma.user.update({
+          await prisma?.user.update({
             where: { email: credentials.email },
             data: {
               failedLoginCount: 0,
@@ -187,9 +187,27 @@ export const authOptions: NextAuthOptions = {
     strategy: 'jwt',
   },
   callbacks: {
+    async signIn({ user, account, profile }) {
+      try {
+        // Allow OAuth sign-ins
+        if (account?.provider === 'google') {
+          console.log('[Auth] Google OAuth signIn:', { 
+            user: { id: user.id, email: user.email, name: user.name },
+            account: { provider: account.provider, type: account.type },
+            profile: { email: profile?.email, name: profile?.name }
+          });
+          return true;
+        }
+        // For credentials provider, the authorize function handles validation
+        return true;
+      } catch (error) {
+        console.error('[Auth] signIn callback error:', error);
+        return false;
+      }
+    },
     async jwt({ token, user, trigger, session }) {
       // Always fetch the latest user data to ensure up-to-date verification status
-      const dbUser = await prisma.user.findUnique({
+      const dbUser = await prisma?.user.findUnique({
         where: { id: token.id || user?.id }, // Use token.id if available, otherwise user?.id
         select: { 
           id: true, 
@@ -268,7 +286,7 @@ export const authOptions: NextAuthOptions = {
     async signIn(message) {
       // Update lastLoginAt and lastLoginIp for the user
       if (message.user?.id) {
-        await prisma.user.update({
+        await prisma?.user.update({
           where: { id: message.user.id },
           data: {
             lastLoginAt: new Date(),
