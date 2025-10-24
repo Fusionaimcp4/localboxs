@@ -7,6 +7,30 @@ import { Plus, Database, FileText, Zap, AlertCircle, X } from "lucide-react";
 import { notifications } from "@/lib/notifications";
 import ErrorBoundary from "@/components/error-boundary";
 
+// Client-side only notifications wrapper
+const clientNotifications = {
+  error: (message: string, title?: string) => {
+    if (typeof window !== 'undefined') {
+      notifications.error(message, title);
+    }
+  },
+  warning: (message: string, title?: string) => {
+    if (typeof window !== 'undefined') {
+      notifications.warning(message, title);
+    }
+  },
+  success: (message: string, title?: string) => {
+    if (typeof window !== 'undefined') {
+      notifications.success(message, title);
+    }
+  },
+  info: (message: string, title?: string) => {
+    if (typeof window !== 'undefined') {
+      notifications.info(message, title);
+    }
+  }
+};
+
 interface KnowledgeBase {
   id: string;
   name: string;
@@ -72,11 +96,11 @@ function KnowledgeBasesPageContent() {
         setShowCreateModal(false);
       } else {
         const error = await response.json();
-        notifications.error(`Failed to create knowledge base: ${error.error}`);
+        clientNotifications.error(`Failed to create knowledge base: ${error.error}`);
       }
     } catch (error) {
       console.error('Failed to create knowledge base:', error);
-      notifications.error('Failed to create knowledge base. Please try again.');
+      clientNotifications.error('Failed to create knowledge base. Please try again.');
     }
   };
 
@@ -279,7 +303,7 @@ function CreateKBModal({
     e.preventDefault();
     
     if (!name.trim()) {
-      notifications.warning('Please enter a name');
+      clientNotifications.warning('Please enter a name');
       return;
     }
 

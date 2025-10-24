@@ -3,11 +3,17 @@ import { toast } from "@/components/ui/use-toast";
 /**
  * Modern notification system to replace browser alerts
  * Provides non-blocking, integrated UI notifications
- * Includes fallback for production errors
+ * Includes fallback for production errors and SSR safety
  */
 
 // Safe toast wrapper that won't crash if toast system fails
 const safeToast = (options: any) => {
+  // Check if we're in browser environment
+  if (typeof window === 'undefined') {
+    console.log(`[SSR] Notification: ${options.title || 'Info'} - ${options.description}`);
+    return;
+  }
+
   try {
     return toast(options);
   } catch (error) {
@@ -70,6 +76,13 @@ export const notifications = {
    */
   confirm: (message: string, title?: string): Promise<boolean> => {
     return new Promise((resolve) => {
+      // Check if we're in browser environment
+      if (typeof window === 'undefined') {
+        console.log(`[SSR] Confirm dialog: ${title ? title + '\n\n' : ''}${message}`);
+        resolve(false); // Default to false in SSR
+        return;
+      }
+
       // For now, we'll use a simple confirm but this could be enhanced
       // with a custom modal component in the future
       const result = window.confirm(`${title ? title + '\n\n' : ''}${message}`);
