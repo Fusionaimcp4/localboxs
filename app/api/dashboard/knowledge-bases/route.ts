@@ -19,6 +19,13 @@ export async function GET(request: NextRequest) {
 
     const userId = session.user.id;
 
+    if (!prisma) {
+      return NextResponse.json(
+        { error: 'Database not available' },
+        { status: 503 }
+      );
+    }
+
     // Fetch user's knowledge bases
     const knowledgeBases = await prisma.knowledgeBase.findMany({
       where: { userId },
@@ -73,6 +80,13 @@ export async function POST(request: NextRequest) {
 
     const userId = session.user.id;
     const body: CreateKBRequest = await request.json();
+
+    if (!prisma) {
+      return NextResponse.json(
+        { error: 'Database not available' },
+        { status: 503 }
+      );
+    }
 
     // Check tier limits before proceeding
     const usageCheck = await canPerformAction(userId, 'create_knowledge_base');
