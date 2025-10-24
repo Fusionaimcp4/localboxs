@@ -406,14 +406,14 @@ export default function UserFacingDemoPage() {
                             type="color"
                             value={demo.primaryColor}
                             onChange={e => setDemo({ ...demo, primaryColor: e.target.value })}
-                            className="w-16 h-10 p-1 rounded-xl bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 focus:border-emerald-500 outline-none cursor-pointer"
+                            className="w-12 h-10 sm:w-16 p-1 rounded-xl bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 focus:border-emerald-500 outline-none cursor-pointer"
                           />
                           <input
                             type="text"
                             value={demo.primaryColor}
                             onChange={e => setDemo({ ...demo, primaryColor: e.target.value })}
                             placeholder="#7ee787"
-                            className="flex-1 px-4 py-3 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-xl focus:outline-none focus:border-emerald-500 transition-colors text-slate-900 dark:text-slate-100 placeholder:text-slate-500 dark:placeholder:text-slate-400"
+                            className="flex-1 px-3 sm:px-4 py-3 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-xl focus:outline-none focus:border-emerald-500 transition-colors text-slate-900 dark:text-slate-100 placeholder:text-slate-500 dark:placeholder:text-slate-400 text-sm sm:text-base"
                           />
                         </div>
                       </div>
@@ -424,14 +424,14 @@ export default function UserFacingDemoPage() {
                             type="color"
                             value={demo.secondaryColor}
                             onChange={e => setDemo({ ...demo, secondaryColor: e.target.value })}
-                            className="w-16 h-10 p-1 rounded-xl bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 focus:border-emerald-500 outline-none cursor-pointer"
+                            className="w-12 h-10 sm:w-16 p-1 rounded-xl bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 focus:border-emerald-500 outline-none cursor-pointer"
                           />
                           <input
                             type="text"
                             value={demo.secondaryColor}
                             onChange={e => setDemo({ ...demo, secondaryColor: e.target.value })}
                             placeholder="#f4a261"
-                            className="flex-1 px-4 py-3 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-xl focus:outline-none focus:border-emerald-500 transition-colors text-slate-900 dark:text-slate-100 placeholder:text-slate-500 dark:placeholder:text-slate-400"
+                            className="flex-1 px-3 sm:px-4 py-3 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-xl focus:outline-none focus:border-emerald-500 transition-colors text-slate-900 dark:text-slate-100 placeholder:text-slate-500 dark:placeholder:text-slate-400 text-sm sm:text-base"
                           />
                         </div>
                       </div>

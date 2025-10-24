@@ -35,7 +35,7 @@ export function AuthModal({ isOpen, onClose, defaultTab = "signin" }: AuthModalP
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[500px] p-0 bg-zinc-900 border border-zinc-800">
+      <DialogContent className="w-[95vw] max-w-[500px] mx-4 p-0 bg-zinc-900 border border-zinc-800">
         <DialogTitle asChild>
           <VisuallyHidden>Authentication</VisuallyHidden>
         </DialogTitle>
@@ -44,7 +44,7 @@ export function AuthModal({ isOpen, onClose, defaultTab = "signin" }: AuthModalP
           {/* Background Pattern */}
           <div className="absolute inset-0 bg-gradient-to-b from-primary/10 to-transparent dark:from-primary/5" />
           
-          <div className="relative p-6 pt-8">
+          <div className="relative p-4 sm:p-6 pt-6 sm:pt-8">
             {/* Logo */}
             <div className="flex justify-center mb-6">
               <div className="flex items-center gap-2">
@@ -89,7 +89,7 @@ export function AuthModal({ isOpen, onClose, defaultTab = "signin" }: AuthModalP
               onValueChange={(value) => setActiveTab(value as "signin" | "signup")}
               className="w-full"
             >
-              <TabsList className="grid w-full grid-cols-2 mb-8 bg-zinc-800/50">
+              <TabsList className="grid w-full grid-cols-2 mb-6 sm:mb-8 bg-zinc-800/50">
                 <TabsTrigger 
                   value="signin"
                   className="data-[state=active]:bg-zinc-700 data-[state=active]:text-zinc-100 text-zinc-400"

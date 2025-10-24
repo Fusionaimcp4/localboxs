@@ -13,6 +13,12 @@ export const metadata: Metadata = {
   title: 'LocalBoxs - All-in-One Conversations Platform | AI-First Customer Support',
   description:
     'Phone, SMS, WhatsApp, Email, Web Chat. AI answers 95% instantly. No per-seat or per-resolution fees. Self-hosted or managed. Your data, your control.',
+  viewport: {
+    width: 'device-width',
+    initialScale: 1,
+    maximumScale: 1,
+    userScalable: false,
+  },
   icons: {
     icon: '/logos/boxlogo32x32.ico',
     shortcut: '/logos/boxlogo48x48.ico',

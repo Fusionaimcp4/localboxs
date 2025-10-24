@@ -154,16 +154,16 @@ export function SignUpForm({ onSuccess }: SignUpFormProps) {
           />
         </div>
 
-        <div className="flex items-center space-x-2">
+        <div className="flex items-start space-x-3">
           <Checkbox 
             id="terms" 
             checked={acceptedTerms}
             onCheckedChange={(checked) => setAcceptedTerms(checked as boolean)}
-            className="border-zinc-700 data-[state=checked]:bg-emerald-600 data-[state=checked]:border-emerald-600"
+            className="border-zinc-700 data-[state=checked]:bg-emerald-600 data-[state=checked]:border-emerald-600 mt-0.5"
           />
           <label
             htmlFor="terms"
-            className="text-sm text-zinc-300 leading-none"
+            className="text-sm text-zinc-300 leading-relaxed"
           >
             I agree to the{" "}
             <Link href="/terms-of-service" className="text-emerald-400 hover:text-emerald-300">

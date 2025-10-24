@@ -99,6 +99,58 @@
     margin: 16px;
     max-height: calc(100vh - 32px);
   }
+  
+  /* Auth modal specific improvements */
+  [data-radix-dialog-content] {
+    width: 95vw !important;
+    max-width: 500px !important;
+    margin: 16px !important;
+  }
+  
+  /* Improve checkbox alignment */
+  .flex.items-start .checkbox {
+    margin-top: 2px;
+  }
+  
+  /* Better text wrapping */
+  .leading-relaxed {
+    line-height: 1.6;
+  }
+  
+  /* Improve button spacing */
+  .space-y-4 button {
+    margin-top: 1rem;
+  }
+  
+  /* Better form spacing on mobile */
+  .space-y-6 > * + * {
+    margin-top: 1.5rem;
+  }
+  
+  /* Improve card padding on mobile */
+  .rounded-2xl {
+    padding: 1rem;
+  }
+  
+  /* Better text sizing for mobile */
+  .text-2xl {
+    font-size: 1.5rem;
+    line-height: 2rem;
+  }
+  
+  .text-lg {
+    font-size: 1.125rem;
+    line-height: 1.75rem;
+  }
+  
+  /* Improve grid gaps on mobile */
+  .gap-4 {
+    gap: 1rem;
+  }
+  
+  .gap-6 {
+    gap: 1.5rem;
+  }
 }
 
 /* Tablet optimizations */

@@ -251,15 +251,15 @@ export default function Sidebar({ isAdmin = false }: SidebarProps) {
 
       {/* Mobile Navigation Bar */}
       <div className="lg:hidden sticky top-0 z-40 bg-white/80 dark:bg-slate-900/80 backdrop-blur-lg border-b border-slate-200 dark:border-slate-700">
-        <div className="px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-3">
+        <div className="px-3 sm:px-4 py-3 flex items-center justify-between">
+          <div className="flex items-center gap-2 sm:gap-3">
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300"
             >
               {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
-            <h1 className="text-xl font-bold text-slate-900 dark:text-slate-100">
+            <h1 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-slate-100">
               {isAdmin ? "Admin" : "Dashboard"}
             </h1>
           </div>
@@ -286,10 +286,10 @@ export default function Sidebar({ isAdmin = false }: SidebarProps) {
           initial={{ x: -300 }}
           animate={{ x: mobileMenuOpen ? 0 : -300 }}
           exit={{ x: -300 }}
-          className="w-80 h-full bg-white dark:bg-slate-900 shadow-2xl"
+          className="w-80 sm:w-96 h-full bg-white dark:bg-slate-900 shadow-2xl"
           onClick={(e) => e.stopPropagation()}
         >
-          <div className="p-6">
+          <div className="p-4 sm:p-6">
             <div className="flex items-center justify-between mb-8">
               <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
                 <div className="w-8 h-8 relative">
