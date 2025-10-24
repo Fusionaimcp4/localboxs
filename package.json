@@ -16,7 +16,8 @@
     "type-check": "tsc --noEmit",
     "clean": "rm -rf .next out dist",
     "analyze": "ANALYZE=true npm run build",
-    "generate-encryption-key": "ts-node --compiler-options \"{\\\"module\\\":\\\"commonjs\\\"}\" scripts/generate-encryption-key.ts"
+    "generate-encryption-key": "ts-node --compiler-options \"{\\\"module\\\":\\\"commonjs\\\"}\" scripts/generate-encryption-key.ts",
+    "populate-template": "tsx scripts/populate-system-message-template.ts"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.11.0",
