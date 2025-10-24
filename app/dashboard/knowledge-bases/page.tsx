@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { Plus, Database, FileText, Zap, AlertCircle, X } from "lucide-react";
 import { notifications } from "@/lib/notifications";
+import ErrorBoundary from "@/components/error-boundary";
 
 interface KnowledgeBase {
   id: string;
@@ -27,7 +28,7 @@ interface KBStats {
   totalTokens: number;
 }
 
-export default function KnowledgeBasesPage() {
+function KnowledgeBasesPageContent() {
   const [knowledgeBases, setKnowledgeBases] = useState<KnowledgeBase[]>([]);
   const [stats, setStats] = useState<KBStats>({
     total: 0,
@@ -375,6 +376,14 @@ function CreateKBModal({
         </form>
       </motion.div>
     </div>
+  );
+}
+
+export default function KnowledgeBasesPage() {
+  return (
+    <ErrorBoundary>
+      <KnowledgeBasesPageContent />
+    </ErrorBoundary>
   );
 }
 

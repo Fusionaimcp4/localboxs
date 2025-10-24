@@ -50,11 +50,16 @@
   COPY --from=builder --chown=nextjs:nodejs /app/package*.json ./
   COPY --from=builder --chown=nextjs:nodejs /app/node_modules ./node_modules
   
+  # Copy additional required files
+  COPY --from=builder --chown=nextjs:nodejs /app/lib ./lib
+  COPY --from=builder --chown=nextjs:nodejs /app/components ./components
+  
   # Copy Prisma Client and schema
   COPY --from=builder --chown=nextjs:nodejs /app/prisma ./prisma
   
-  # Copy email templates
+  # Copy email templates and data
   COPY --from=builder --chown=nextjs:nodejs /app/emails ./emails
+  COPY --from=builder --chown=nextjs:nodejs /app/data ./data
   
   # Regenerate Prisma Client for Alpine Linux
   RUN npx prisma generate
@@ -67,8 +72,8 @@
   ENV HOSTNAME=0.0.0.0
   
   # Health check
-  HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-    CMD wget -qO- http://localhost:3000/api/health || exit 1
+  HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+    CMD wget -q --spider http://localhost:3000/api/health || exit 1
   
   # Default start command (for production)
   CMD ["npm", "start"]

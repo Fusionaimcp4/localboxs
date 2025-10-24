@@ -3,14 +3,28 @@ import { toast } from "@/components/ui/use-toast";
 /**
  * Modern notification system to replace browser alerts
  * Provides non-blocking, integrated UI notifications
+ * Includes fallback for production errors
  */
+
+// Safe toast wrapper that won't crash if toast system fails
+const safeToast = (options: any) => {
+  try {
+    return toast(options);
+  } catch (error) {
+    console.error('Toast system error:', error);
+    // Fallback to console logging in production
+    if (process.env.NODE_ENV === 'production') {
+      console.log(`Notification: ${options.title || 'Info'} - ${options.description}`);
+    }
+  }
+};
 
 export const notifications = {
   /**
    * Show success notification
    */
   success: (message: string, title?: string) => {
-    toast({
+    safeToast({
       title: title || "Success",
       description: message,
       variant: "default",
@@ -21,7 +35,7 @@ export const notifications = {
    * Show error notification
    */
   error: (message: string, title?: string) => {
-    toast({
+    safeToast({
       title: title || "Error",
       description: message,
       variant: "destructive",
@@ -32,7 +46,7 @@ export const notifications = {
    * Show warning notification
    */
   warning: (message: string, title?: string) => {
-    toast({
+    safeToast({
       title: title || "Warning",
       description: message,
       variant: "default",
@@ -43,7 +57,7 @@ export const notifications = {
    * Show info notification
    */
   info: (message: string, title?: string) => {
-    toast({
+    safeToast({
       title: title || "Info",
       description: message,
       variant: "default",
