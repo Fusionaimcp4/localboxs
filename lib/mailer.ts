@@ -34,7 +34,11 @@ export async function sendEmail(options: EmailOptions) {
 
 // Function to load email templates
 export async function loadEmailTemplate(templateName: string, replacements: Record<string, string>): Promise<string> {
-  const templatePath = path.join(process.cwd(), 'emails', `${templateName}.html`);
+  // Use environment-aware path - absolute path for Docker, relative for local dev
+  const templatePath = process.env.NODE_ENV === 'production' 
+    ? path.join('/app', 'emails', `${templateName}.html`)
+    : path.join(process.cwd(), 'emails', `${templateName}.html`);
+  
   let html = await fs.readFile(templatePath, 'utf-8');
 
   for (const key in replacements) {

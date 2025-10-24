@@ -6,6 +6,13 @@ import { sendEmail, loadEmailTemplate } from '@/lib/mailer';
 
 export async function POST(request: NextRequest) {
   try {
+    if (!prisma) {
+      return NextResponse.json(
+        { error: 'Database not available' },
+        { status: 503 }
+      );
+    }
+
     const { name, email, company, password } = await request.json();
 
     // Validate required fields

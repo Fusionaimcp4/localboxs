@@ -56,6 +56,10 @@ data/
 tests/
 todo/
 
+# ─────────────── Dynamic Content ───────────────
+public/system_messages/
+public/demos/
+
 # ─────────────── IDE & Editor ───────────────
 .vscode/
 .idea/
