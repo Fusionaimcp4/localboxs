@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const { PrismaClient } = require('@prisma/client');
+const { PrismaClient } = require('./lib/generated/prisma');
 const fs = require('fs').promises;
 const path = require('path');
 
