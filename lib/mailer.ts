@@ -19,6 +19,15 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+// Debug: Log SMTP configuration (remove in production)
+console.log('SMTP Config:', {
+  host: process.env.SMTP_HOST,
+  port: process.env.SMTP_PORT,
+  secure: process.env.SMTP_SECURE,
+  user: process.env.SMTP_USER ? '***' : 'NOT_SET',
+  pass: process.env.SMTP_PASS ? '***' : 'NOT_SET'
+});
+
 // Function to send an email
 export async function sendEmail(options: EmailOptions) {
   const from = process.env.EMAIL_FROM || 'Localbox <no-reply@localboxs.com>';
