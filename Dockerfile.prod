@@ -11,11 +11,21 @@
   COPY package.json package-lock.json* ./
   RUN npm install --omit=dev --legacy-peer-deps && npm cache clean --force
   
+  # Fix React version compatibility with Next.js 14
+  RUN npm install react@^18.2.0 react-dom@^18.2.0 --omit=dev --legacy-peer-deps
+  
   # ---- Builder ----
   FROM base AS builder
   WORKDIR /app
   COPY package.json package-lock.json* ./
   RUN npm install --legacy-peer-deps && npm cache clean --force
+  
+  # Fix React version compatibility with Next.js 14
+  RUN npm install react@^18.2.0 react-dom@^18.2.0 --legacy-peer-deps
+  
+  # Verify React versions are correct
+  RUN npm ls react react-dom
+  
   COPY . .
   
   # Accept database URL at build time (non-blocking)
