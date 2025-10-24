@@ -209,7 +209,7 @@ export const authOptions: NextAuthOptions = {
                 data: {
                   email: user.email,
                   name: user.name || profile?.name || '',
-                  emailVerified: new Date(), // OAuth users are verified
+                  emailVerifiedAt: new Date(), // OAuth users are verified
                   isVerified: true,
                   role: 'USER',
                   subscriptionTier: 'FREE',
@@ -222,7 +222,7 @@ export const authOptions: NextAuthOptions = {
               await prisma?.user.update({
                 where: { email: user.email },
                 data: {
-                  emailVerified: new Date(),
+                  emailVerifiedAt: new Date(),
                   isVerified: true,
                   lastLoginAt: new Date()
                 }
