@@ -17,13 +17,6 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    if (!prisma) {
-      return NextResponse.json(
-        { error: 'Database not available' },
-        { status: 503 }
-      );
-    }
-
     const userId = session.user.id;
 
     // Fetch user's knowledge bases
@@ -75,13 +68,6 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { error: 'Unauthorized' },
         { status: 401 }
-      );
-    }
-
-    if (!prisma) {
-      return NextResponse.json(
-        { error: 'Database not available' },
-        { status: 503 }
       );
     }
 

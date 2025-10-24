@@ -1,6 +1,6 @@
 import { prisma } from '@/lib/prisma';
 import { SubscriptionTier } from '@/lib/generated/prisma';
-import { getTierLimits } from '@/lib/features';
+import { getDynamicTierLimits, DynamicTierLimits } from '@/lib/dynamic-tier-limits';
 import { checkUsageLimits, UsageStats } from '@/lib/tier-access';
 import { FusionSubAccountService } from '@/lib/fusion-sub-accounts';
 
@@ -108,7 +108,7 @@ export async function canPerformAction(
     }
 
     const usage = await getUserUsageStats(userId);
-    const limits = getTierLimits(user.subscriptionTier as SubscriptionTier);
+    const limits = await getDynamicTierLimits(user.subscriptionTier as SubscriptionTier);
     const usageCheck = checkUsageLimits(user.subscriptionTier as SubscriptionTier, usage);
 
     // Check specific action limits using dynamic limits

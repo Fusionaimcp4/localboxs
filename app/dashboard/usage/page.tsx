@@ -5,10 +5,8 @@ import { motion } from "framer-motion";
 import { useSession } from "next-auth/react";
 import { UsageDashboard } from "@/components/usage-dashboard";
 import { ActivityLogs } from "@/components/activity-logs";
-import ErrorBoundary from "@/components/error-boundary";
-import ClientOnly from "@/components/client-only";
 
-function UsagePageContent() {
+export default function UsagePage() {
   const { data: session } = useSession();
 
   return (
@@ -40,9 +38,7 @@ function UsagePageContent() {
           transition={{ duration: 0.3, delay: 0.1 }}
           className="mb-8"
         >
-          <ClientOnly fallback={<div className="h-64 bg-slate-100 dark:bg-slate-800 rounded-lg animate-pulse" />}>
-            <UsageDashboard />
-          </ClientOnly>
+          <UsageDashboard />
         </motion.div>
 
         {/* Activity Logs */}
@@ -51,19 +47,9 @@ function UsagePageContent() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: 0.2 }}
         >
-          <ClientOnly fallback={<div className="h-32 bg-slate-100 dark:bg-slate-800 rounded-lg animate-pulse" />}>
-            <ActivityLogs userId={session?.user?.id || ''} />
-          </ClientOnly>
+          <ActivityLogs userId={session?.user?.id || ''} />
         </motion.div>
       </div>
     </div>
-  );
-}
-
-export default function UsagePage() {
-  return (
-    <ErrorBoundary>
-      <UsagePageContent />
-    </ErrorBoundary>
   );
 }

@@ -5,32 +5,6 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { Plus, Database, FileText, Zap, AlertCircle, X } from "lucide-react";
 import { notifications } from "@/lib/notifications";
-import ErrorBoundary from "@/components/error-boundary";
-import ClientOnly from "@/components/client-only";
-
-// Client-side only notifications wrapper
-const clientNotifications = {
-  error: (message: string, title?: string) => {
-    if (typeof window !== 'undefined') {
-      notifications.error(message, title);
-    }
-  },
-  warning: (message: string, title?: string) => {
-    if (typeof window !== 'undefined') {
-      notifications.warning(message, title);
-    }
-  },
-  success: (message: string, title?: string) => {
-    if (typeof window !== 'undefined') {
-      notifications.success(message, title);
-    }
-  },
-  info: (message: string, title?: string) => {
-    if (typeof window !== 'undefined') {
-      notifications.info(message, title);
-    }
-  }
-};
 
 interface KnowledgeBase {
   id: string;
@@ -53,7 +27,7 @@ interface KBStats {
   totalTokens: number;
 }
 
-function KnowledgeBasesPageContent() {
+export default function KnowledgeBasesPage() {
   const [knowledgeBases, setKnowledgeBases] = useState<KnowledgeBase[]>([]);
   const [stats, setStats] = useState<KBStats>({
     total: 0,
@@ -97,11 +71,11 @@ function KnowledgeBasesPageContent() {
         setShowCreateModal(false);
       } else {
         const error = await response.json();
-        clientNotifications.error(`Failed to create knowledge base: ${error.error}`);
+        notifications.error(`Failed to create knowledge base: ${error.error}`);
       }
     } catch (error) {
       console.error('Failed to create knowledge base:', error);
-      clientNotifications.error('Failed to create knowledge base. Please try again.');
+      notifications.error('Failed to create knowledge base. Please try again.');
     }
   };
 
@@ -139,8 +113,7 @@ function KnowledgeBasesPageContent() {
   }
 
   return (
-    <ClientOnly fallback={<div className="px-4 py-6 space-y-6"><div className="h-64 bg-slate-100 dark:bg-slate-800 rounded-lg animate-pulse" /></div>}>
-      <div className="px-4 py-6 space-y-6">
+    <div className="px-4 py-6 space-y-6">
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: 10 }}
@@ -285,8 +258,7 @@ function KnowledgeBasesPageContent() {
           onCreate={handleCreateKB}
         />
       )}
-      </div>
-    </ClientOnly>
+    </div>
   );
 }
 
@@ -306,7 +278,7 @@ function CreateKBModal({
     e.preventDefault();
     
     if (!name.trim()) {
-      clientNotifications.warning('Please enter a name');
+      notifications.warning('Please enter a name');
       return;
     }
 
@@ -403,14 +375,6 @@ function CreateKBModal({
         </form>
       </motion.div>
     </div>
-  );
-}
-
-export default function KnowledgeBasesPage() {
-  return (
-    <ErrorBoundary>
-      <KnowledgeBasesPageContent />
-    </ErrorBoundary>
   );
 }
 

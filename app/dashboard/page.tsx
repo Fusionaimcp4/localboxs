@@ -7,7 +7,6 @@ import { useSession } from "next-auth/react";
 import { AlertCircle, Plus, Settings, BarChart3, MessageSquare, ChevronRight, Eye, Trash2, X } from "lucide-react";
 import { notifications } from "@/lib/notifications";
 import { logger } from "@/lib/logger";
-import ErrorBoundary from "@/components/error-boundary";
 
 interface DashboardStats {
   totalDemos: number;
@@ -29,7 +28,7 @@ interface Demo {
   }>;
 }
 
-function DashboardPageContent() {
+export default function DashboardPage() {
   const { data: session, update: updateSession } = useSession();
   const [stats, setStats] = useState<DashboardStats>({
     totalDemos: 0,
@@ -521,13 +520,5 @@ function DashboardPageContent() {
         )}
       </AnimatePresence>
     </div>
-  );
-}
-
-export default function DashboardPage() {
-  return (
-    <ErrorBoundary>
-      <DashboardPageContent />
-    </ErrorBoundary>
   );
 }
