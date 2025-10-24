@@ -1,4 +1,4 @@
-import { SubscriptionTier } from '@prisma/client';
+import { SubscriptionTier } from '@/lib/generated/prisma';
 import { getTierLimits, canAccessFeature } from './features';
 
 // Tier-based access control utilities

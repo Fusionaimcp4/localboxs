@@ -1,22 +1,30 @@
-import { SubscriptionTier } from '@prisma/client';
+import { SubscriptionTier } from '@/lib/generated/prisma';
 
-// Feature Matrix - Defines what each tier can access
-export const FEATURE_MATRIX = {
+// Tier limits configuration
+export interface TierLimits {
+  maxDemos: number;
+  maxWorkflows: number;
+  maxKnowledgeBases: number;
+  maxDocuments: number;
+  maxIntegrations: number;
+  apiCallsPerMonth: number;
+  documentSizeLimit: number;
+  chunkSize: number;
+  maxChunksPerDocument: number;
+}
+
+// Default tier limits
+const DEFAULT_TIER_LIMITS: Record<SubscriptionTier, TierLimits> = {
   FREE: {
     maxDemos: 1,
     maxWorkflows: 2,
     maxKnowledgeBases: 1,
     maxDocuments: 10,
     maxIntegrations: 1,
-    integrations: ['CRM'],
-    supportLevel: 'community',
     apiCallsPerMonth: 1000,
-    features: [],
-    limits: {
-      documentSize: 5 * 1024 * 1024, // 5MB
-      chunkSize: 1000,
-      maxChunksPerDocument: 50
-    }
+    documentSizeLimit: 5 * 1024 * 1024, // 5MB
+    chunkSize: 1000,
+    maxChunksPerDocument: 50
   },
   PRO: {
     maxDemos: 5,
@@ -24,15 +32,10 @@ export const FEATURE_MATRIX = {
     maxKnowledgeBases: 5,
     maxDocuments: 100,
     maxIntegrations: 3,
-    integrations: ['CRM', 'Calendar', 'Database'],
-    supportLevel: 'email',
     apiCallsPerMonth: 10000,
-    features: ['advanced_analytics', 'custom_branding', 'priority_support'],
-    limits: {
-      documentSize: 25 * 1024 * 1024, // 25MB
-      chunkSize: 2000,
-      maxChunksPerDocument: 200
-    }
+    documentSizeLimit: 25 * 1024 * 1024, // 25MB
+    chunkSize: 2000,
+    maxChunksPerDocument: 200
   },
   PRO_PLUS: {
     maxDemos: 25,
@@ -40,135 +43,30 @@ export const FEATURE_MATRIX = {
     maxKnowledgeBases: 25,
     maxDocuments: 1000,
     maxIntegrations: 10,
-    integrations: ['CRM', 'Calendar', 'Database', 'API', 'Webhook'],
-    supportLevel: 'priority',
     apiCallsPerMonth: 100000,
-    features: ['advanced_analytics', 'custom_branding', 'white_label', 'sso', 'api_access', 'webhook_integrations'],
-    limits: {
-      documentSize: 100 * 1024 * 1024, // 100MB
-      chunkSize: 4000,
-      maxChunksPerDocument: 1000
-    }
+    documentSizeLimit: 100 * 1024 * 1024, // 100MB
+    chunkSize: 4000,
+    maxChunksPerDocument: 1000
   },
   ENTERPRISE: {
     maxDemos: -1, // Unlimited
-    maxWorkflows: -1, // Unlimited
-    maxKnowledgeBases: -1, // Unlimited
-    maxDocuments: -1, // Unlimited
-    maxIntegrations: -1, // Unlimited
-    integrations: ['CRM', 'Calendar', 'Database', 'API', 'Webhook', 'Custom'],
-    supportLevel: 'dedicated',
-    apiCallsPerMonth: -1, // Unlimited
-    features: ['advanced_analytics', 'custom_branding', 'white_label', 'sso', 'api_access', 'webhook_integrations', 'custom_integrations', 'dedicated_support', 'sla'],
-    limits: {
-      documentSize: 500 * 1024 * 1024, // 500MB
-      chunkSize: 8000,
-      maxChunksPerDocument: -1 // Unlimited
-    }
+    maxWorkflows: -1,
+    maxKnowledgeBases: -1,
+    maxDocuments: -1,
+    maxIntegrations: -1,
+    apiCallsPerMonth: -1,
+    documentSizeLimit: 500 * 1024 * 1024, // 500MB
+    chunkSize: 8000,
+    maxChunksPerDocument: -1
   }
-} as const;
+};
 
-// Feature definitions for database seeding
-export const FEATURE_DEFINITIONS = [
-  // FREE tier features (basic functionality)
-  {
-    name: 'basic_demos',
-    description: 'Create and manage basic demos',
-    tier: 'FREE' as SubscriptionTier
-  },
-  {
-    name: 'basic_workflows',
-    description: 'Create and manage basic workflows',
-    tier: 'FREE' as SubscriptionTier
-  },
-  {
-    name: 'basic_knowledge_bases',
-    description: 'Create and manage basic knowledge bases',
-    tier: 'FREE' as SubscriptionTier
-  },
-  {
-    name: 'crm_integration',
-    description: 'Connect with CRM systems',
-    tier: 'FREE' as SubscriptionTier
-  },
-
-  // PRO tier features
-  {
-    name: 'advanced_analytics',
-    description: 'Access to advanced analytics and reporting',
-    tier: 'PRO' as SubscriptionTier
-  },
-  {
-    name: 'custom_branding',
-    description: 'Custom branding and theming options',
-    tier: 'PRO' as SubscriptionTier
-  },
-  {
-    name: 'priority_support',
-    description: 'Priority email support',
-    tier: 'PRO' as SubscriptionTier
-  },
-  {
-    name: 'calendar_integration',
-    description: 'Calendar and scheduling integrations',
-    tier: 'PRO' as SubscriptionTier
-  },
-  {
-    name: 'database_integration',
-    description: 'Database and data source integrations',
-    tier: 'PRO' as SubscriptionTier
-  },
-
-  // PRO_PLUS tier features
-  {
-    name: 'white_label',
-    description: 'White-label solution with custom domain',
-    tier: 'PRO_PLUS' as SubscriptionTier
-  },
-  {
-    name: 'sso',
-    description: 'Single Sign-On (SSO) integration',
-    tier: 'PRO_PLUS' as SubscriptionTier
-  },
-  {
-    name: 'api_access',
-    description: 'Full API access and custom integrations',
-    tier: 'PRO_PLUS' as SubscriptionTier
-  },
-  {
-    name: 'webhook_integrations',
-    description: 'Webhook and real-time integrations',
-    tier: 'PRO_PLUS' as SubscriptionTier
-  },
-
-  // ENTERPRISE tier features
-  {
-    name: 'custom_integrations',
-    description: 'Custom integration development',
-    tier: 'ENTERPRISE' as SubscriptionTier
-  },
-  {
-    name: 'dedicated_support',
-    description: 'Dedicated account manager and support',
-    tier: 'ENTERPRISE' as SubscriptionTier
-  },
-  {
-    name: 'sla',
-    description: 'Service Level Agreement guarantees',
-    tier: 'ENTERPRISE' as SubscriptionTier
-  }
-];
-
-// Helper functions for feature checking
-export function getTierLimits(tier: SubscriptionTier) {
-  return FEATURE_MATRIX[tier];
+// Get tier limits for a subscription tier
+export function getTierLimits(tier: SubscriptionTier): TierLimits {
+  return DEFAULT_TIER_LIMITS[tier] || DEFAULT_TIER_LIMITS.FREE;
 }
 
-export function hasFeature(tier: SubscriptionTier, feature: string): boolean {
-  const limits = getTierLimits(tier);
-  return limits.features.includes(feature);
-}
-
+// Check if user can access a feature based on tier
 export function canAccessFeature(userTier: SubscriptionTier, requiredTier: SubscriptionTier): boolean {
   const tierOrder = ['FREE', 'PRO', 'PRO_PLUS', 'ENTERPRISE'];
   const userTierIndex = tierOrder.indexOf(userTier);
@@ -177,38 +75,78 @@ export function canAccessFeature(userTier: SubscriptionTier, requiredTier: Subsc
   return userTierIndex >= requiredTierIndex;
 }
 
-export function getUpgradePrompt(currentTier: SubscriptionTier, feature: string): string {
-  const tierOrder = ['FREE', 'PRO', 'PRO_PLUS', 'ENTERPRISE'];
+// Get all available features for a tier
+export function getAvailableFeatures(tier: SubscriptionTier): string[] {
+  const features = {
+    FREE: [
+      'Basic dashboard',
+      'Create demos (1)',
+      'Create workflows (2)',
+      'Create knowledge bases (1)',
+      'Upload documents (10)',
+      'Basic integrations (1)'
+    ],
+    PRO: [
+      'All FREE features',
+      'Create demos (5)',
+      'Create workflows (10)',
+      'Create knowledge bases (5)',
+      'Upload documents (100)',
+      'Advanced integrations (3)',
+      'Analytics dashboard',
+      'Custom branding',
+      'API keys'
+    ],
+    PRO_PLUS: [
+      'All PRO features',
+      'Create demos (25)',
+      'Create workflows (50)',
+      'Create knowledge bases (25)',
+      'Upload documents (1000)',
+      'Advanced integrations (10)',
+      'White-label solution',
+      'SSO integration',
+      'Webhooks'
+    ],
+    ENTERPRISE: [
+      'All PRO_PLUS features',
+      'Unlimited demos',
+      'Unlimited workflows',
+      'Unlimited knowledge bases',
+      'Unlimited documents',
+      'Unlimited integrations',
+      'Priority support',
+      'Custom integrations',
+      'Dedicated infrastructure'
+    ]
+  };
+
+  return features[tier] || features.FREE;
+}
+
+// Check if a feature is available for a tier
+export function isFeatureAvailable(tier: SubscriptionTier, feature: string): boolean {
+  const availableFeatures = getAvailableFeatures(tier);
+  return availableFeatures.some(f => f.toLowerCase().includes(feature.toLowerCase()));
+}
+
+// Get upgrade suggestions for a tier
+export function getUpgradeSuggestions(currentTier: SubscriptionTier): {
+  nextTier: SubscriptionTier | null;
+  benefits: string[];
+} {
+  const tierOrder: SubscriptionTier[] = ['FREE', 'PRO', 'PRO_PLUS', 'ENTERPRISE'];
   const currentIndex = tierOrder.indexOf(currentTier);
   
-  // Find the minimum tier that has this feature
-  let requiredTier = 'ENTERPRISE';
-  for (const tier of tierOrder) {
-    if (hasFeature(tier as SubscriptionTier, feature)) {
-      requiredTier = tier;
-      break;
-    }
+  if (currentIndex >= tierOrder.length - 1) {
+    return { nextTier: null, benefits: [] };
   }
   
-  return `This feature requires ${requiredTier} tier or higher. Upgrade to unlock ${feature}.`;
-}
-
-// Usage tracking helpers
-export function isWithinLimit(current: number, limit: number): boolean {
-  if (limit === -1) return true; // Unlimited
-  return current < limit;
-}
-
-export function getUsagePercentage(current: number, limit: number): number {
-  if (limit === -1) return 0; // Unlimited
-  return Math.min((current / limit) * 100, 100);
-}
-
-export function getUsageStatus(current: number, limit: number): 'safe' | 'warning' | 'critical' {
-  if (limit === -1) return 'safe'; // Unlimited
+  const nextTier = tierOrder[currentIndex + 1];
+  const currentFeatures = getAvailableFeatures(currentTier);
+  const nextFeatures = getAvailableFeatures(nextTier);
   
-  const percentage = getUsagePercentage(current, limit);
-  if (percentage >= 90) return 'critical';
-  if (percentage >= 75) return 'warning';
-  return 'safe';
+  const benefits = nextFeatures.filter(feature => !currentFeatures.includes(feature));
+  
+  return { nextTier, benefits };
 }
