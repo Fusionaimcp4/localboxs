@@ -243,7 +243,7 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token, user, trigger, session }) {
       // Always fetch the latest user data to ensure up-to-date verification status
       const dbUser = await prisma?.user.findUnique({
-        where: { id: token.id || user?.id }, // Use token.id if available, otherwise user?.id
+        where: { email: token.email || user?.email }, // Use email instead of id
         select: { 
           id: true, 
           role: true, 
@@ -320,9 +320,9 @@ export const authOptions: NextAuthOptions = {
   events: {
     async signIn(message) {
       // Update lastLoginAt and lastLoginIp for the user
-      if (message.user?.id) {
-        await prisma?.user.update({
-          where: { id: message.user.id },
+      if (message.user?.email) {
+        await prisma?.user.updateMany({
+          where: { email: message.user.email },
           data: {
             lastLoginAt: new Date(),
           },
