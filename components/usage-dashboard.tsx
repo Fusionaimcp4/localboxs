@@ -31,9 +31,31 @@ export function UsageDashboard({ className = '' }: UsageDashboardProps) {
   const [usage, setUsage] = useState<UsageStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  // Prevent hydration mismatch by only rendering after mount
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const userTier = (session?.user?.subscriptionTier as SubscriptionTier) || 'FREE';
   const limits = getTierLimits(userTier);
+
+  // Show loading state during hydration
+  if (!mounted) {
+    return (
+      <div className={`bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6 ${className}`}>
+        <div className="animate-pulse space-y-4">
+          <div className="h-6 bg-slate-200 dark:bg-slate-700 rounded w-32"></div>
+          <div className="space-y-3">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="h-4 bg-slate-200 dark:bg-slate-700 rounded w-full"></div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   useEffect(() => {
     const fetchUsage = async () => {

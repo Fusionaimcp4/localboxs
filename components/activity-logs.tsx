@@ -7,6 +7,13 @@ import { Button } from '@/components/ui/button';
 import { RefreshCw, Clock, DollarSign, Zap, Activity } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 
+// SSR-safe toast wrapper
+const safeToast = (options: any) => {
+  if (typeof window !== 'undefined') {
+    toast(options);
+  }
+};
+
 interface ActivityLog {
   id: number;
   timestamp: string;
@@ -53,6 +60,12 @@ export function ActivityLogs({ userId }: ActivityLogsProps) {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [mounted, setMounted] = useState(false);
+
+  // Prevent hydration mismatch
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const fetchActivityLogs = async () => {
     try {
@@ -86,7 +99,7 @@ export function ActivityLogs({ userId }: ActivityLogsProps) {
     } catch (err) {
       console.error('Failed to fetch activity logs:', err);
       setError(err instanceof Error ? err.message : 'Failed to fetch activity logs');
-      toast({
+      safeToast({
         title: 'Error',
         description: 'Failed to load activity logs',
         variant: 'destructive',
@@ -146,7 +159,8 @@ export function ActivityLogs({ userId }: ActivityLogsProps) {
     }
   };
 
-  if (loading) {
+  // Show loading state during hydration
+  if (!mounted || loading) {
     return (
       <Card className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
         <CardHeader className="bg-slate-50 dark:bg-slate-700/50 border-b border-slate-200 dark:border-slate-700">

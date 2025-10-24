@@ -5,8 +5,9 @@ import { motion } from "framer-motion";
 import { useSession } from "next-auth/react";
 import { UsageDashboard } from "@/components/usage-dashboard";
 import { ActivityLogs } from "@/components/activity-logs";
+import ErrorBoundary from "@/components/error-boundary";
 
-export default function UsagePage() {
+function UsagePageContent() {
   const { data: session } = useSession();
 
   return (
@@ -51,5 +52,13 @@ export default function UsagePage() {
         </motion.div>
       </div>
     </div>
+  );
+}
+
+export default function UsagePage() {
+  return (
+    <ErrorBoundary>
+      <UsagePageContent />
+    </ErrorBoundary>
   );
 }
