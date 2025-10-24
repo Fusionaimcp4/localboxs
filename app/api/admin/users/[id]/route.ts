@@ -178,7 +178,7 @@ export async function PATCH(
 // DELETE /api/admin/users/[id] - Delete user
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -187,14 +187,16 @@ export async function DELETE(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    const { id } = await params;
+
     // Prevent self-deletion
-    if (session.user.id === params.id) {
+    if (session.user.id === id) {
       return NextResponse.json({ error: 'Cannot delete your own account' }, { status: 400 });
     }
 
     // Check if user exists
     const existingUser = await prisma.user.findUnique({
-      where: { id: params.id },
+      where: { id },
       select: { id: true, email: true, role: true }
     });
 
@@ -207,9 +209,14 @@ export async function DELETE(
       return NextResponse.json({ error: 'Cannot delete super admin account' }, { status: 403 });
     }
 
+    // Delete verification tokens first to avoid foreign key constraint
+    await prisma.verificationToken.deleteMany({
+      where: { userId: id }
+    });
+
     // Delete user (this will cascade delete related records due to Prisma relations)
     await prisma.user.delete({
-      where: { id: params.id }
+      where: { id }
     });
 
     logger.info(`Admin ${session.user.email} deleted user`, {
