@@ -23,6 +23,9 @@
   # Fix React version compatibility with Next.js 14
   RUN npm install react@^18.2.0 react-dom@^18.2.0 --legacy-peer-deps
   
+  # Clear Next.js cache to prevent stale builds
+  RUN rm -rf .next
+  
   # Verify React versions are correct
   RUN npm ls react react-dom
   

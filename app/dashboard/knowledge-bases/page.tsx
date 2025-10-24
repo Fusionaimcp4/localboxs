@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Plus, Database, FileText, Zap, AlertCircle, X } from "lucide-react";
 import { notifications } from "@/lib/notifications";
 import ErrorBoundary from "@/components/error-boundary";
+import ClientOnly from "@/components/client-only";
 
 // Client-side only notifications wrapper
 const clientNotifications = {
@@ -138,7 +139,8 @@ function KnowledgeBasesPageContent() {
   }
 
   return (
-    <div className="px-4 py-6 space-y-6">
+    <ClientOnly fallback={<div className="px-4 py-6 space-y-6"><div className="h-64 bg-slate-100 dark:bg-slate-800 rounded-lg animate-pulse" /></div>}>
+      <div className="px-4 py-6 space-y-6">
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: 10 }}
@@ -283,7 +285,8 @@ function KnowledgeBasesPageContent() {
           onCreate={handleCreateKB}
         />
       )}
-    </div>
+      </div>
+    </ClientOnly>
   );
 }
 
