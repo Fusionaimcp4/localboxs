@@ -72,7 +72,15 @@ export default function KnowledgeBaseDetailPage({ params }: { params: Promise<{ 
   const [resolvedParams, setResolvedParams] = useState<{ id: string } | null>(null);
   
   useEffect(() => {
-    params.then(setResolvedParams);
+    const resolveParams = async () => {
+      try {
+        const resolved = await params;
+        setResolvedParams(resolved);
+      } catch (error) {
+        console.error('Error resolving params:', error);
+      }
+    };
+    resolveParams();
   }, [params]);
   const [kb, setKb] = useState<KnowledgeBaseDetail | null>(null);
   const [loading, setLoading] = useState(true);

@@ -19,7 +19,7 @@
     },
     {
       "src": "/logos/boxlogo512x512.png",
-      "sizes": "512x512",
+      "sizes": "48x48",
       "type": "image/png"
     }
   ]
