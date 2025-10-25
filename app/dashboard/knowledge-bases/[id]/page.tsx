@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, use } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { 
@@ -69,7 +69,11 @@ interface KnowledgeBaseDetail {
 }
 
 export default function KnowledgeBaseDetailPage({ params }: { params: Promise<{ id: string }> }) {
-  const resolvedParams = use(params);
+  const [resolvedParams, setResolvedParams] = useState<{ id: string } | null>(null);
+  
+  useEffect(() => {
+    params.then(setResolvedParams);
+  }, [params]);
   const [kb, setKb] = useState<KnowledgeBaseDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
@@ -92,8 +96,10 @@ export default function KnowledgeBaseDetailPage({ params }: { params: Promise<{ 
   });
 
   useEffect(() => {
-    fetchKB();
-  }, [resolvedParams.id]);
+    if (resolvedParams?.id) {
+      fetchKB();
+    }
+  }, [resolvedParams?.id]);
 
   useEffect(() => {
     // Auto-refresh only while documents are processing
@@ -113,8 +119,10 @@ export default function KnowledgeBaseDetailPage({ params }: { params: Promise<{ 
   }, [kb?.documents]);
 
   const fetchKB = async () => {
+    if (!resolvedParams?.id) return;
+    
     try {
-      const response = await fetch(`/api/dashboard/knowledge-bases/${resolvedParams.id}`);
+      const response = await fetch(`/api/dashboard/knowledge-bases/${resolvedParams?.id}`);
       
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
@@ -153,7 +161,7 @@ export default function KnowledgeBaseDetailPage({ params }: { params: Promise<{ 
       const formData = new FormData();
       formData.append('file', file);
 
-      const response = await fetch(`/api/dashboard/knowledge-bases/${resolvedParams.id}/upload`, {
+      const response = await fetch(`/api/dashboard/knowledge-bases/${resolvedParams?.id}/upload`, {
         method: 'POST',
         body: formData,
       });
@@ -261,7 +269,7 @@ export default function KnowledgeBaseDetailPage({ params }: { params: Promise<{ 
 
   const handleSaveSettings = async () => {
     try {
-      const response = await fetch(`/api/dashboard/knowledge-bases/${resolvedParams.id}`, {
+      const response = await fetch(`/api/dashboard/knowledge-bases/${resolvedParams?.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(settingsForm),
@@ -288,7 +296,7 @@ export default function KnowledgeBaseDetailPage({ params }: { params: Promise<{ 
     }
 
     try {
-      const response = await fetch(`/api/dashboard/knowledge-bases/${resolvedParams.id}`, {
+      const response = await fetch(`/api/dashboard/knowledge-bases/${resolvedParams?.id}`, {
         method: 'DELETE',
       });
 
@@ -307,7 +315,7 @@ export default function KnowledgeBaseDetailPage({ params }: { params: Promise<{ 
   // Workflow link management
   const fetchWorkflowLinks = async () => {
     try {
-      const response = await fetch(`/api/dashboard/knowledge-bases/${resolvedParams.id}/workflow-links`);
+      const response = await fetch(`/api/dashboard/knowledge-bases/${resolvedParams?.id}/workflow-links`);
       if (response.ok) {
         const data = await response.json();
         setWorkflowLinks(data.links || []);
@@ -341,7 +349,7 @@ export default function KnowledgeBaseDetailPage({ params }: { params: Promise<{ 
     }
 
     try {
-      const response = await fetch(`/api/dashboard/knowledge-bases/${resolvedParams.id}/link-workflow`, {
+      const response = await fetch(`/api/dashboard/knowledge-bases/${resolvedParams?.id}/link-workflow`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(linkForm),
@@ -375,7 +383,7 @@ export default function KnowledgeBaseDetailPage({ params }: { params: Promise<{ 
 
     try {
       const response = await fetch(
-        `/api/dashboard/knowledge-bases/${resolvedParams.id}/unlink-workflow?workflowId=${workflowId}`,
+        `/api/dashboard/knowledge-bases/${resolvedParams?.id}/unlink-workflow?workflowId=${workflowId}`,
         { method: 'DELETE' }
       );
 
@@ -394,7 +402,7 @@ export default function KnowledgeBaseDetailPage({ params }: { params: Promise<{ 
 
   const handleToggleLinkActive = async (linkId: string, isActive: boolean) => {
     try {
-      const response = await fetch(`/api/dashboard/knowledge-bases/${resolvedParams.id}/workflow-links`, {
+      const response = await fetch(`/api/dashboard/knowledge-bases/${resolvedParams?.id}/workflow-links`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ linkId, isActive: !isActive }),
@@ -419,7 +427,7 @@ export default function KnowledgeBaseDetailPage({ params }: { params: Promise<{ 
     }
   }, [kb]);
 
-  if (loading) {
+  if (!resolvedParams || loading) {
     return (
       <div className="px-4 py-6 space-y-6">
         {/* Header Skeleton */}

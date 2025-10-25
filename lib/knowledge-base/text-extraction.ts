@@ -84,17 +84,47 @@ async function extractTextFromCSV(filePath: string): Promise<{
   text: string;
   wordCount: number;
 }> {
-  const content = await fs.readFile(filePath, 'utf-8');
-  
-  // Simple CSV to text conversion (will enhance with papaparse later)
-  const lines = content.split('\n').filter(line => line.trim());
-  const text = lines.join('\n');
-  const wordCount = text.split(/\s+/).filter(word => word.length > 0).length;
-  
-  return {
-    text,
-    wordCount,
-  };
+  try {
+    // Use csv-parser for proper CSV parsing
+    const csv = require('csv-parser');
+    const { createReadStream } = require('fs');
+    
+    const results: any[] = [];
+    const stream = createReadStream(filePath);
+    
+    await new Promise((resolve, reject) => {
+      stream
+        .pipe(csv())
+        .on('data', (data: any) => results.push(data))
+        .on('end', resolve)
+        .on('error', reject);
+    });
+    
+    // Convert CSV data to readable text format
+    const text = results.map(row => 
+      Object.entries(row).map(([key, value]) => `${key}: ${value}`).join(', ')
+    ).join('\n');
+    
+    const wordCount = text.split(/\s+/).filter(word => word.length > 0).length;
+    
+    return {
+      text,
+      wordCount,
+    };
+  } catch (error) {
+    console.error('[CSV] Parsing error, falling back to simple parsing:', error);
+    
+    // Fallback to simple parsing
+    const content = await fs.readFile(filePath, 'utf-8');
+    const lines = content.split('\n').filter(line => line.trim());
+    const text = lines.join('\n');
+    const wordCount = text.split(/\s+/).filter(word => word.length > 0).length;
+    
+    return {
+      text,
+      wordCount,
+    };
+  }
 }
 
 /**

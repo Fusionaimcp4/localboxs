@@ -68,6 +68,10 @@
   # Copy styles directory (CSS files)
   COPY --from=builder --chown=nextjs:nodejs /app/styles ./styles
   
+  # Create public directories for dynamic content
+  RUN mkdir -p public/knowledge-bases public/system_messages && \
+      chown -R nextjs:nodejs public/knowledge-bases public/system_messages
+  
   # Regenerate Prisma Client for Alpine Linux
   RUN npx prisma generate
   
