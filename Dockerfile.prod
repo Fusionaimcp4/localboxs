@@ -56,6 +56,18 @@
   # Copy email templates
   COPY --from=builder --chown=nextjs:nodejs /app/emails ./emails
   
+  # Copy data directory (templates, registry, etc.)
+  COPY --from=builder --chown=nextjs:nodejs /app/data ./data
+  
+  # Copy lib directory (core functionality)
+  COPY --from=builder --chown=nextjs:nodejs /app/lib ./lib
+  
+  # Copy hooks directory (React hooks)
+  COPY --from=builder --chown=nextjs:nodejs /app/hooks ./hooks
+  
+  # Copy styles directory (CSS files)
+  COPY --from=builder --chown=nextjs:nodejs /app/styles ./styles
+  
   # Regenerate Prisma Client for Alpine Linux
   RUN npx prisma generate
   
