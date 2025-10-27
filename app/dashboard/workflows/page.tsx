@@ -91,11 +91,25 @@ export default function WorkflowsPage() {
   const [availableModels, setAvailableModels] = useState<FusionModel[]>([]);
   const [selectedModel, setSelectedModel] = useState<string>('');
   const [switchingModel, setSwitchingModel] = useState(false);
+  const [helpdeskAgents, setHelpdeskAgents] = useState<Array<{id: string, name: string, email: string}>>([]);
 
   useEffect(() => {
     fetchWorkflows();
     fetchAvailableModels();
+    fetchHelpdeskAgents();
   }, []);
+
+  const fetchHelpdeskAgents = async () => {
+    try {
+      const response = await fetch('/api/dashboard/integrations/chatwoot/agents');
+      const data = await response.json();
+      if (response.ok && data.agents) {
+        setHelpdeskAgents(data.agents);
+      }
+    } catch (error) {
+      console.error('Failed to fetch helpdesk agents:', error);
+    }
+  };
 
   const fetchWorkflows = async () => {
     try {
@@ -532,34 +546,37 @@ export default function WorkflowsPage() {
                 </div>
                 
                 <div className="space-y-6">
-                  <div>
-                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                      AI Model
-                    </label>
-                    <select 
-                      value={selectedModel}
-                      onChange={(e) => setSelectedModel(e.target.value)}
-                      className="w-full rounded-xl bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none px-4 py-3 text-slate-900 dark:text-slate-100"
-                    >
-                      <option value="">Select a model...</option>
-                      {availableModels.map((model) => (
-                        <option key={model.id} value={model.id}>
-                          {model.name} ({model.provider})
-                        </option>
-                      ))}
-                    </select>
-                    {selectedModel && (
-                      <div className="mt-2 flex justify-end">
-                        <button
-                          onClick={handleModelSwitch}
-                          disabled={switchingModel || selectedModel === selectedWorkflow?.configuration.aiModel}
-                          className="px-4 py-2 bg-emerald-500 text-white rounded-xl hover:bg-emerald-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium"
-                        >
-                          {switchingModel ? 'Switching...' : 'Switch Model'}
-                        </button>
-                      </div>
-                    )}
-                  </div>
+                <div>
+  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+    AI Model
+  </label>
+  <select 
+    value={selectedModel}
+    onChange={(e) => setSelectedModel(e.target.value)}
+    className="w-full rounded-xl bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none px-4 py-3 text-slate-900 dark:text-slate-100"
+  >
+    <option value="">Select a model...</option>
+    {availableModels
+      .filter((model) => model.provider.toLowerCase() === 'openai') // only OpenAI models
+      .map((model) => (
+        <option key={model.id} value={model.id}>
+          {model.name} ({model.provider})
+        </option>
+      ))
+    }
+  </select>
+  {selectedModel && (
+    <div className="mt-2 flex justify-end">
+      <button
+        onClick={handleModelSwitch}
+        disabled={switchingModel || selectedModel === selectedWorkflow?.configuration.aiModel}
+        className="px-4 py-2 bg-emerald-500 text-white rounded-xl hover:bg-emerald-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium"
+      >
+        {switchingModel ? 'Switching...' : 'Switch Model'}
+      </button>
+    </div>
+  )}
+</div>
                   
                   {/* Timing Thresholds Configuration */}
                   <div className="space-y-4">
@@ -634,13 +651,36 @@ export default function WorkflowsPage() {
                     <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                       Escalation Contact
                     </label>
-                    <input
-                      type="text"
-                      value={timingThresholds.escalationContact}
-                      onChange={(e) => setTimingThresholds(prev => ({ ...prev, escalationContact: e.target.value }))}
-                      className="w-full rounded-xl bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none px-4 py-3 text-slate-900 dark:text-slate-100"
-                      placeholder="Enter supervisor name (e.g., Jon Monark)"
-                    />
+                    <div className="space-y-3">
+                      <select
+                        value=""
+                        onChange={(e) => {
+                          if (e.target.value) {
+                            setTimingThresholds(prev => ({ ...prev, escalationContact: e.target.value }));
+                          }
+                        }}
+                        className="w-full rounded-xl bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none px-4 py-3 text-slate-900 dark:text-slate-100"
+                      >
+                        <option value="">Quick select from helpdesk agents...</option>
+                        {helpdeskAgents.map((agent) => (
+                          <option key={agent.id} value={agent.name}>
+                            {agent.name}
+                          </option>
+                        ))}
+                      </select>
+                      <input
+                        type="text"
+                        value={timingThresholds.escalationContact}
+                        onChange={(e) => setTimingThresholds(prev => ({ ...prev, escalationContact: e.target.value }))}
+                        className="w-full rounded-xl bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none px-4 py-3 text-slate-900 dark:text-slate-100"
+                        placeholder="Or enter supervisor name manually (e.g., Jon Monark)"
+                      />
+                      {helpdeskAgents.length === 0 && (
+                        <p className="text-xs text-amber-600 dark:text-amber-400 mt-2">
+                          No helpdesk agents found. Add agents in Integrations → Helpdesk Setup.
+                        </p>
+                      )}
+                    </div>
                   </div>
                   
                   <div>
