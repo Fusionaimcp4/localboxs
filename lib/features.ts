@@ -1,4 +1,4 @@
-import { SubscriptionTier } from '@prisma/client';
+import { SubscriptionTier } from './generated/prisma';
 
 // Feature Matrix - Defines what each tier can access
 export const FEATURE_MATRIX = {
@@ -8,6 +8,7 @@ export const FEATURE_MATRIX = {
     maxKnowledgeBases: 1,
     maxDocuments: 10,
     maxIntegrations: 1,
+    maxHelpdeskAgents: 1,
     integrations: ['CRM'],
     supportLevel: 'community',
     apiCallsPerMonth: 1000,
@@ -24,6 +25,7 @@ export const FEATURE_MATRIX = {
     maxKnowledgeBases: 5,
     maxDocuments: 100,
     maxIntegrations: 3,
+    maxHelpdeskAgents: 3,
     integrations: ['CRM', 'Calendar', 'Database'],
     supportLevel: 'email',
     apiCallsPerMonth: 10000,
@@ -40,6 +42,7 @@ export const FEATURE_MATRIX = {
     maxKnowledgeBases: 25,
     maxDocuments: 1000,
     maxIntegrations: 10,
+    maxHelpdeskAgents: 5,
     integrations: ['CRM', 'Calendar', 'Database', 'API', 'Webhook'],
     supportLevel: 'priority',
     apiCallsPerMonth: 100000,
@@ -56,6 +59,7 @@ export const FEATURE_MATRIX = {
     maxKnowledgeBases: -1, // Unlimited
     maxDocuments: -1, // Unlimited
     maxIntegrations: -1, // Unlimited
+    maxHelpdeskAgents: -1, // Unlimited
     integrations: ['CRM', 'Calendar', 'Database', 'API', 'Webhook', 'Custom'],
     supportLevel: 'dedicated',
     apiCallsPerMonth: -1, // Unlimited
@@ -166,7 +170,7 @@ export function getTierLimits(tier: SubscriptionTier) {
 
 export function hasFeature(tier: SubscriptionTier, feature: string): boolean {
   const limits = getTierLimits(tier);
-  return limits.features.includes(feature);
+  return (limits.features as unknown as string[]).includes(feature);
 }
 
 export function canAccessFeature(userTier: SubscriptionTier, requiredTier: SubscriptionTier): boolean {

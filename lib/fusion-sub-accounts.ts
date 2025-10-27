@@ -23,7 +23,7 @@ export class FusionSubAccountService {
    */
   private static transformEmailForFusion(email: string): string {
     const [localPart, domain] = email.split('@');
-    return `${localPart}.localboxs@${domain}`;
+    return `${localPart}+localboxs@${domain}`;
   }
 
   /**
@@ -284,6 +284,11 @@ export async function ensureFusionSubAccount(userId: string): Promise<void> {
     
     // Import prisma here to avoid circular dependencies
     const { prisma } = await import('@/lib/prisma');
+    
+    if (!prisma) {
+      console.error(`❌ [Fusion] Prisma client not available`);
+      return;
+    }
     
     // Get user from database
     const user = await prisma.user.findUnique({

@@ -32,6 +32,11 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+    volumes:
+      # Persist dynamic demo content and uploaded files
+      - ./public/demos:/app/public/demos
+      - ./public/knowledge-bases:/app/public/knowledge-bases
+      - ./public/system_messages:/app/public/system_messages
     environment:
       NODE_ENV: production
       DATABASE_URL: ${DATABASE_URL}
@@ -43,6 +48,7 @@ services:
       CHATWOOT_BASE_URL: ${CHATWOOT_BASE_URL}
       CHATWOOT_ACCOUNT_ID: ${CHATWOOT_ACCOUNT_ID}
       CHATWOOT_API_KEY: ${CHATWOOT_API_KEY}
+      CHATWOOT_PLATFORM_API_KEY: ${CHATWOOT_PLATFORM_API_KEY}
       N8N_BASE_URL: ${N8N_BASE_URL}
       N8N_API_KEY: ${N8N_API_KEY}
       N8N_DUPLICATE_ENDPOINT: ${N8N_DUPLICATE_ENDPOINT}
@@ -74,3 +80,4 @@ services:
 
 volumes:
   postgres_data:
+  # Note: Demo content is persisted via bind mounts above, not separate volumes

@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useSession } from 'next-auth/react';
-import { SubscriptionTier } from '@prisma/client';
+import { SubscriptionTier } from '@/lib/generated/prisma';
 import { canAccessFeature, getUpgradePrompt } from '@/lib/features';
 import { motion } from 'framer-motion';
 import { Crown, Lock, ArrowUp } from 'lucide-react';

@@ -7,6 +7,7 @@ export interface DynamicTierLimits {
   maxKnowledgeBases: number;
   maxDocuments: number;
   maxIntegrations: number;
+  maxHelpdeskAgents: number;
   apiCallsPerMonth: number;
   documentSizeLimit: number;
   chunkSize: number;
@@ -28,6 +29,10 @@ export async function getDynamicTierLimits(tier: SubscriptionTier): Promise<Dyna
   }
 
   try {
+    if (!prisma) {
+      return getDefaultTierLimits(tier);
+    }
+    
     const tierLimit = await prisma.tierLimit.findUnique({
       where: { tier }
     });
@@ -43,6 +48,7 @@ export async function getDynamicTierLimits(tier: SubscriptionTier): Promise<Dyna
       maxKnowledgeBases: tierLimit.maxKnowledgeBases,
       maxDocuments: tierLimit.maxDocuments,
       maxIntegrations: tierLimit.maxIntegrations,
+      maxHelpdeskAgents: tierLimit.maxHelpdeskAgents,
       apiCallsPerMonth: tierLimit.apiCallsPerMonth,
       documentSizeLimit: tierLimit.documentSizeLimit,
       chunkSize: tierLimit.chunkSize,
@@ -69,6 +75,7 @@ function getDefaultTierLimits(tier: SubscriptionTier): DynamicTierLimits {
       maxKnowledgeBases: 1,
       maxDocuments: 10,
       maxIntegrations: 1,
+      maxHelpdeskAgents: 1,
       apiCallsPerMonth: 1000,
       documentSizeLimit: 5 * 1024 * 1024, // 5MB
       chunkSize: 1000,
@@ -80,6 +87,7 @@ function getDefaultTierLimits(tier: SubscriptionTier): DynamicTierLimits {
       maxKnowledgeBases: 5,
       maxDocuments: 100,
       maxIntegrations: 3,
+      maxHelpdeskAgents: 3,
       apiCallsPerMonth: 10000,
       documentSizeLimit: 25 * 1024 * 1024, // 25MB
       chunkSize: 2000,
@@ -91,6 +99,7 @@ function getDefaultTierLimits(tier: SubscriptionTier): DynamicTierLimits {
       maxKnowledgeBases: 25,
       maxDocuments: 1000,
       maxIntegrations: 10,
+      maxHelpdeskAgents: 5,
       apiCallsPerMonth: 100000,
       documentSizeLimit: 100 * 1024 * 1024, // 100MB
       chunkSize: 4000,
@@ -102,6 +111,7 @@ function getDefaultTierLimits(tier: SubscriptionTier): DynamicTierLimits {
       maxKnowledgeBases: -1,
       maxDocuments: -1,
       maxIntegrations: -1,
+      maxHelpdeskAgents: -1, // Unlimited
       apiCallsPerMonth: -1,
       documentSizeLimit: 500 * 1024 * 1024, // 500MB
       chunkSize: 8000,
@@ -123,6 +133,10 @@ export async function updateTierLimits(
   tier: SubscriptionTier, 
   limits: Partial<DynamicTierLimits>
 ): Promise<void> {
+  if (!prisma) {
+    throw new Error('Prisma client is not available');
+  }
+  
   await prisma.tierLimit.upsert({
     where: { tier },
     update: {
@@ -136,6 +150,7 @@ export async function updateTierLimits(
       maxKnowledgeBases: limits.maxKnowledgeBases || 0,
       maxDocuments: limits.maxDocuments || 0,
       maxIntegrations: limits.maxIntegrations || 0,
+      maxHelpdeskAgents: limits.maxHelpdeskAgents || 0,
       apiCallsPerMonth: limits.apiCallsPerMonth || 0,
       documentSizeLimit: limits.documentSizeLimit || 0,
       chunkSize: limits.chunkSize || 1000,
@@ -149,6 +164,10 @@ export async function updateTierLimits(
 
 // Get all tier limits (admin function)
 export async function getAllTierLimits(): Promise<Record<SubscriptionTier, DynamicTierLimits>> {
+  if (!prisma) {
+    throw new Error('Prisma client is not available');
+  }
+  
   const tierLimits = await prisma.tierLimit.findMany({
     orderBy: { tier: 'asc' }
   });
@@ -168,6 +187,7 @@ export async function getAllTierLimits(): Promise<Record<SubscriptionTier, Dynam
         maxKnowledgeBases: dbLimit.maxKnowledgeBases,
         maxDocuments: dbLimit.maxDocuments,
         maxIntegrations: dbLimit.maxIntegrations,
+        maxHelpdeskAgents: dbLimit.maxHelpdeskAgents,
         apiCallsPerMonth: dbLimit.apiCallsPerMonth,
         documentSizeLimit: dbLimit.documentSizeLimit,
         chunkSize: dbLimit.chunkSize,

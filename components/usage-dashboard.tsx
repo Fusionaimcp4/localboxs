@@ -21,6 +21,7 @@ import { SubscriptionTier } from '@/lib/generated/prisma';
 import { getTierLimits, getUsagePercentage, getUsageStatus } from '@/lib/features';
 import { UsageStats } from '@/lib/tier-access';
 import { TierBadge, UsageLimit } from '@/components/feature-gate';
+import { DynamicTierLimits } from '@/lib/dynamic-tier-limits';
 
 interface UsageDashboardProps {
   className?: string;
@@ -29,51 +30,64 @@ interface UsageDashboardProps {
 export function UsageDashboard({ className = '' }: UsageDashboardProps) {
   const { data: session } = useSession();
   const [usage, setUsage] = useState<UsageStats | null>(null);
+  const [limits, setLimits] = useState<DynamicTierLimits | null>(null);
   const [loading, setLoading] = useState(true);
   const [isExpanded, setIsExpanded] = useState(false);
 
   const userTier = (session?.user?.subscriptionTier as SubscriptionTier) || 'FREE';
-  const limits = getTierLimits(userTier);
 
   useEffect(() => {
-    const fetchUsage = async () => {
+    const fetchData = async () => {
       try {
-        const response = await fetch('/api/dashboard/usage');
-        if (response.ok) {
-          const data = await response.json();
-          setUsage(data.usage);
+        // Fetch usage stats and tier limits in parallel
+        const [usageResponse, limitsResponse] = await Promise.all([
+          fetch('/api/dashboard/usage'),
+          fetch(`/api/dashboard/tier-limits?tier=${userTier}`)
+        ]);
+
+        if (usageResponse.ok) {
+          const usageData = await usageResponse.json();
+          setUsage(usageData.usage);
+        }
+
+        if (limitsResponse.ok) {
+          const limitsData = await limitsResponse.json();
+          setLimits(limitsData.limits);
+        } else {
+          // Fallback to hardcoded limits if API fails
+          const fallbackLimits = getTierLimits(userTier);
+          setLimits(fallbackLimits as DynamicTierLimits);
         }
       } catch (error) {
-        console.error('Failed to fetch usage:', error);
+        console.error('Failed to fetch data:', error);
+        // Fallback to hardcoded limits on error
+        const fallbackLimits = getTierLimits(userTier);
+        setLimits(fallbackLimits as DynamicTierLimits);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchUsage();
-  }, []);
+    fetchData();
+  }, [userTier]);
 
-  if (loading) {
+  if (loading || !limits || !usage) {
     return (
       <div className={`bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6 ${className}`}>
-        <div className="animate-pulse space-y-4">
-          <div className="h-6 bg-slate-200 dark:bg-slate-700 rounded w-32"></div>
-          <div className="space-y-3">
-            {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="h-4 bg-slate-200 dark:bg-slate-700 rounded w-full"></div>
-            ))}
+        {loading ? (
+          <div className="animate-pulse space-y-4">
+            <div className="h-6 bg-slate-200 dark:bg-slate-700 rounded w-32"></div>
+            <div className="space-y-3">
+              {[1, 2, 3, 4].map((i) => (
+                <div key={i} className="h-4 bg-slate-200 dark:bg-slate-700 rounded w-full"></div>
+              ))}
+            </div>
           </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (!usage) {
-    return (
-      <div className={`bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6 ${className}`}>
-        <div className="text-center text-slate-500 dark:text-slate-400">
-          Unable to load usage data
-        </div>
+        ) : (
+          <div className="text-center text-slate-500 dark:text-slate-400">
+            Unable to load usage data
+          </div>
+        )}
       </div>
     );
   }
@@ -107,6 +121,12 @@ export function UsageDashboard({ className = '' }: UsageDashboardProps) {
       label: 'Integrations',
       current: usage.integrations,
       limit: limits.maxIntegrations,
+      icon: BarChart3
+    },
+    {
+      label: 'Helpdesk Agents',
+      current: usage.helpdeskAgents,
+      limit: limits.maxHelpdeskAgents,
       icon: BarChart3
     },
     {
@@ -273,12 +293,16 @@ export function UsageDashboard({ className = '' }: UsageDashboardProps) {
                 {userTier} Plan Benefits
               </h4>
               <div className="space-y-2">
-                {limits.features.map((feature: string, index: number) => (
-                  <div key={index} className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
-                    <CheckCircle className="w-4 h-4 text-emerald-500" />
-                    {feature.replace(/_/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase())}
-                  </div>
-                ))}
+                {(() => {
+                  // Get features from hardcoded FEATURE_MATRIX since DynamicTierLimits doesn't include them
+                  const tierFeatures = getTierLimits(userTier);
+                  return tierFeatures.features.map((feature: string, index: number) => (
+                    <div key={index} className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
+                      <CheckCircle className="w-4 h-4 text-emerald-500" />
+                      {feature.replace(/_/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase())}
+                    </div>
+                  ));
+                })()}
               </div>
             </div>
           </motion.div>

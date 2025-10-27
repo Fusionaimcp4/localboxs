@@ -26,7 +26,7 @@ export async function trackUsage(
 // Get current usage stats for a user
 export async function getUserUsageStats(userId: string): Promise<UsageStats> {
   try {
-    const [demos, workflows, knowledgeBases, documents, integrations, user] = await Promise.all([
+    const [demos, workflows, knowledgeBases, documents, integrations, helpdeskAgents, user] = await Promise.all([
       prisma.demo.count({ where: { userId } }),
       prisma.workflow.count({ where: { userId } }),
       prisma.knowledgeBase.count({ where: { userId } }),
@@ -36,6 +36,7 @@ export async function getUserUsageStats(userId: string): Promise<UsageStats> {
         } 
       }),
       prisma.integration.count({ where: { userId } }),
+      prisma.helpdeskUser.count({ where: { userId } }),
       prisma.user.findUnique({
         where: { id: userId },
         select: { fusionSubAccountId: true }
@@ -77,6 +78,7 @@ export async function getUserUsageStats(userId: string): Promise<UsageStats> {
       knowledgeBases,
       documents,
       integrations,
+      helpdeskAgents,
       apiCalls
     };
   } catch (error) {
@@ -87,6 +89,7 @@ export async function getUserUsageStats(userId: string): Promise<UsageStats> {
       knowledgeBases: 0,
       documents: 0,
       integrations: 0,
+      helpdeskAgents: 0,
       apiCalls: 0
     };
   }

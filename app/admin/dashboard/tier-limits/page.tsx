@@ -23,6 +23,7 @@ interface TierLimits {
   maxKnowledgeBases: number;
   maxDocuments: number;
   maxIntegrations: number;
+  maxHelpdeskAgents: number;
   apiCallsPerMonth: number;
   documentSizeLimit: number;
   chunkSize: number;
@@ -333,17 +334,31 @@ export default function TierLimitsManagement() {
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
-                      <Zap className="w-4 h-4 inline mr-1" />
-                      API Calls/Month
+                      <Crown className="w-4 h-4 inline mr-1" />
+                      Helpdesk Agents
                     </label>
                     <input
                       type="number"
-                      value={limits.apiCallsPerMonth === -1 ? '' : limits.apiCallsPerMonth}
-                      onChange={(e) => handleLimitChange(tier, 'apiCallsPerMonth', e.target.value)}
+                      value={limits.maxHelpdeskAgents === -1 ? '' : limits.maxHelpdeskAgents}
+                      onChange={(e) => handleLimitChange(tier, 'maxHelpdeskAgents', e.target.value)}
                       placeholder="Unlimited"
                       className="w-full px-3 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg focus:outline-none focus:border-emerald-500 transition-colors text-slate-900 dark:text-slate-100"
                     />
                   </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
+                    <Zap className="w-4 h-4 inline mr-1" />
+                    API Calls/Month
+                  </label>
+                  <input
+                    type="number"
+                    value={limits.apiCallsPerMonth === -1 ? '' : limits.apiCallsPerMonth}
+                    onChange={(e) => handleLimitChange(tier, 'apiCallsPerMonth', e.target.value)}
+                    placeholder="Unlimited"
+                    className="w-full px-3 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg focus:outline-none focus:border-emerald-500 transition-colors text-slate-900 dark:text-slate-100"
+                  />
                 </div>
 
                 <div>

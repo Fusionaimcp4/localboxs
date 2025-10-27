@@ -13,49 +13,50 @@ datasource db {
 
 // User Management
 model User {
-  id                 String   @id @default(cuid())
-  email              String   @unique
-  name               String?
-  company            String?
-  password           String?  // null for pure OAuth accounts
-  role               UserRole @default(USER)
-  tenantId           String?  // keep if already present (not currently in schema, adding as optional)
+  id       String   @id @default(cuid())
+  email    String   @unique
+  name     String?
+  company  String?
+  password String? // null for pure OAuth accounts
+  role     UserRole @default(USER)
+  tenantId String? // keep if already present (not currently in schema, adding as optional)
 
   // Security & UX
-  isVerified         Boolean  @default(false)
-  emailVerifiedAt    DateTime?
-  failedLoginCount   Int      @default(0)
-  lastLoginAt        DateTime?
-  lastLoginIp        String?
-  totpSecret         String?  // base32 TOTP secret for 2FA
-  avatarUrl          String?
+  isVerified       Boolean   @default(false)
+  emailVerifiedAt  DateTime?
+  failedLoginCount Int       @default(0)
+  lastLoginAt      DateTime?
+  lastLoginIp      String?
+  totpSecret       String? // base32 TOTP secret for 2FA
+  avatarUrl        String?
 
   // Subscription & Tier Management
-  subscriptionTier   SubscriptionTier @default(FREE)
-  subscriptionStatus SubscriptionStatus @default(ACTIVE)
+  subscriptionTier      SubscriptionTier   @default(FREE)
+  subscriptionStatus    SubscriptionStatus @default(ACTIVE)
   subscriptionExpiresAt DateTime?
 
   // Fusion integration fields
-  fusionSubAccountId String?
+  fusionSubAccountId   String?
   fusionCredentialName String? // n8n credential name for this user
-  fusionCredentialId String? // n8n credential ID for this user (encrypted)
+  fusionCredentialId   String? // n8n credential ID for this user (encrypted)
 
-  createdAt          DateTime @default(now())
-  updatedAt          DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   // NextAuth relations (Accounts/Sessions) if using adapter
-  accounts           Account[]
-  sessions           Session[]
+  accounts Account[]
+  sessions Session[]
 
   // Relations
-  demos          Demo[]
-  workflows      Workflow[]      @relation("WorkflowUser")
-  apiKeys        ApiKey[]
-  knowledgeBases KnowledgeBase[]
-  integrations   Integration[]
+  demos              Demo[]
+  workflows          Workflow[]          @relation("WorkflowUser")
+  apiKeys            ApiKey[]
+  knowledgeBases     KnowledgeBase[]
+  integrations       Integration[]
   verificationTokens VerificationToken[] // new relation for tokens
-  features       UserFeature[] // Many-to-many relationship with features
-  apiCallLogs    ApiCallLog[] // API call tracking for usage
+  features           UserFeature[] // Many-to-many relationship with features
+  apiCallLogs        ApiCallLog[] // API call tracking for usage
+  helpdeskUsers      HelpdeskUser[]
 
   @@map("users")
 }
@@ -203,16 +204,16 @@ model SystemMessageTemplate {
 }
 
 model SystemMessageVersion {
-  id           String   @id @default(cuid())
-  templateId   String
-  version      Int
-  content      String
-  isPublished  Boolean  @default(false)
-  publishedAt  DateTime?
-  publishedBy  String?
-  changeLog    String?
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id          String    @id @default(cuid())
+  templateId  String
+  version     Int
+  content     String
+  isPublished Boolean   @default(false)
+  publishedAt DateTime?
+  publishedBy String?
+  changeLog   String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 
   // Relations
   template SystemMessageTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
@@ -243,6 +244,7 @@ enum IntegrationType {
   API
   WEBHOOK
   CRM
+  HELPDESK
 }
 
 // Analytics and Monitoring
@@ -393,14 +395,14 @@ enum ProcessingStatus {
 
 // Token table for verification & reset
 model VerificationToken {
-  id          String   @id @default(cuid())
-  userId      String
-  tokenHash   String   // store hash, not raw token
-  type        String   // 'email_verify' | 'password_reset'
-  expiresAt   DateTime
-  createdAt   DateTime @default(now())
+  id        String   @id @default(cuid())
+  userId    String
+  tokenHash String // store hash, not raw token
+  type      String // 'email_verify' | 'password_reset'
+  expiresAt DateTime
+  createdAt DateTime @default(now())
 
-  user        User     @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id])
 
   @@index([userId, type])
   @@index([expiresAt])
@@ -409,30 +411,30 @@ model VerificationToken {
 
 // Feature Management for Tiered Access
 model Feature {
-  id          String @id @default(cuid())
-  name        String @unique
+  id          String           @id @default(cuid())
+  name        String           @unique
   description String
   tier        SubscriptionTier
-  isActive    Boolean @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  isActive    Boolean          @default(true)
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
 
   // Relations
-  users       UserFeature[]
+  users UserFeature[]
 
   @@map("features")
 }
 
 model UserFeature {
-  id        String @id @default(cuid())
+  id        String    @id @default(cuid())
   userId    String
   featureId String
-  grantedAt DateTime @default(now())
+  grantedAt DateTime  @default(now())
   expiresAt DateTime?
 
   // Relations
-  user      User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  feature   Feature @relation(fields: [featureId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  feature Feature @relation(fields: [featureId], references: [id], onDelete: Cascade)
 
   @@unique([userId, featureId])
   @@index([userId])
@@ -442,48 +444,49 @@ model UserFeature {
 
 // Dynamic Tier Limits Configuration
 model TierLimit {
-  id          String @id @default(cuid())
-  tier        SubscriptionTier @unique
-  maxDemos    Int
-  maxWorkflows Int
-  maxKnowledgeBases Int
-  maxDocuments Int
-  maxIntegrations Int
-  apiCallsPerMonth Int
-  documentSizeLimit Int // in bytes
-  chunkSize Int
+  id                   String           @id @default(cuid())
+  tier                 SubscriptionTier @unique
+  maxDemos             Int
+  maxWorkflows         Int
+  maxKnowledgeBases    Int
+  maxDocuments         Int
+  maxIntegrations      Int
+  maxHelpdeskAgents    Int              @default(1)
+  apiCallsPerMonth     Int
+  documentSizeLimit    Int // in bytes
+  chunkSize            Int
   maxChunksPerDocument Int
-  isActive    Boolean @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  isActive             Boolean          @default(true)
+  createdAt            DateTime         @default(now())
+  updatedAt            DateTime         @updatedAt
 
   @@map("tier_limits")
 }
 
 // Pricing Plans Configuration
 model PricingPlan {
-  id          String @id @default(cuid())
+  id          String           @id @default(cuid())
   tier        SubscriptionTier @unique
   name        String
-  price       Decimal @db.Decimal(10, 2)
-  currency    String @default("USD")
-  period      String @default("month") // month, year, forever
+  price       Decimal          @db.Decimal(10, 2)
+  currency    String           @default("USD")
+  period      String           @default("month") // month, year, forever
   description String
   features    String[] // Array of feature descriptions
-  isPopular   Boolean @default(false)
-  isActive    Boolean @default(true)
-  ctaText     String @default("Get Started")
-  ctaHref     String @default("/dashboard/userdemo")
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  isPopular   Boolean          @default(false)
+  isActive    Boolean          @default(true)
+  ctaText     String           @default("Get Started")
+  ctaHref     String           @default("/dashboard/userdemo")
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
 
   @@map("pricing_plans")
 }
 
 // Optional: disposable domain list (adding if not present, otherwise skipping)
 model BlockedEmailDomain {
-  domain   String @id
-  reason   String?
+  domain    String   @id
+  reason    String?
   createdAt DateTime @default(now())
 
   @@map("blocked_email_domains")
@@ -491,36 +494,71 @@ model BlockedEmailDomain {
 
 // API Call Logging for Usage Tracking
 model ApiCallLog {
-  id          String   @id @default(cuid())
-  userId      String
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   // API Call Details
-  provider    String   // "openai", "anthropic", "google", etc.
-  model       String   // "text-embedding-3-small", "gpt-4o", etc.
-  endpoint    String   // "embeddings", "chat", "completions", etc.
-  
+  provider String // "openai", "anthropic", "google", etc.
+  model    String // "text-embedding-3-small", "gpt-4o", etc.
+  endpoint String // "embeddings", "chat", "completions", etc.
+
   // Token Usage
-  inputTokens Int      @default(0)
-  outputTokens Int     @default(0)
-  totalTokens Int      @default(0)
-  
+  inputTokens  Int @default(0)
+  outputTokens Int @default(0)
+  totalTokens  Int @default(0)
+
   // Cost and Performance
-  cost        Float    @default(0.0)
-  responseTime Int     @default(0) // milliseconds
-  
+  cost         Float @default(0.0)
+  responseTime Int   @default(0) // milliseconds
+
   // Context
-  context     String?  // "knowledge_base_processing", "chat", "search", etc.
-  documentId  String?  // Link to document if applicable
+  context         String? // "knowledge_base_processing", "chat", "search", etc.
+  documentId      String? // Link to document if applicable
   knowledgeBaseId String? // Link to knowledge base if applicable
-  workflowId  String?  // Link to workflow if applicable
-  
+  workflowId      String? // Link to workflow if applicable
+
   // Metadata
-  success     Boolean  @default(true)
+  success      Boolean  @default(true)
   errorMessage String?
-  createdAt   DateTime @default(now())
-  
+  createdAt    DateTime @default(now())
+
   @@map("api_call_logs")
+}
+
+// Helpdesk User Management
+model HelpdeskUser {
+  id             String   @id @default(cuid())
+  userId         String
+  name           String
+  email          String
+  chatwootUserId Int?
+  chatwootRole   String   @default("agent")
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  // Relations
+  user    User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  inboxes HelpdeskUserInbox[]
+
+  @@index([userId])
+  @@map("helpdesk_users")
+}
+
+model HelpdeskUserInbox {
+  id             String   @id @default(cuid())
+  helpdeskUserId String
+  inboxId        Int
+  isActive       Boolean  @default(true)
+  assignedAt     DateTime @default(now())
+
+  // Relations
+  helpdeskUser HelpdeskUser @relation(fields: [helpdeskUserId], references: [id], onDelete: Cascade)
+
+  @@unique([helpdeskUserId, inboxId])
+  @@index([helpdeskUserId])
+  @@index([inboxId])
+  @@map("helpdesk_user_inboxes")
 }
 
 // NextAuth.js required tables

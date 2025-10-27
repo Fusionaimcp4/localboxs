@@ -85,8 +85,9 @@ export async function PUT(request: NextRequest) {
     // Validate limits
     const requiredFields = [
       'maxDemos', 'maxWorkflows', 'maxKnowledgeBases', 
-      'maxDocuments', 'maxIntegrations', 'apiCallsPerMonth',
-      'documentSizeLimit', 'chunkSize', 'maxChunksPerDocument'
+      'maxDocuments', 'maxIntegrations', 'maxHelpdeskAgents',
+      'apiCallsPerMonth', 'documentSizeLimit', 'chunkSize', 
+      'maxChunksPerDocument'
     ];
 
     for (const field of requiredFields) {

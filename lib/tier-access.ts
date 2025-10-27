@@ -1,4 +1,4 @@
-import { SubscriptionTier } from '@prisma/client';
+import { SubscriptionTier } from './generated/prisma';
 import { getTierLimits, canAccessFeature } from './features';
 
 // Tier-based access control utilities
@@ -62,6 +62,7 @@ export interface UsageStats {
   knowledgeBases: number;
   documents: number;
   integrations: number;
+  helpdeskAgents: number;
   apiCalls: number;
 }
 
@@ -104,6 +105,12 @@ export function checkUsageLimits(userTier: SubscriptionTier, usage: UsageStats):
     exceeded.push('integrations');
   } else if (limits.maxIntegrations !== -1 && usage.integrations >= limits.maxIntegrations * 0.8) {
     warnings.push('integrations');
+  }
+
+  if (limits.maxHelpdeskAgents !== -1 && usage.helpdeskAgents >= limits.maxHelpdeskAgents) {
+    exceeded.push('helpdeskAgents');
+  } else if (limits.maxHelpdeskAgents !== -1 && usage.helpdeskAgents >= limits.maxHelpdeskAgents * 0.8) {
+    warnings.push('helpdeskAgents');
   }
 
   if (limits.apiCallsPerMonth !== -1 && usage.apiCalls >= limits.apiCallsPerMonth) {

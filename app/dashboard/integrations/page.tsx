@@ -5,8 +5,9 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { useSession } from 'next-auth/react';
 import { SubscriptionTier } from '@/lib/generated/prisma';
-import { Plus, Link as LinkIcon, Calendar, Database, Zap, Webhook, Users, Settings, Trash2, Power, MessageCircle, Copy, Check, X, ChevronDown, Crown, Lock } from "lucide-react";
+import { Plus, Link as LinkIcon, Calendar, Database, Zap, Webhook, Users, Settings, Trash2, Power, MessageCircle, Copy, Check, X, ChevronDown, Crown, Lock, Headphones } from "lucide-react";
 import { CRMConfigModal } from "@/components/integrations/CRMConfigModal";
+import { HelpdeskModal } from "@/components/integrations/HelpdeskModal";
 import { CRMConfiguration } from "@/lib/integrations/types";
 import { notifications } from "@/lib/notifications";
 
@@ -39,6 +40,7 @@ export default function IntegrationsPage() {
   const [loading, setLoading] = useState(true);
   const [showCRMModal, setShowCRMModal] = useState(false);
   const [showChatScriptModal, setShowChatScriptModal] = useState(false);
+  const [showHelpdeskModal, setShowHelpdeskModal] = useState(false);
   const [selectedIntegrationType, setSelectedIntegrationType] = useState<string | null>(null);
   const [editingIntegration, setEditingIntegration] = useState<Integration | null>(null);
   const [copied, setCopied] = useState(false);
@@ -109,6 +111,8 @@ export default function IntegrationsPage() {
         return;
       }
       setShowChatScriptModal(true);
+    } else if (type === 'HELPDESK') {
+      setShowHelpdeskModal(true);
     } else {
       // For other types, show a "coming soon" message
       notifications.info(`${type} integration coming soon!`);
@@ -287,6 +291,7 @@ export default function IntegrationsPage() {
       case 'WEBHOOK': return <Webhook className="w-6 h-6 text-indigo-500" />;
       case 'CRM': return <Users className="w-6 h-6 text-emerald-500" />;
       case 'CHAT_WIDGET': return <MessageCircle className="w-6 h-6 text-cyan-500" />;
+      case 'HELPDESK': return <Headphones className="w-6 h-6 text-rose-500" />;
       default: return <LinkIcon className="w-6 h-6 text-slate-500" />;
     }
   };
@@ -411,7 +416,7 @@ export default function IntegrationsPage() {
           {[
             { type: 'CRM', name: 'CRM Integration', description: 'Connect Chatwoot, Salesforce, HubSpot, or custom CRM systems', available: true, tier: 'FREE' },
             { type: 'CHAT_WIDGET', name: 'Chat Widget Script', description: 'Get the embeddable chat script for your website', available: isPaidUser, tier: 'PRO', requiresUpgrade: !isPaidUser },
-            { type: 'CALENDAR', name: 'Calendar Integration', description: 'Connect Google Calendar, Outlook, or other calendar services', available: false, tier: 'PRO' },
+            { type: 'HELPDESK', name: 'Helpdesk Setup', description: 'Create and manage Chatwoot helpdesk agents and assignments', available: true, tier: 'FREE' },
             { type: 'DATABASE', name: 'Database Integration', description: 'Connect to PostgreSQL, MySQL, MongoDB, or other databases', available: false, tier: 'PRO_PLUS' },
             { type: 'API', name: 'API Integration', description: 'Connect to REST APIs, GraphQL endpoints, or custom services', available: false, tier: 'PRO_PLUS' },
             { type: 'WEBHOOK', name: 'Webhook Integration', description: 'Set up custom webhooks for real-time notifications', available: false, tier: 'PRO_PLUS' },
@@ -755,6 +760,15 @@ export default function IntegrationsPage() {
           name: editingIntegration.name,
           configuration: editingIntegration.configuration,
         } : undefined}
+      />
+
+      {/* Helpdesk Modal */}
+      <HelpdeskModal
+        isOpen={showHelpdeskModal}
+        onClose={() => setShowHelpdeskModal(false)}
+        userEmail={session?.user?.email || ''}
+        userTier={userTier}
+        agentLimit={userTier === 'FREE' ? 1 : userTier === 'PRO' ? 3 : userTier === 'PRO_PLUS' ? 5 : -1}
       />
     </div>
   );
