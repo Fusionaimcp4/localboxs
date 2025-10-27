@@ -37,6 +37,7 @@ services:
       - ./public/demos:/app/public/demos
       - ./public/knowledge-bases:/app/public/knowledge-bases
       - ./public/system_messages:/app/public/system_messages
+      - ./data:/app/data
     user: "1000:1000"
     environment:
       NODE_ENV: production

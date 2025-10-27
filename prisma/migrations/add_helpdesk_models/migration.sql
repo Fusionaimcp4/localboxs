@@ -1,5 +1,5 @@
 -- AlterTable
-ALTER TABLE "users" ADD COLUMN IF NOT EXISTS "helpdeskUsers" TEXT;
+ALTER TABLE "tier_limits" ADD COLUMN IF NOT EXISTS "maxHelpdeskAgents" INTEGER DEFAULT 1;
 
 -- CreateTable
 CREATE TABLE IF NOT EXISTS "helpdesk_users" (
