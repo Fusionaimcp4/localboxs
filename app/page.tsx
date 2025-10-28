@@ -20,7 +20,7 @@ export default function LandingPage() {
         <main className="w-full relative">
           <HeroSection />
           {/* Dashboard Preview Wrapper - Mobile optimized */}
-          <div className="absolute bottom-[-1600px] sm:bottom-[-150px] md:bottom-[-480px] left-1/2 transform -translate-x-1/2 z-30 w-[95%] sm:w-[90%] md:w-auto">
+          <div className="absolute bottom-[-160px] sm:bottom-[-150px] md:bottom-[-480px] left-1/2 transform -translate-x-1/2 z-30 w-[95%] sm:w-[90%] md:w-auto">
             <AnimatedSection>
               <DashboardPreview />
             </AnimatedSection>
