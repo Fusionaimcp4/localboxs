@@ -25,10 +25,10 @@ const TestimonialCard = ({ quote, name, company, title, avatar, alt, type }: Tes
   const cardWidth = "w-full md:w-[384px]"
 
   if (type === "large-teal") {
-    cardClasses += " bg-primary"
-    quoteClasses += " text-primary-foreground text-2xl font-medium leading-8"
-    nameClasses += " text-primary-foreground text-base font-normal leading-6"
-    companyClasses += " text-primary-foreground/60 text-base font-normal leading-6"
+    cardClasses += " bg-gradient-to-br from-emerald-500 to-teal-600"
+    quoteClasses += " text-white text-2xl font-medium leading-8"
+    nameClasses += " text-white text-base font-semibold leading-6"
+    companyClasses += " text-white/80 text-base font-normal leading-6"
     cardHeight = "h-[502px]"
     backgroundElements = (
       <div
@@ -37,10 +37,10 @@ const TestimonialCard = ({ quote, name, company, title, avatar, alt, type }: Tes
       />
     )
   } else if (type === "large-light") {
-    cardClasses += " bg-[rgba(231,236,235,0.12)]"
-    quoteClasses += " text-foreground text-2xl font-medium leading-8"
-    nameClasses += " text-foreground text-base font-normal leading-6"
-    companyClasses += " text-muted-foreground text-base font-normal leading-6"
+    cardClasses += " bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700"
+    quoteClasses += " text-slate-900 dark:text-white text-2xl font-medium leading-8"
+    nameClasses += " text-slate-900 dark:text-white text-base font-semibold leading-6"
+    companyClasses += " text-slate-600 dark:text-slate-300 text-base font-normal leading-6"
     cardHeight = "h-[502px]"
     backgroundElements = (
       <div
@@ -49,10 +49,10 @@ const TestimonialCard = ({ quote, name, company, title, avatar, alt, type }: Tes
       />
     )
   } else {
-    cardClasses += " bg-card outline outline-1 outline-border outline-offset-[-1px]"
-    quoteClasses += " text-foreground/80 text-[17px] font-normal leading-6"
-    nameClasses += " text-foreground text-sm font-normal leading-[22px]"
-    companyClasses += " text-muted-foreground text-sm font-normal leading-[22px]"
+    cardClasses += " bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700"
+    quoteClasses += " text-slate-900 dark:text-white text-[17px] font-normal leading-6"
+    nameClasses += " text-slate-900 dark:text-white text-sm font-semibold leading-[22px]"
+    companyClasses += " text-slate-600 dark:text-slate-300 text-sm font-normal leading-[22px]"
     cardHeight = "h-[244px]"
   }
 
@@ -83,13 +83,13 @@ const TestimonialCard = ({ quote, name, company, title, avatar, alt, type }: Tes
 
 export function TestimonialGridSection() {
   return (
-    <section className="w-full px-5 overflow-hidden flex flex-col justify-start py-6 md:py-8 lg:py-14">
+    <section className="w-full px-5 overflow-hidden flex flex-col justify-start py-6 md:py-8 lg:py-14 bg-white dark:bg-slate-900">
       <div className="self-stretch py-6 md:py-8 lg:py-14 flex flex-col justify-center items-center gap-2">
         <div className="flex flex-col justify-start items-center gap-4">
-          <h2 className="text-center text-foreground text-3xl md:text-4xl lg:text-[40px] font-semibold leading-tight md:leading-tight lg:leading-[40px]">
+          <h2 className="text-center text-slate-900 dark:text-white text-3xl md:text-4xl lg:text-[40px] font-bold leading-tight md:leading-tight lg:leading-[40px]">
             {SECTION_HEADING}
           </h2>
-          <p className="self-stretch text-center text-muted-foreground text-sm md:text-sm lg:text-base font-medium leading-[18.20px] md:leading-relaxed lg:leading-relaxed">
+          <p className="self-stretch text-center text-slate-700 dark:text-slate-300 text-base md:text-base lg:text-lg font-medium leading-[18.20px] md:leading-relaxed lg:leading-relaxed max-w-3xl">
             {SECTION_SUBHEAD}
           </p>
         </div>

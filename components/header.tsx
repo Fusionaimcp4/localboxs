@@ -16,7 +16,7 @@ export function Header() {
   const navItems = [
     { name: "Platform", href: "#features-section" },
     { name: "Features", href: "#features-section" },
-    { name: "Pricing", href: "#pricing-section" },
+    { name: "Pricing", href: "/pricing-page" },
    
     { name: "Integration", href: "/integration-process" },
     { name: "Cost & Savings", href: "/cost-savings" },
@@ -41,7 +41,7 @@ export function Header() {
         <div className="flex items-center gap-4 sm:gap-6">
           <div className="flex items-center gap-2 sm:gap-3">
             <Link href="/" className="flex items-center gap-1 sm:gap-2">
-            <span className="text-foreground text-lg sm:text-xl font-semibold flex items-center gap-1">
+            <span className="text-foreground text-black text-lg sm:text-xl font-semibold flex items-center gap-1">
   LocalBox
   <Image
     src="/logos/boxlogo512x512.png"

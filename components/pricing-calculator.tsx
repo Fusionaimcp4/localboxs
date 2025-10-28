@@ -74,17 +74,21 @@ export function PricingCalculator() {
   const results = calculateSavings()
 
   return (
-    <section className="w-full px-5 py-16 md:py-24 bg-background relative overflow-hidden">
-      {/* Background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-secondary/5" />
+    <section className="w-full px-5 py-16 md:py-24 bg-white dark:bg-slate-900 relative overflow-hidden">
+      {/* Very subtle light background */}
+      <div className="absolute inset-0 bg-gradient-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900" />
       
-      <div className="max-w-6xl mx-auto relative z-10">
+      <div className="max-w-7xl mx-auto relative z-10">
         {/* Header */}
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-semibold text-foreground mb-6">
+          <div className="inline-flex items-center gap-2 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-full px-4 py-2 mb-6">
+            <Calculator className="w-5 h-5 text-slate-700 dark:text-slate-300" />
+            <span className="text-sm font-semibold text-slate-800 dark:text-slate-200">Savings Calculator</span>
+          </div>
+          <h2 className="text-4xl md:text-5xl font-bold text-slate-900 dark:text-white mb-6">
             Calculate Your Savings
           </h2>
-          <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+          <p className="text-xl text-slate-700 dark:text-slate-300 max-w-3xl mx-auto">
             See how much you could save by switching from per-agent or per-resolution providers. 
             Most businesses save 60-80% on support costs.
           </p>
@@ -92,19 +96,19 @@ export function PricingCalculator() {
 
         <div className="grid lg:grid-cols-2 gap-8">
           {/* Calculator Input */}
-          <Card>
+          <Card className="bg-white dark:bg-slate-800">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
+              <CardTitle className="flex items-center gap-2 text-slate-400 dark:text-slate-400">
                 <Calculator className="w-5 h-5" />
                 Your Current Setup
               </CardTitle>
-              <CardDescription>
+              <CardDescription className="text-slate-400 dark:text-slate-400">
                 Enter your current support team size and conversation volume
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="space-y-2">
-                <Label htmlFor="agents">Number of Support Agents</Label>
+                <Label htmlFor="agents" className="text-slate-400 dark:text-slate-400">Number of Support Agents</Label>
                 <Input
                   id="agents"
                   type="number"
@@ -112,11 +116,12 @@ export function PricingCalculator() {
                   onChange={(e) => setAgents(parseInt(e.target.value) || 0)}
                   min="1"
                   max="100"
+                  className="bg-slate-900 text-white dark:bg-slate-700 dark:text-white border-slate-700"
                 />
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="conversations">Monthly Conversations</Label>
+                <Label htmlFor="conversations" className="text-slate-400 dark:text-slate-400">Monthly Conversations</Label>
                 <Input
                   id="conversations"
                   type="number"
@@ -124,16 +129,17 @@ export function PricingCalculator() {
                   onChange={(e) => setConversations(parseInt(e.target.value) || 0)}
                   min="100"
                   step="100"
+                  className="bg-slate-900 text-white dark:bg-slate-700 dark:text-white border-slate-700"
                 />
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="provider">Current Provider</Label>
+                <Label htmlFor="provider" className="text-slate-400 dark:text-slate-400">Current Provider</Label>
                 <Select value={currentProvider} onValueChange={setCurrentProvider}>
-                  <SelectTrigger>
+                  <SelectTrigger className="bg-slate-900 text-white dark:bg-slate-700 dark:text-white border-slate-700">
                     <SelectValue placeholder="Select your current provider" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="bg-white dark:bg-slate-800">
                     <SelectItem value="intercom">Intercom</SelectItem>
                     <SelectItem value="zendesk">Zendesk</SelectItem>
                     <SelectItem value="freshdesk">Freshdesk</SelectItem>
@@ -158,54 +164,54 @@ export function PricingCalculator() {
             </CardHeader>
             <CardContent className="space-y-6">
               {/* Current Cost */}
-              <div className="bg-destructive/10 rounded-lg p-4">
+              <div className="bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 rounded-xl p-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-muted-foreground">Current Provider</p>
-                    <p className="text-2xl font-bold text-destructive">${results.currentCost}</p>
-                    <p className="text-xs text-muted-foreground">per month</p>
+                    <p className="text-sm text-slate-600 dark:text-slate-300">Current Provider</p>
+                    <p className="text-2xl font-bold text-red-600 dark:text-red-400">${results.currentCost}</p>
+                    <p className="text-xs text-slate-600 dark:text-slate-400">per month</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-sm text-muted-foreground">{agents} agents</p>
-                    <p className="text-sm text-muted-foreground">{conversations} conversations</p>
+                    <p className="text-sm text-slate-700 dark:text-slate-300">{agents} agents</p>
+                    <p className="text-sm text-slate-700 dark:text-slate-300">{conversations} conversations</p>
                   </div>
                 </div>
               </div>
 
               {/* LocalBoxs Cost */}
-              <div className="bg-primary/10 rounded-lg p-4">
+              <div className="bg-emerald-50 dark:bg-emerald-950 border border-emerald-200 dark:border-emerald-800 rounded-xl p-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-muted-foreground">With LocalBoxs</p>
-                    <p className="text-2xl font-bold text-primary">${results.localboxsCost}</p>
-                    <p className="text-xs text-muted-foreground">per month</p>
+                    <p className="text-sm text-slate-600 dark:text-slate-300">With LocalBoxs</p>
+                    <p className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">${results.localboxsCost}</p>
+                    <p className="text-xs text-slate-600 dark:text-slate-400">per month</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-sm text-muted-foreground">Unlimited agents</p>
-                    <p className="text-sm text-muted-foreground">Unlimited conversations</p>
+                    <p className="text-sm text-slate-700 dark:text-slate-300">Unlimited agents</p>
+                    <p className="text-sm text-slate-700 dark:text-slate-300">Unlimited conversations</p>
                   </div>
                 </div>
               </div>
 
               {/* Savings */}
-              <div className="bg-primary/10 rounded-lg p-6 text-center">
-                <div className="text-4xl font-bold text-primary mb-2">
+              <div className="bg-slate-100 dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-700 rounded-xl p-6 text-center">
+                <div className="text-4xl font-bold text-slate-900 dark:text-white mb-2">
                   ${results.savings}
                 </div>
-                <p className="text-lg font-semibold text-foreground mb-1">
+                <p className="text-lg font-semibold text-slate-900 dark:text-white mb-1">
                   Monthly Savings
                 </p>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-slate-700 dark:text-slate-300">
                   {results.savingsPercentage}% cost reduction
                 </p>
               </div>
 
               {/* Annual Savings */}
-              <div className="text-center">
-                <div className="text-2xl font-bold text-foreground mb-1">
+              <div className="text-center bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-4">
+                <div className="text-2xl font-bold text-slate-900 dark:text-white mb-1">
                   ${results.savings * 12}
                 </div>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-slate-700 dark:text-slate-300">
                   Annual savings
                 </p>
               </div>
@@ -311,164 +317,20 @@ export function PricingCalculator() {
           </div>
         )}
 
-        {/* Benefits Summary */}
-        <div className="mt-16 grid md:grid-cols-3 gap-8">
-          <div className="text-center p-6 bg-muted/30 rounded-xl">
-            <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Users className="w-6 h-6 text-primary" />
-            </div>
-            <h3 className="text-lg font-semibold text-foreground mb-2">Unlimited Agents</h3>
-            <p className="text-sm text-muted-foreground">
-              Add team members without increasing costs. Scale your support team freely.
-            </p>
-          </div>
-          <div className="text-center p-6 bg-muted/30 rounded-xl">
-            <div className="w-12 h-12 bg-secondary/20 rounded-full flex items-center justify-center mx-auto mb-4">
-              <MessageSquare className="w-6 h-6 text-secondary-foreground" />
-            </div>
-            <h3 className="text-lg font-semibold text-foreground mb-2">Unlimited Conversations</h3>
-            <p className="text-sm text-muted-foreground">
-              Handle as many customer conversations as you need. No per-message fees.
-            </p>
-          </div>
-          <div className="text-center p-6 bg-muted/30 rounded-xl">
-            <div className="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-4">
-              <TrendingDown className="w-6 h-6 text-primary" />
-            </div>
-            <h3 className="text-lg font-semibold text-foreground mb-2">Predictable Costs</h3>
-            <p className="text-sm text-muted-foreground">
-              Fixed monthly fee. No surprises. Budget with confidence.
-            </p>
-          </div>
-        </div>
-
-        {/* Pricing Section */}
-        <div className="mt-16">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-semibold text-foreground mb-6">
-              Clear & Simple Pricing
-            </h2>
-            <p className="text-lg text-muted-foreground max-w-3xl mx-auto mb-8">
-              All plans include unlimited agents and predictable costs. No per-seat or per-resolution fees.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Check className="w-4 h-4 text-primary" />
-                Unlimited agents
-              </div>
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Check className="w-4 h-4 text-primary" />
-                Unlimited AI responses
-              </div>
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Check className="w-4 h-4 text-primary" />
-                No per-resolution fees
-              </div>
-            </div>
-          </div>
-
-          {/* Pricing Cards */}
-          <div className="grid md:grid-cols-3 gap-8 mb-16">
-            {[
-              {
-                name: "Managed (Site License)",
-                description: "Fixed setup + monthly fee",
-                price: "Contact for pricing",
-                features: [
-                  "Unlimited agents & AI responses",
-                  "WhatsApp, chat, SMS included",
-                  "Basic reports and dashboards",
-                  "Email support",
-                  "Standard integrations"
-                ],
-                popular: false
-              },
-              {
-                name: "Managed + LLM",
-                description: "Adds voice capabilities",
-                price: "Contact for pricing",
-                features: [
-                  "Everything in Managed",
-                  "CRM integrations",
-                  "Outbound campaigns",
-                  "SLA monitoring",
-                  "AI orchestration",
-                  "Priority support"
-                ],
-                popular: true
-              },
-              {
-                name: "Self-Hosted",
-                description: "One-time onboarding + optional support",
-                price: "Contact for pricing",
-                features: [
-                  "Deploy on your infrastructure",
-                  "Full data control",
-                  "Optional support plans",
-                  "Custom integrations",
-                  "BYO LLM keys",
-                  "Complete ownership"
-                ],
-                popular: false
-              }
-            ].map((tier, index) => (
-              <Card 
-                key={index} 
-                className={`relative ${tier.popular ? 'border-primary shadow-lg scale-105' : 'border-border'}`}
-              >
-                {tier.popular && (
-                  <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                    <div className="bg-primary text-primary-foreground px-4 py-1 rounded-full text-sm font-medium flex items-center gap-1">
-                      <Star className="w-4 h-4" />
-                      Most Popular
-                    </div>
-                  </div>
-                )}
-                <CardHeader className="text-center pb-4">
-                  <CardTitle className="text-xl font-semibold">{tier.name}</CardTitle>
-                  <CardDescription className="text-muted-foreground">
-                    {tier.description}
-                  </CardDescription>
-                  <div className="text-3xl font-bold text-foreground mt-4">
-                    {tier.price}
-                  </div>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <ul className="space-y-3">
-                    {tier.features.map((feature, featureIndex) => (
-                      <li key={featureIndex} className="flex items-start gap-3">
-                        <Check className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
-                        <span className="text-sm text-muted-foreground">{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-                  <div className="pt-4">
-                    <ContactModal>
-                      <Button 
-                        className={`w-full ${tier.popular ? 'bg-primary hover:bg-primary/90' : 'bg-secondary hover:bg-secondary/90'}`}
-                      >
-                        Request Quote
-                      </Button>
-                    </ContactModal>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-
         {/* CTA */}
         <div className="mt-16 text-center">
-          <div className="bg-muted/30 rounded-2xl p-8 max-w-4xl mx-auto">
-            <h3 className="text-2xl font-semibold text-foreground mb-4">
+          <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-10 max-w-4xl mx-auto">
+            <h3 className="text-3xl font-bold text-slate-900 dark:text-white mb-4">
               Ready to Start Saving?
             </h3>
-            <p className="text-muted-foreground mb-6">
+            <p className="text-lg text-slate-700 dark:text-slate-300 mb-8">
               Book a demo to see how LocalBoxs can transform your customer support while reducing costs.
             </p>
-            <Button size="lg" className="bg-primary hover:bg-primary/90">
-              Book a Demo
-            </Button>
+            <ContactModal>
+              <Button size="lg" className="bg-blue-600 dark:bg-blue-500 text-white hover:bg-blue-700 dark:hover:bg-blue-600 px-10 py-6 text-lg">
+                Book a Demo
+              </Button>
+            </ContactModal>
           </div>
         </div>
       </div>

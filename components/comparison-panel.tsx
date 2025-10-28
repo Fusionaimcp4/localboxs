@@ -1,152 +1,199 @@
 import React from "react"
-import { Check, X } from "lucide-react"
+import { MessageSquare, Sparkles, Users, ShoppingBag } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import Link from "next/link"
 import Image from "next/image"
 
 export function ComparisonPanel() {
-  const comparisonData = [
-    {
-      feature: "Pricing Model",
-      localboxs: "Fixed setup + LLM",
-      perAgent: "Per agent monthly",
-      perResolution: "Per conversation"
-    },
-    {
-      feature: "Channels",
-      localboxs: "All included",
-      perAgent: "Limited",
-      perResolution: "Limited"
-    },
-    {
-      feature: "AI Automation",
-      localboxs: "Unlimited usage",
-      perAgent: "Limited responses",
-      perResolution: "Pay per use"
-    },
-    {
-      feature: "Follow-up Automation",
-      localboxs: "Built-in",
-      perAgent: "Extra cost",
-      perResolution: "Not available"
-    },
-    {
-      feature: "CRM Approach",
-      localboxs: "Flexible integration",
-      perAgent: "Proprietary",
-      perResolution: "Limited"
-    },
-    {
-      feature: "Ownership",
-      localboxs: "Your data, your choice",
-      perAgent: "Vendor locked",
-      perResolution: "Vendor locked"
-    },
-    {
-      feature: "Scaling Cost",
-      localboxs: "Predictable",
-      perAgent: "Grows with team",
-      perResolution: "Grows with volume"
-    },
-    {
-      feature: "Lock-in",
-      localboxs: "None",
-      perAgent: "High",
-      perResolution: "High"
-    }
-  ]
-
   return (
-    <section className="w-full px-5 py-16 md:py-24 bg-background relative overflow-hidden">
-      {/* Background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-secondary/5" />
-      
-      <div className="max-w-6xl mx-auto relative z-10">
-        {/* Header */}
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-semibold text-foreground mb-6">
-            LocalBoxs vs. Traditional Providers
-          </h2>
-          <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-            See how our model differs from per-agent and per-resolution providers. 
-            Focus on outcomes, not just features.
-          </p>
+    <section className="w-full py-20 md:py-32 bg-white dark:bg-slate-900">
+      <div className="max-w-7xl mx-auto px-5 space-y-32">
+        
+        {/* Section 1: Support customers on multiple channels */}
+        <div className="flex flex-col lg:flex-row items-center gap-16">
+          <div className="lg:w-1/2 space-y-6">
+            <h2 className="text-5xl md:text-6xl font-bold text-slate-900 dark:text-white leading-tight">
+              Support customers on multiple channels
+            </h2>
+            <p className="text-xl text-slate-700 dark:text-slate-300 leading-relaxed">
+              Add an AI chatbot to your website, LiveChat, Messenger, or Slack to handle all support cases automatically, 24/7.
+            </p>
+            <Link href="/auth/signin">
+              <Button size="lg" className="bg-black dark:bg-white text-white dark:text-black hover:bg-slate-800 dark:hover:bg-slate-100 px-8 py-6 text-lg font-semibold rounded-xl">
+                Sign up free
+              </Button>
+            </Link>
+          </div>
+          <div className="lg:w-1/2">
+            <div className="bg-slate-100 dark:bg-slate-800 rounded-2xl p-6 shadow-xl">
+              {/* Channel Icons */}
+              <div className="mb-6">
+                <Image 
+                  src="/images/home__multiple-channels-resize_lanczos_3.png" 
+                  alt="Supported platforms: Facebook Messenger, LiveChat, WordPress, Shopify, BigCommerce, Slack, Webflow, Stripe, WooCommerce, Wix"
+                  width={1200}
+                  height={120}
+                  className="w-full h-auto"
+                />
+              </div>
+              {/* Chat Messages */}
+              <div className="space-y-3">
+                {[
+                  { message: "Check my order status.", agent: "/agent1.png" },
+                  { message: "How can I change my billing address?", agent: "/agent2.png" },
+                  { message: "How can I modify my client's pending order?", agent: "/agent3.png" },
+                  { message: "Can you connect me with a sales agent?", agent: "/agent4.png" }
+                ].map((item, i) => (
+                  <div key={i} className="flex items-start gap-3 mb-4">
+                    <div className="w-9 h-9 rounded-full overflow-hidden flex-shrink-0">
+                      <Image src={item.agent} alt="Agent" width={36} height={36} className="w-full h-full object-cover" />
+                    </div>
+                    <div className="bg-white dark:bg-slate-700 rounded-2xl px-4 py-3 shadow-sm flex-1">
+                      <p className="text-sm text-slate-900 dark:text-white">{item.message}</p>
+                    </div>
+                    {i === 0 && <div className="w-6 h-6 rounded bg-[#FF6900] flex items-center justify-center flex-shrink-0 self-end shadow-sm">
+                      <MessageSquare className="w-3.5 h-3.5 text-white" />
+                    </div>}
+                    {i === 1 && <div className="w-6 h-6 rounded bg-purple-600 flex items-center justify-center flex-shrink-0 self-end shadow-sm">
+                      <MessageSquare className="w-3.5 h-3.5 text-white" />
+                    </div>}
+                    {i === 2 && <div className="w-6 h-6 rounded bg-indigo-600 flex items-center justify-center flex-shrink-0 self-end shadow-sm">
+                      <MessageSquare className="w-3.5 h-3.5 text-white" />
+                    </div>}
+                    {i === 3 && <div className="w-6 h-6 rounded bg-red-500 flex items-center justify-center flex-shrink-0 self-end shadow-sm">
+                      <MessageSquare className="w-3.5 h-3.5 text-white" />
+                    </div>}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
 
-        {/* Comparison Table */}
-        <div className="bg-card border border-border rounded-2xl overflow-hidden">
-          {/* Table Header */}
-          <div className="bg-muted/50 grid grid-cols-4 gap-4 p-6 font-semibold text-foreground">
-            <div className="text-left">Feature</div>
-            <div className="text-center bg-primary/10 rounded-lg py-2">LocalBoxs</div>
-            <div className="text-center">Per-Agent Providers</div>
-            <div className="text-center">Per-Resolution Providers</div>
+        {/* Section 2: Show offers to boost sales */}
+        <div className="flex flex-col lg:flex-row-reverse items-center gap-16">
+          <div className="lg:w-1/2 space-y-6">
+            <h2 className="text-5xl md:text-6xl font-bold text-slate-900 dark:text-white leading-tight">
+              Show offers to boost sales
+            </h2>
+            <p className="text-xl text-slate-700 dark:text-slate-300 leading-relaxed">
+              Proactively reach website visitors with product recommendations to increase engagement and conversions.
+            </p>
+            <Link href="/auth/signin">
+              <Button size="lg" className="bg-black dark:bg-white text-white dark:text-black hover:bg-slate-800 dark:hover:bg-slate-100 px-8 py-6 text-lg font-semibold rounded-xl">
+                Sign up free
+              </Button>
+            </Link>
           </div>
-
-          {/* Table Rows */}
-          <div className="divide-y divide-border">
-            {comparisonData.map((row, index) => (
-              <div key={index} className="grid grid-cols-4 gap-4 p-6 hover:bg-muted/20 transition-colors">
-                <div className="text-left font-medium text-foreground">
-                  {row.feature}
-                </div>
-                <div className="text-center bg-primary/5 rounded-lg py-2 px-4">
-                  <span className="text-primary font-medium">{row.localboxs}</span>
-                </div>
-                <div className="text-center text-muted-foreground">
-                  {row.perAgent}
-                </div>
-                <div className="text-center text-muted-foreground">
-                  {row.perResolution}
+          <div className="lg:w-1/2">
+            <div className="bg-slate-100 dark:bg-slate-800 rounded-2xl p-6 shadow-xl">
+              <div className="flex items-center justify-between mb-4 pb-4 border-b border-slate-200 dark:border-slate-700">
+                <MessageSquare className="w-5 h-5 text-slate-600" />
+                <div className="w-8 h-8 rounded-full overflow-hidden">
+                  <Image src="/agent1.png" alt="Agent" width={32} height={32} className="w-full h-full object-cover" />
                 </div>
               </div>
-            ))}
+              {/* User Query */}
+              <div className="flex justify-end mb-4">
+                <div className="bg-white dark:bg-slate-700 rounded-2xl px-4 py-3 max-w-[85%]">
+                  <p className="text-sm text-slate-900 dark:text-white">
+                    looking for glasses blocking blue light and strong sun exposure.
+                  </p>
+                </div>
+              </div>
+              {/* AI Response with Products */}
+              <div className="bg-blue-500 dark:bg-blue-600 rounded-2xl p-4">
+                <div className="flex items-center gap-2 mb-3">
+                  <MessageSquare className="w-4 h-4 text-white" />
+                  <Sparkles className="w-4 h-4 text-white" />
+                </div>
+                <p className="text-sm text-white mb-4">
+                  Sure! These items have anti-rad filter and block above 80% UV rays:
+                </p>
+                <div className="grid grid-cols-2 gap-3">
+                  {[
+                    { name: "Sunlort Blue 776", image: "/model2.JPG" },
+                    { name: "Sunconer yellow 196", image: "/model1.JPG" }
+                  ].map((product, i) => (
+                    <div key={i} className="bg-white dark:bg-slate-700 rounded-xl overflow-hidden shadow-md">
+                      <div className="w-full h-32 relative overflow-hidden">
+                        <Image
+                          src={product.image}
+                          alt={product.name}
+                          fill
+                          className="object-cover"
+                        />
+                      </div>
+                      <div className="p-3">
+                        <h4 className="text-sm font-semibold text-slate-900 dark:text-white mb-2">{product.name}</h4>
+                        <button className="w-full bg-blue-500 hover:bg-blue-600 text-white text-xs py-2 rounded mb-1 transition-colors">Add to cart</button>
+                        <button className="w-full text-blue-500 hover:text-blue-600 text-xs py-1 transition-colors">Try it online</button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* Bottom Summary */}
-        <div className="mt-16 grid md:grid-cols-3 gap-8">
-          <div className="text-center p-6 bg-primary/5 rounded-xl">
-          <div className="relative w-80 h-60 rounded-lg overflow-hidden shadow-lg">
-              <Image
-                src="/images/localboxs3.png"
-                alt="LocalBoxs platform - Multi-channel customer support interface"
-                fill
-                className="object-cover"
-              />
-            </div>
-            <h3 className="text-lg font-semibold text-foreground mb-2">Predictable Costs</h3>
-            <p className="text-sm text-muted-foreground">
-              Fixed monthly fee. No surprises. Scale your team without scaling your costs.
+        {/* Section 3: Deliver on-point answers with AI automation */}
+        <div className="flex flex-col lg:flex-row-reverse items-center gap-16">
+          <div className="lg:w-1/2 space-y-6">
+            <h2 className="text-5xl md:text-6xl font-bold text-slate-900 dark:text-white leading-tight">
+              Deliver on-point answers with AI automation
+            </h2>
+            <p className="text-xl text-slate-700 dark:text-slate-300 leading-relaxed">
+              Ensure continuous customer engagement and human-like support without expanding your team.
             </p>
+            <Link href="/auth/signin">
+              <Button size="lg" className="bg-black dark:bg-white text-white dark:text-black hover:bg-slate-800 dark:hover:bg-slate-100 px-8 py-6 text-lg font-semibold rounded-xl">
+                Sign up free
+              </Button>
+            </Link>
           </div>
-          <div className="text-center p-6 bg-secondary/10 rounded-xl">
-          <div className="relative w-80 h-60 rounded-lg overflow-hidden shadow-lg">
-              <Image
-                src="/images/localboxs1.png"
-                alt="LocalBoxs platform - Multi-channel customer support interface"
-                fill
-                className="object-cover"
-              />
+          <div className="lg:w-1/2">
+            <div className="bg-slate-100 dark:bg-slate-800 rounded-2xl p-6 shadow-xl">
+              <div className="flex items-center justify-between mb-4 pb-4 border-b border-slate-200 dark:border-slate-700">
+                <div className="flex items-center gap-3">
+                  <div className="space-y-1">
+                    <div className="w-4 bg-slate-400 rounded" />
+                    <div className="w-4 bg-slate-400 rounded" />
+                    <div className="w-4 bg-slate-400 rounded" />
+                  </div>
+                  <span className="text-sm font-semibold text-slate-900 dark:text-white">AI ChatBot</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <MessageSquare className="w-5 h-5 text-slate-600" />
+                  <div className="w-5 h-3 bg-slate-400 rounded" />
+                </div>
+              </div>
+              {/* User Query */}
+              <div className="flex justify-end mb-4">
+                <div className="bg-white dark:bg-slate-700 rounded-2xl px-4 py-3 max-w-[90%]">
+                  <p className="text-sm text-slate-900 dark:text-white">
+                    My verification code has expired. Could you help me with that?
+                  </p>
+                </div>
+              </div>
+              {/* AI Response */}
+              <div className="bg-blue-500 dark:bg-blue-600 rounded-2xl p-4">
+                <div className="flex items-start gap-2 mb-2">
+                  <MessageSquare className="w-4 h-4 text-white flex-shrink-0 mt-0.5" />
+                  <Sparkles className="w-4 h-4 text-white flex-shrink-0" />
+                  <p className="text-sm text-white">
+                    Sure! Choose the "request new code" option. Then check your email or phone messages.
+                  </p>
+                </div>
+                <p className="text-xs text-white/70 flex items-center gap-1 mt-3">
+                  <Sparkles className="w-3 h-3" />
+                  Answered by AI
+                </p>
+              </div>
             </div>
-            <h3 className="text-lg font-semibold text-foreground mb-2">All Channels Included</h3>
-            <p className="text-sm text-muted-foreground">
-              Phone, WhatsApp, email, chat. Everything you need, nothing you don't.
-            </p>
-          </div>
-          <div className="text-center p-6 bg-muted/20 rounded-xl">
-          <div className="relative w-80 h-60 rounded-lg overflow-hidden shadow-lg">
-              <Image
-                src="/images/localboxs2.png"
-                alt="LocalBoxs platform - Multi-channel customer support interface"
-                fill
-                className="object-cover"
-              />
-            </div>
-            <h3 className="text-lg font-semibold text-foreground mb-2">No Vendor Lock-in</h3>
-            <p className="text-sm text-muted-foreground">
-              Export your data anytime. Host on your infrastructure. Own your customer relationships.
-            </p>
           </div>
         </div>
+
       </div>
     </section>
   )
