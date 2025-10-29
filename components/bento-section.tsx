@@ -40,9 +40,7 @@ export function BentoSection() {
                   playsInline
                   src="/videos/scraping-deployment-demo.mp4"
                 />
-                <div className="absolute inset-0 flex items-center justify-center bg-black/40">
-                  <p className="text-white text-sm font-medium">Upload scraping-deployment-demo.mp4 to /public/videos/</p>
-                </div>
+                
               </div>
             </div>
           </div>
@@ -74,9 +72,7 @@ export function BentoSection() {
                   playsInline
                   src="/videos/context-management-demo.mp4"
                 />
-                <div className="absolute inset-0 flex items-center justify-center bg-black/40">
-                  <p className="text-white text-sm font-medium">Upload context-management-demo.mp4 to /public/videos/</p>
-                </div>
+
               </div>
             </div>
           </div>
@@ -108,9 +104,7 @@ export function BentoSection() {
                   playsInline
                   src="/videos/supervisor-notifications-demo.mp4"
                 />
-                <div className="absolute inset-0 flex items-center justify-center bg-black/40">
-                  <p className="text-white text-sm font-medium">Upload supervisor-notifications-demo.mp4 to /public/videos/</p>
-                </div>
+                
               </div>
             </div>
           </div>
@@ -135,26 +129,19 @@ export function BentoSection() {
 
           {/* Video Box - Orange Background */}
           <div className="bg-gradient-to-br from-orange-500 to-orange-600 rounded-3xl p-8 md:p-12 relative overflow-hidden shadow-2xl">
-            {/* Video */}
-            <div className="relative aspect-video rounded-xl overflow-hidden bg-black/20">
-              <video
-                className="w-full h-full object-cover"
-                autoPlay
-                loop
-                muted
-                playsInline
-                src="/videos/handover-demo.mp4"
-              />
-              {/* Fallback overlay if video doesn't load */}
-              <div className="absolute inset-0 flex items-center justify-center bg-black/30 backdrop-blur-sm">
-                <div className="text-center">
-                  <div className="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4 backdrop-blur-md">
-                    <ChevronRight className="w-10 h-10 text-white" />
-                  </div>
-                  <p className="text-white text-lg font-semibold">Upload handover-demo.mp4 to /public/videos/</p>
-                </div>
-              </div>
-          </div>
+  {/* Image Section */}
+  <div className="relative aspect-video rounded-xl overflow-hidden bg-black/20">
+    <img
+      className="w-full h-full object-cover"
+      src="/videos/handover-demo.png"
+      alt="Handover workflow preview"
+    />
+
+    {/* Optional overlay for design consistency */}
+    
+  
+</div>
+
         </div>
         </div>
 

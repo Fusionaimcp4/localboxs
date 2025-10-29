@@ -56,13 +56,13 @@ export function UsageDashboard({ className = '' }: UsageDashboardProps) {
         } else {
           // Fallback to hardcoded limits if API fails
           const fallbackLimits = getTierLimits(userTier);
-          setLimits(fallbackLimits as DynamicTierLimits);
+          setLimits(fallbackLimits as unknown as DynamicTierLimits);
         }
       } catch (error) {
         console.error('Failed to fetch data:', error);
         // Fallback to hardcoded limits on error
         const fallbackLimits = getTierLimits(userTier);
-        setLimits(fallbackLimits as DynamicTierLimits);
+        setLimits(fallbackLimits as unknown as DynamicTierLimits);
       } finally {
         setLoading(false);
       }
@@ -73,7 +73,7 @@ export function UsageDashboard({ className = '' }: UsageDashboardProps) {
 
   if (loading || !limits || !usage) {
     return (
-      <div className={`bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6 ${className}`}>
+      <div className={`bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4 sm:p-6 ${className}`}>
         {loading ? (
           <div className="animate-pulse space-y-4">
             <div className="h-6 bg-slate-200 dark:bg-slate-700 rounded w-32"></div>
@@ -84,7 +84,7 @@ export function UsageDashboard({ className = '' }: UsageDashboardProps) {
             </div>
           </div>
         ) : (
-          <div className="text-center text-slate-500 dark:text-slate-400">
+          <div className="text-center text-slate-500 dark:text-slate-400 text-sm sm:text-base">
             Unable to load usage data
           </div>
         )}
@@ -148,33 +148,33 @@ export function UsageDashboard({ className = '' }: UsageDashboardProps) {
   });
 
   return (
-    <div className={`bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6 ${className}`}>
+    <div className={`bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4 sm:p-6 ${className}`}>
       {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center gap-3">
-          <div className="p-2 rounded-lg bg-blue-100 dark:bg-blue-900">
-            <BarChart3 className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 sm:gap-0 mb-4 sm:mb-6">
+        <div className="flex items-center gap-2 sm:gap-3">
+          <div className="p-1.5 sm:p-2 rounded-lg bg-blue-100 dark:bg-blue-900">
+            <BarChart3 className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600 dark:text-blue-400" />
           </div>
           <div>
-            <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
+            <h3 className="text-base sm:text-lg font-semibold text-slate-900 dark:text-slate-100">
               Usage Overview
             </h3>
-            <div className="flex items-center gap-2 mt-1">
+            <div className="flex items-center gap-2 mt-1 flex-wrap">
               <TierBadge tier={userTier} />
               {hasCritical && (
-                <span className="text-xs text-red-600 dark:text-red-400 flex items-center gap-1">
+                <span className="text-[10px] sm:text-xs text-red-600 dark:text-red-400 flex items-center gap-1">
                   <AlertTriangle className="w-3 h-3" />
                   Limits Exceeded
                 </span>
               )}
               {hasWarnings && !hasCritical && (
-                <span className="text-xs text-amber-600 dark:text-amber-400 flex items-center gap-1">
+                <span className="text-[10px] sm:text-xs text-amber-600 dark:text-amber-400 flex items-center gap-1">
                   <AlertTriangle className="w-3 h-3" />
                   Approaching Limits
                 </span>
               )}
               {!hasWarnings && (
-                <span className="text-xs text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+                <span className="text-[10px] sm:text-xs text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
                   <CheckCircle className="w-3 h-3" />
                   All Good
                 </span>
@@ -183,35 +183,37 @@ export function UsageDashboard({ className = '' }: UsageDashboardProps) {
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
           <button
             onClick={() => setIsExpanded(!isExpanded)}
-            className="flex items-center gap-2 px-3 py-2 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors text-sm font-medium"
+            className="flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors text-xs sm:text-sm font-medium"
           >
             {isExpanded ? (
               <>
-                <EyeOff className="w-4 h-4" />
-                Hide Usage
+                <EyeOff className="w-3 h-3 sm:w-4 sm:h-4" />
+                <span className="hidden sm:inline">Hide Usage</span>
+                <span className="sm:hidden">Hide</span>
               </>
             ) : (
               <>
-                <Eye className="w-4 h-4" />
-                Show Usage
+                <Eye className="w-3 h-3 sm:w-4 sm:h-4" />
+                <span className="hidden sm:inline">Show Usage</span>
+                <span className="sm:hidden">Show</span>
               </>
             )}
             {isExpanded ? (
-              <ChevronDown className="w-4 h-4" />
+              <ChevronDown className="w-3 h-3 sm:w-4 sm:h-4" />
             ) : (
-              <ChevronRight className="w-4 h-4" />
+              <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4" />
             )}
           </button>
 
           {userTier !== 'ENTERPRISE' && (
             <Link
               href="/pricing"
-              className="flex items-center gap-2 px-3 py-2 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white rounded-lg hover:from-emerald-600 hover:to-emerald-700 transition-all duration-200 text-sm font-medium"
+              className="flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white rounded-lg hover:from-emerald-600 hover:to-emerald-700 transition-all duration-200 text-xs sm:text-sm font-medium"
             >
-              <Crown className="w-4 h-4" />
+              <Crown className="w-3 h-3 sm:w-4 sm:h-4" />
               Upgrade
             </Link>
           )}

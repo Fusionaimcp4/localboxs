@@ -37,7 +37,7 @@ export function ValuePropositionSection() {
       }
     }
 
-    const initialTimeout = setTimeout(showMessage, 500)
+    const initialTimeout = setTimeout(showMessage, 100)
     timeoutIds.push(initialTimeout)
 
     return () => {
@@ -79,14 +79,15 @@ export function ValuePropositionSection() {
           </div>
 
           {/* Chat Messages Container */}
-          <div className="absolute inset-0 pt-6 pb-6 pl-6 pr-6 flex flex-col justify-between z-10">
+          <div className="absolute inset-0 pt-[2rem] sm:pt-[4rem] md:pt-[12rem] lg:pt-[16rem] pb-6 pl-6 pr-6 z-10 flex flex-col gap-3">
+
             
-            {/* Liya's First Message - Top Right */}
+            {/* First: User Question (Top) */}
             {visibleMessages >= 1 && (
               <div className="flex items-start gap-2 w-full max-w-[60%] self-end animate-in slide-in-from-right duration-500">
                 <div className="flex flex-col items-end flex-1">
-                  <div className="bg-white/15 backdrop-blur-md rounded-2xl px-4 py-3 shadow-lg border border-white/20">
-                    <p className="text-sm font-bold text-slate-900 drop-shadow-md">
+                  <div>
+                    <p className="text-sm font-bold text-white drop-shadow-lg">
                       How much time do I have for my order return?
                     </p>
                   </div>
@@ -106,9 +107,9 @@ export function ValuePropositionSection() {
               </div>
             )}
 
-            {/* ChatBot's Message - Middle Left */}
+            {/* Second: Bot Response (Middle) */}
             {visibleMessages >= 2 && (
-              <div className="flex items-end gap-2 w-full max-w-[60%] self-start animate-in slide-in-from-left duration-500">
+              <div className="flex items-start gap-2 w-full max-w-[60%] self-start animate-in slide-in-from-left duration-500">
                 <div className="flex-shrink-0">
                   <div className="w-8 h-8 rounded-xl overflow-hidden bg-blue-500/50 flex items-center justify-center">
                     <Image
@@ -122,8 +123,8 @@ export function ValuePropositionSection() {
                   <p className="text-xs text-slate-600 dark:text-slate-400 mt-1 text-center">ChatBot</p>
                 </div>
                 <div className="flex flex-col items-start flex-1">
-                  <div className="bg-blue-500/20 backdrop-blur-md rounded-2xl px-4 py-3 shadow-lg border border-blue-300/30">
-                    <p className="text-sm text-blue-900 font-bold drop-shadow-md">
+                  <div>
+                    <p className="text-sm text-yellow-400 font-bold drop-shadow-lg">
                       Hi Liya! You can return your purchase within 7 days.
                     </p>
                   </div>
@@ -131,12 +132,12 @@ export function ValuePropositionSection() {
               </div>
             )}
 
-            {/* Liya's Second Message - Bottom Right */}
+            {/* Third: User Thanks (Bottom) */}
             {visibleMessages >= 3 && (
               <div className="flex items-end gap-2 w-full max-w-[60%] self-end animate-in slide-in-from-right duration-500">
                 <div className="flex flex-col items-end flex-1">
-                  <div className="bg-white/15 backdrop-blur-md rounded-2xl px-4 py-3 shadow-lg border border-white/20">
-                    <p className="text-sm font-bold text-slate-900 drop-shadow-md">
+                  <div>
+                    <p className="text-sm font-bold text-white drop-shadow-lg">
                       That's what I needed! Thx
                     </p>
                   </div>
