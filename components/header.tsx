@@ -41,7 +41,7 @@ export function Header() {
         <div className="flex items-center gap-4 sm:gap-6">
           <div className="flex items-center gap-2 sm:gap-3">
             <Link href="/" className="flex items-center gap-1 sm:gap-2">
-            <span className="text-foreground text-black text-lg sm:text-xl font-semibold flex items-center gap-1">
+            <span className="text-slate-900 dark:text-white text-lg sm:text-xl font-semibold flex items-center gap-1">
   LocalBox
   <Image
     src="/logos/boxlogo512x512.png"
@@ -60,7 +60,7 @@ export function Header() {
                 key={item.name}
                 href={item.href}
                 onClick={(e) => handleScroll(e, item.href)} // Add onClick handler
-                className="text-[#888888] hover:text-foreground px-4 py-2 rounded-full font-medium transition-colors"
+                className="text-slate-700 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white px-4 py-2 rounded-full font-medium transition-colors"
               >
                 {item.name}
               </Link>
@@ -74,7 +74,7 @@ export function Header() {
               <div className="w-8 h-8 border-2 border-zinc-500/30 border-t-zinc-500 rounded-full animate-spin"></div>
             ) : session ? (
               <div className="flex items-center gap-3">
-                <span className="text-sm text-zinc-400">Welcome, {session.user?.name}</span>
+                <span className="text-sm text-slate-600 dark:text-slate-400">Welcome, {session.user?.name}</span>
                 <Link href="/dashboard">
                   <Button className="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-full font-medium">
                     Dashboard
@@ -102,7 +102,7 @@ export function Header() {
           {/* Mobile Menu */}
           <Sheet>
             <SheetTrigger asChild className="sm:hidden">
-              <Button variant="ghost" size="icon" className="text-foreground min-h-[44px] min-w-[44px]">
+              <Button variant="ghost" size="icon" className="text-slate-900 dark:text-white min-h-[44px] min-w-[44px]">
                 <Menu className="h-6 w-6" />
                 <span className="sr-only">Toggle navigation menu</span>
               </Button>
@@ -117,7 +117,7 @@ export function Header() {
                     key={item.name}
                     href={item.href}
                     onClick={(e) => handleScroll(e, item.href)} // Add onClick handler
-                    className="text-[#888888] hover:text-foreground justify-start text-lg py-3 min-h-[44px] flex items-center"
+                    className="text-slate-700 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white justify-start text-lg py-3 min-h-[44px] flex items-center"
                   >
                     {item.name}
                   </Link>
@@ -127,7 +127,7 @@ export function Header() {
                 <div className="border-t border-border pt-6 mt-4">
                   {session ? (
                     <div className="flex flex-col gap-4">
-                      <span className="text-sm text-zinc-400">Welcome, {session.user?.name}</span>
+                      <span className="text-sm text-slate-600 dark:text-slate-400">Welcome, {session.user?.name}</span>
                       <Link href="/dashboard">
                         <Button className="w-full bg-emerald-500 hover:bg-emerald-600 text-white px-6 py-3 rounded-full font-medium min-h-[48px]">
                           Dashboard
