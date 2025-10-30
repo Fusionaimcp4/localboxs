@@ -32,6 +32,15 @@ interface EnvConfig {
   // App URLs
   NEXT_PUBLIC_BASE_URL?: string;
   NEXT_PUBLIC_APP_URL?: string;
+  
+  // Stripe (optional, only required if billing is enabled)
+  STRIPE_SECRET_KEY?: string;
+  STRIPE_SECRET_KEY_TEST?: string;
+  STRIPE_WEBHOOK_SECRET?: string;
+  STRIPE_WEBHOOK_SECRET_TEST?: string;
+  NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY?: string;
+  NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY_TEST?: string;
+  STRIPE_BILLING_ENABLED?: string;
 }
 
 class EnvironmentValidator {
@@ -63,6 +72,13 @@ class EnvironmentValidator {
       SMTP_PASS: process.env.SMTP_PASS,
       NEXT_PUBLIC_BASE_URL: process.env.NEXT_PUBLIC_BASE_URL,
       NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
+      STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
+      STRIPE_SECRET_KEY_TEST: process.env.STRIPE_SECRET_KEY_TEST,
+      STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET,
+      STRIPE_WEBHOOK_SECRET_TEST: process.env.STRIPE_WEBHOOK_SECRET_TEST,
+      NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
+      NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY_TEST: process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY_TEST,
+      STRIPE_BILLING_ENABLED: process.env.STRIPE_BILLING_ENABLED,
     };
   }
 

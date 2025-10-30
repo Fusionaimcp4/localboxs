@@ -19,7 +19,24 @@ export const FEATURE_MATRIX = {
       maxChunksPerDocument: 50
     }
   },
-  PRO: {
+  STARTER: {
+    maxDemos: 2,
+    maxWorkflows: 5,
+    maxKnowledgeBases: 2,
+    maxDocuments: 50,
+    maxIntegrations: 2,
+    maxHelpdeskAgents: 2,
+    integrations: ['CRM', 'Calendar'],
+    supportLevel: 'email',
+    apiCallsPerMonth: 5000,
+    features: [],
+    limits: {
+      documentSize: 10 * 1024 * 1024, // 10MB
+      chunkSize: 1500,
+      maxChunksPerDocument: 100
+    }
+  },
+  TEAM: {
     maxDemos: 5,
     maxWorkflows: 10,
     maxKnowledgeBases: 5,
@@ -36,7 +53,7 @@ export const FEATURE_MATRIX = {
       maxChunksPerDocument: 200
     }
   },
-  PRO_PLUS: {
+  BUSINESS: {
     maxDemos: 25,
     maxWorkflows: 50,
     maxKnowledgeBases: 25,
@@ -96,53 +113,75 @@ export const FEATURE_DEFINITIONS = [
     tier: 'FREE' as SubscriptionTier
   },
 
-  // PRO tier features
+  // STARTER tier features
+  {
+    name: 'more_demos',
+    description: 'Create and manage more demos',
+    tier: 'STARTER' as SubscriptionTier
+  },
+  {
+    name: 'more_workflows',
+    description: 'Create and manage more workflows',
+    tier: 'STARTER' as SubscriptionTier
+  },
+  {
+    name: 'more_knowledge_bases',
+    description: 'Create and manage more knowledge bases',
+    tier: 'STARTER' as SubscriptionTier
+  },
+  {
+    name: 'calendar_integration_starter',
+    description: 'Basic calendar and scheduling integrations',
+    tier: 'STARTER' as SubscriptionTier
+  },
+
+  // TEAM tier features (formerly PRO)
   {
     name: 'advanced_analytics',
     description: 'Access to advanced analytics and reporting',
-    tier: 'PRO' as SubscriptionTier
+    tier: 'TEAM' as SubscriptionTier
   },
   {
     name: 'custom_branding',
     description: 'Custom branding and theming options',
-    tier: 'PRO' as SubscriptionTier
+    tier: 'TEAM' as SubscriptionTier
   },
   {
     name: 'priority_support',
     description: 'Priority email support',
-    tier: 'PRO' as SubscriptionTier
+    tier: 'TEAM' as SubscriptionTier
   },
   {
     name: 'calendar_integration',
     description: 'Calendar and scheduling integrations',
-    tier: 'PRO' as SubscriptionTier
+    tier: 'TEAM' as SubscriptionTier
   },
   {
     name: 'database_integration',
     description: 'Database and data source integrations',
-    tier: 'PRO' as SubscriptionTier
+    tier: 'TEAM' as SubscriptionTier
   },
 
-  // PRO_PLUS tier features
+  // BUSINESS tier features (formerly PRO_PLUS)
   {
     name: 'white_label',
     description: 'White-label solution with custom domain',
-    tier: 'PRO_PLUS' as SubscriptionTier
+    tier: 'BUSINESS' as SubscriptionTier
   },
   {
     name: 'sso',
     description: 'Single Sign-On (SSO) integration',
-    tier: 'PRO_PLUS' as SubscriptionTier
+    tier: 'BUSINESS' as SubscriptionTier
   },
   {
     name: 'api_access',
     description: 'Full API access and custom integrations',
-    tier: 'PRO_PLUS' as SubscriptionTier
+    tier: 'BUSINESS' as SubscriptionTier
   },
   {
     name: 'webhook_integrations',
     description: 'Webhook and real-time integrations',
-    tier: 'PRO_PLUS' as SubscriptionTier
+    tier: 'BUSINESS' as SubscriptionTier
   },
 
   // ENTERPRISE tier features
@@ -174,7 +213,7 @@ export function hasFeature(tier: SubscriptionTier, feature: string): boolean {
 }
 
 export function canAccessFeature(userTier: SubscriptionTier, requiredTier: SubscriptionTier): boolean {
-  const tierOrder = ['FREE', 'PRO', 'PRO_PLUS', 'ENTERPRISE'];
+  const tierOrder = ['FREE', 'STARTER', 'TEAM', 'BUSINESS', 'ENTERPRISE'];
   const userTierIndex = tierOrder.indexOf(userTier);
   const requiredTierIndex = tierOrder.indexOf(requiredTier);
   
@@ -182,7 +221,7 @@ export function canAccessFeature(userTier: SubscriptionTier, requiredTier: Subsc
 }
 
 export function getUpgradePrompt(currentTier: SubscriptionTier, feature: string): string {
-  const tierOrder = ['FREE', 'PRO', 'PRO_PLUS', 'ENTERPRISE'];
+  const tierOrder = ['FREE', 'STARTER', 'TEAM', 'BUSINESS', 'ENTERPRISE'];
   const currentIndex = tierOrder.indexOf(currentTier);
   
   // Find the minimum tier that has this feature

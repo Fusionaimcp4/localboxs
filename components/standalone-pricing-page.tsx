@@ -222,7 +222,7 @@ export function StandalonePricingPage() {
                           : "bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 hover:bg-slate-800 dark:hover:bg-slate-200"
                       }`}
                     >
-                      Go to Dashboard
+                      14 day free trial
                       <ArrowRight className="w-4 h-4 ml-2" />
                     </Button>
                   </Link>

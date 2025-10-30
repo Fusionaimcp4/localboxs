@@ -101,7 +101,33 @@ export async function PATCH(
     }
 
     const body = await request.json();
-    const { name, email, company, role, subscriptionTier, subscriptionStatus, password, isVerified } = body;
+    let { name, email, company, role, subscriptionTier, subscriptionStatus, password, isVerified } = body as {
+      name?: string;
+      email?: string;
+      company?: string;
+      role?: UserRole;
+      subscriptionTier?: string;
+      subscriptionStatus?: SubscriptionStatus;
+      password?: string;
+      isVerified?: boolean;
+    };
+
+    // Normalize legacy tier names to new ones to ensure persistence
+    if (subscriptionTier) {
+      const mapLegacy: Record<string, SubscriptionTier> = {
+        PRO: 'TEAM',
+        PRO_PLUS: 'BUSINESS',
+      } as const;
+      const upper = String(subscriptionTier).toUpperCase();
+      if (upper in mapLegacy) {
+        subscriptionTier = mapLegacy[upper];
+      }
+      // Whitelist allowed values; fallback to FREE if an invalid value slips through
+      const allowed: SubscriptionTier[] = ['FREE', 'STARTER', 'TEAM', 'BUSINESS', 'ENTERPRISE'];
+      if (!allowed.includes(subscriptionTier as SubscriptionTier)) {
+        subscriptionTier = 'FREE';
+      }
+    }
 
     // Check if user exists
     const existingUser = await prisma.user.findUnique({
@@ -130,7 +156,7 @@ export async function PATCH(
     if (email !== undefined) updateData.email = email;
     if (company !== undefined) updateData.company = company;
     if (role !== undefined) updateData.role = role;
-    if (subscriptionTier !== undefined) updateData.subscriptionTier = subscriptionTier;
+    if (subscriptionTier !== undefined) updateData.subscriptionTier = subscriptionTier as SubscriptionTier;
     if (subscriptionStatus !== undefined) updateData.subscriptionStatus = subscriptionStatus;
     if (isVerified !== undefined) {
       updateData.isVerified = isVerified;

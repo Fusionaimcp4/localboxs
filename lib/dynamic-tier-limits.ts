@@ -81,7 +81,19 @@ function getDefaultTierLimits(tier: SubscriptionTier): DynamicTierLimits {
       chunkSize: 1000,
       maxChunksPerDocument: 50
     },
-    PRO: {
+    STARTER: {
+      maxDemos: 2,
+      maxWorkflows: 5,
+      maxKnowledgeBases: 2,
+      maxDocuments: 50,
+      maxIntegrations: 2,
+      maxHelpdeskAgents: 2,
+      apiCallsPerMonth: 5000,
+      documentSizeLimit: 10 * 1024 * 1024, // 10MB
+      chunkSize: 1500,
+      maxChunksPerDocument: 100
+    },
+    TEAM: {
       maxDemos: 5,
       maxWorkflows: 10,
       maxKnowledgeBases: 5,
@@ -93,7 +105,7 @@ function getDefaultTierLimits(tier: SubscriptionTier): DynamicTierLimits {
       chunkSize: 2000,
       maxChunksPerDocument: 200
     },
-    PRO_PLUS: {
+    BUSINESS: {
       maxDemos: 25,
       maxWorkflows: 50,
       maxKnowledgeBases: 25,
@@ -175,7 +187,7 @@ export async function getAllTierLimits(): Promise<Record<SubscriptionTier, Dynam
   const result: Record<SubscriptionTier, DynamicTierLimits> = {} as any;
 
   // Get limits for all tiers (including those not in database)
-  const allTiers: SubscriptionTier[] = ['FREE', 'PRO', 'PRO_PLUS', 'ENTERPRISE'];
+  const allTiers: SubscriptionTier[] = ['FREE', 'STARTER', 'TEAM', 'BUSINESS', 'ENTERPRISE'];
   
   for (const tier of allTiers) {
     const dbLimit = tierLimits.find(tl => tl.tier === tier);

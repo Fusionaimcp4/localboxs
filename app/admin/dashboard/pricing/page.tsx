@@ -24,9 +24,12 @@ interface PricingPlan {
   isPopular: boolean;
   ctaText: string;
   ctaHref: string;
+  stripeMonthlyPriceId?: string; // New: Stripe Price ID for monthly subscriptions
+  stripeYearlyPriceId?: string;  // New: Stripe Price ID for yearly subscriptions
+  annualDiscountPercentage?: number; // Add annualDiscountPercentage
 }
 
-const tierOrder: SubscriptionTier[] = ['FREE', 'PRO', 'PRO_PLUS', 'ENTERPRISE'];
+const tierOrder: SubscriptionTier[] = ['FREE', 'STARTER', 'TEAM', 'BUSINESS', 'ENTERPRISE'];
 
 export default function AdminPricingPage() {
   const [pricingPlans, setPricingPlans] = useState<PricingPlan[]>([]);
@@ -47,7 +50,7 @@ export default function AdminPricingPage() {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const data = await response.json();
-      setPricingPlans(data.pricingPlans);
+      setPricingPlans(data); // Corrected: Directly use data as it's the array of plans
     } catch (err: any) {
       console.error('Failed to fetch pricing plans:', err);
       setError(err.message || 'Failed to fetch pricing plans');
@@ -128,6 +131,9 @@ export default function AdminPricingPage() {
           isPopular: plan.isPopular,
           ctaText: plan.ctaText,
           ctaHref: plan.ctaHref,
+          stripeMonthlyPriceId: plan.stripeMonthlyPriceId, // Include new monthly ID
+          stripeYearlyPriceId: plan.stripeYearlyPriceId,   // Include new yearly ID
+          annualDiscountPercentage: plan.annualDiscountPercentage, // Include annualDiscountPercentage
         }),
       });
 
@@ -151,9 +157,11 @@ export default function AdminPricingPage() {
     switch (tier) {
       case 'FREE':
         return <Zap className="w-6 h-6 text-slate-600 dark:text-slate-400" />;
-      case 'PRO':
+      case 'STARTER':
+        return <Crown className="w-6 h-6 text-blue-500 dark:text-blue-400" />;
+      case 'TEAM':
         return <Crown className="w-6 h-6 text-blue-600 dark:text-blue-400" />;
-      case 'PRO_PLUS':
+      case 'BUSINESS':
         return <Crown className="w-6 h-6 text-purple-600 dark:text-purple-400" />;
       case 'ENTERPRISE':
         return <Crown className="w-6 h-6 text-amber-600 dark:text-amber-400" />;
@@ -166,9 +174,11 @@ export default function AdminPricingPage() {
     switch (tier) {
       case 'FREE':
         return 'bg-slate-100 dark:bg-slate-700';
-      case 'PRO':
+      case 'STARTER':
+        return 'bg-blue-50 dark:bg-blue-900/20';
+      case 'TEAM':
         return 'bg-blue-100 dark:bg-blue-900';
-      case 'PRO_PLUS':
+      case 'BUSINESS':
         return 'bg-purple-100 dark:bg-purple-900';
       case 'ENTERPRISE':
         return 'bg-gradient-to-r from-amber-100 to-orange-100 dark:from-amber-900 dark:to-orange-900';
@@ -335,6 +345,43 @@ export default function AdminPricingPage() {
                       placeholder="/dashboard/userdemo"
                     />
                   </div>
+                </div>
+
+                {/* Stripe Price ID */}
+                <div className="space-y-2">
+                  <Label htmlFor={`${plan.id}-stripeMonthlyPriceId`}>Stripe Monthly Price ID</Label>
+                  <Input
+                    id={`${plan.id}-stripeMonthlyPriceId`}
+                    value={plan.stripeMonthlyPriceId || ''}
+                    onChange={(e) => handleInputChange(plan.id, 'stripeMonthlyPriceId', e.target.value)}
+                    placeholder="Monthly price ID (e.g., price_month_123)"
+                  />
+                  <p className="text-xs text-slate-500">Use the monthly recurring Price ID from the plan's LIVE product.</p>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor={`${plan.id}-stripeYearlyPriceId`}>Stripe Yearly Price ID</Label>
+                  <Input
+                    id={`${plan.id}-stripeYearlyPriceId`}
+                    value={plan.stripeYearlyPriceId || ''}
+                    onChange={(e) => handleInputChange(plan.id, 'stripeYearlyPriceId', e.target.value)}
+                    placeholder="Yearly price ID (e.g., price_year_123)"
+                  />
+                  <p className="text-xs text-slate-500">Use the yearly recurring Price ID from the plan's LIVE product.</p>
+                </div>
+
+                {/* Annual Discount Percentage */}
+                <div className="space-y-2">
+                  <Label htmlFor={`${plan.id}-annualDiscountPercentage`}>Annual Discount (%)</Label>
+                  <Input
+                    id={`${plan.id}-annualDiscountPercentage`}
+                    type="number"
+                    value={plan.annualDiscountPercentage ?? 0}
+                    onChange={(e) => handleInputChange(plan.id, 'annualDiscountPercentage', parseInt(e.target.value) || 0)}
+                    placeholder="0"
+                    min="0"
+                    max="100"
+                  />
                 </div>
 
                 {/* Popular Toggle */}

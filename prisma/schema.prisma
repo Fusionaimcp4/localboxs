@@ -1,6 +1,3 @@
-// LocalBox Database Schema
-// Comprehensive schema for user management, demo creation, and workflow control
-
 generator client {
   provider = "prisma-client-js"
   output   = "../lib/generated/prisma"
@@ -11,131 +8,116 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// User Management
 model User {
-  id       String   @id @default(cuid())
-  email    String   @unique
-  name     String?
-  company  String?
-  password String? // null for pure OAuth accounts
-  role     UserRole @default(USER)
-  tenantId String? // keep if already present (not currently in schema, adding as optional)
-
-  // Security & UX
-  isVerified       Boolean   @default(false)
-  emailVerifiedAt  DateTime?
-  failedLoginCount Int       @default(0)
-  lastLoginAt      DateTime?
-  lastLoginIp      String?
-  totpSecret       String? // base32 TOTP secret for 2FA
-  avatarUrl        String?
-
-  // Subscription & Tier Management
-  subscriptionTier      SubscriptionTier   @default(FREE)
-  subscriptionStatus    SubscriptionStatus @default(ACTIVE)
+  id                    String              @id @default(cuid())
+  email                 String              @unique
+  name                  String?
+  company               String?
+  password              String?
+  role                  UserRole            @default(USER)
+  tenantId              String?
+  isVerified            Boolean             @default(false)
+  emailVerifiedAt       DateTime?
+  failedLoginCount      Int                 @default(0)
+  lastLoginAt           DateTime?
+  lastLoginIp           String?
+  totpSecret            String?
+  avatarUrl             String?
+  subscriptionTier      SubscriptionTier    @default(FREE)
+  subscriptionStatus    SubscriptionStatus  @default(ACTIVE)
   subscriptionExpiresAt DateTime?
+  fusionSubAccountId    String?
+  fusionCredentialName  String?
+  fusionCredentialId    String?
+  createdAt             DateTime            @default(now())
+  updatedAt             DateTime            @updatedAt
+  stripeCustomerId      String?
+  stripeSubscriptionId  String?
+  apiCallsThisMonth     Int                 @default(0)
+  balanceUsd            Decimal             @default(0) @db.Decimal(12, 4)
+  freeTrialEndsAt       DateTime? // Added for 14-day free trial
 
-  // Fusion integration fields
-  fusionSubAccountId   String?
-  fusionCredentialName String? // n8n credential name for this user
-  fusionCredentialId   String? // n8n credential ID for this user (encrypted)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  // NextAuth relations (Accounts/Sessions) if using adapter
-  accounts Account[]
-  sessions Session[]
-
-  // Relations
-  demos              Demo[]
-  workflows          Workflow[]          @relation("WorkflowUser")
-  apiKeys            ApiKey[]
-  knowledgeBases     KnowledgeBase[]
-  integrations       Integration[]
-  verificationTokens VerificationToken[] // new relation for tokens
-  features           UserFeature[] // Many-to-many relationship with features
-  apiCallLogs        ApiCallLog[] // API call tracking for usage
-  helpdeskUsers      HelpdeskUser[]
+  accounts              Account[]
+  apiCallLogs           ApiCallLog[]
+  apiKeys               ApiKey[]
+  demos                 Demo[]
+  helpdeskUsers         HelpdeskUser[]
+  integrations          Integration[]
+  knowledgeBases        KnowledgeBase[]
+  sessions              Session[]
+  transactions          Transaction[]
+  userFeatures          UserFeature[] @relation("UserToUserFeature") // Explicit relation name
+  verificationTokens    VerificationToken[]
+  workflows             Workflow[]          @relation("WorkflowUser")
 
   @@map("users")
 }
 
-enum UserRole {
-  USER
-  ADMIN
-  SUPER_ADMIN
+model Transaction {
+  id                      String            @id @default(cuid())
+  userId                  String
+  stripePaymentIntentId   String?
+  stripeCheckoutSessionId String?
+  stripeInvoiceId         String?
+  type                    String
+  amount                  Decimal           @db.Decimal(10, 2)
+  currency                String            @default("USD")
+  status                  String
+  productType             String
+  subscriptionTier        SubscriptionTier?
+  description             String?
+  metadata                Json?
+  createdAt               DateTime          @default(now())
+  updatedAt               DateTime          @default(now()) @updatedAt
+  user                    User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([stripePaymentIntentId])
+  @@index([stripeCheckoutSessionId])
+  @@index([status])
+  @@index([createdAt])
+  @@map("transactions")
 }
 
-enum SubscriptionTier {
-  FREE
-  PRO
-  PRO_PLUS
-  ENTERPRISE
-}
-
-enum SubscriptionStatus {
-  ACTIVE
-  EXPIRED
-  CANCELLED
-  SUSPENDED
-}
-
-// Demo Management
 model Demo {
-  id                String   @id @default(cuid())
-  userId            String
-  slug              String   @unique
-  businessName      String
-  businessUrl       String
-  systemMessageFile String
-  demoUrl           String
-  primaryColor      String?
-  secondaryColor    String?
-  logoUrl           String?
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
-
-  // Chatwoot Integration
+  id                   String         @id @default(cuid())
+  userId               String
+  slug                 String         @unique
+  businessName         String
+  businessUrl          String
+  systemMessageFile    String
+  demoUrl              String
+  primaryColor         String?
+  secondaryColor       String?
+  logoUrl              String?
+  createdAt            DateTime       @default(now())
+  updatedAt            DateTime       @updatedAt
   chatwootInboxId      Int?
   chatwootWebsiteToken String?
-
-  // Relations
-  user           User            @relation(fields: [userId], references: [id], onDelete: Cascade)
-  workflows      Workflow[]
-  contacts       Contact[]
-  systemMessages SystemMessage[]
+  contacts             Contact[]
+  user                 User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  systemMessages       SystemMessage?
+  workflows            Workflow[]
 
   @@map("demos")
 }
 
-// Workflow Management
 model Workflow {
-  id            String         @id @default(cuid())
-  demoId        String
-  userId        String
-  n8nWorkflowId String?
-  status        WorkflowStatus @default(INACTIVE)
-  configuration Json?
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
-
-  // Relations
+  id             String                  @id @default(cuid())
+  demoId         String
+  userId         String
+  n8nWorkflowId  String?
+  status         WorkflowStatus          @default(INACTIVE)
+  configuration  Json?
+  createdAt      DateTime                @default(now())
+  updatedAt      DateTime                @updatedAt
+  knowledgeBases WorkflowKnowledgeBase[]
   demo           Demo                    @relation(fields: [demoId], references: [id], onDelete: Cascade)
   user           User                    @relation("WorkflowUser", fields: [userId], references: [id], onDelete: Cascade)
-  knowledgeBases WorkflowKnowledgeBase[]
 
   @@map("workflows")
 }
 
-enum WorkflowStatus {
-  ACTIVE
-  INACTIVE
-  ERROR
-  PENDING
-}
-
-// Contact Management
 model Contact {
   id        String   @id @default(cuid())
   demoId    String
@@ -145,83 +127,69 @@ model Contact {
   phone     String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  // Relations
-  demo Demo @relation(fields: [demoId], references: [id], onDelete: Cascade)
+  demo      Demo     @relation(fields: [demoId], references: [id], onDelete: Cascade)
 
   @@map("contacts")
 }
 
-// AI Model Management
 model ApiKey {
   id         String   @id @default(cuid())
   userId     String
-  provider   String // openai, anthropic, google, etc.
+  provider   String
   model      String
-  apiKey     String // encrypted
+  apiKey     String
   isActive   Boolean  @default(true)
-  usageStats Json? // { totalRequests, totalTokens, cost }
+  usageStats Json?
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
-
-  // Relations
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("api_keys")
 }
 
-// System Message Management
 model SystemMessage {
   id        String   @id @default(cuid())
   demoId    String   @unique
   content   String
-  sections  Json? // structured sections
+  sections  Json?
   version   Int      @default(1)
   isActive  Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  // Relations
-  demo Demo @relation(fields: [demoId], references: [id], onDelete: Cascade)
+  demo      Demo     @relation(fields: [demoId], references: [id], onDelete: Cascade)
 
   @@map("system_messages")
 }
 
-// System Message Template Management
 model SystemMessageTemplate {
-  id          String   @id @default(cuid())
+  id          String                 @id @default(cuid())
   name        String
   description String
   content     String
-  isActive    Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  // Relations
-  versions SystemMessageVersion[]
+  isActive    Boolean                @default(true)
+  createdAt   DateTime               @default(now())
+  updatedAt   DateTime               @updatedAt
+  versions    SystemMessageVersion[]
 
   @@map("system_message_templates")
 }
 
 model SystemMessageVersion {
-  id          String    @id @default(cuid())
+  id          String                @id @default(cuid())
   templateId  String
   version     Int
   content     String
-  isPublished Boolean   @default(false)
+  isPublished Boolean               @default(false)
   publishedAt DateTime?
   publishedBy String?
   changeLog   String?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-
-  // Relations
-  template SystemMessageTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  createdAt   DateTime              @default(now())
+  updatedAt   DateTime              @updatedAt
+  template    SystemMessageTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
 
   @@map("system_message_versions")
 }
 
-// Integration Management
 model Integration {
   id            String          @id @default(cuid())
   userId        String
@@ -231,23 +199,11 @@ model Integration {
   isActive      Boolean         @default(true)
   createdAt     DateTime        @default(now())
   updatedAt     DateTime        @updatedAt
-
-  // Relations
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user          User            @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("integrations")
 }
 
-enum IntegrationType {
-  CALENDAR
-  DATABASE
-  API
-  WEBHOOK
-  CRM
-  HELPDESK
-}
-
-// Analytics and Monitoring
 model Analytics {
   id        String   @id @default(cuid())
   demoId    String?
@@ -259,28 +215,22 @@ model Analytics {
   @@map("analytics")
 }
 
-// Knowledge Base Management
 model KnowledgeBase {
-  id          String  @id @default(cuid())
-  userId      String
-  name        String
-  description String?
-  type        KBType  @default(USER)
-
-  // Metadata
-  totalDocuments Int       @default(0)
-  totalChunks    Int       @default(0)
-  totalTokens    Int       @default(0)
+  id             String                  @id @default(cuid())
+  userId         String
+  name           String
+  description    String?
+  type           KBType                  @default(USER)
+  totalDocuments Int                     @default(0)
+  totalChunks    Int                     @default(0)
+  totalTokens    Int                     @default(0)
   lastSyncedAt   DateTime?
-
-  isActive  Boolean  @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  // Relations
-  user      User                    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  documents Document[]
-  workflows WorkflowKnowledgeBase[]
+  isActive       Boolean                 @default(true)
+  createdAt      DateTime                @default(now())
+  updatedAt      DateTime                @updatedAt
+  documents      Document[]
+  user           User                    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  workflows      WorkflowKnowledgeBase[]
 
   @@index([userId])
   @@index([type])
@@ -288,42 +238,29 @@ model KnowledgeBase {
 }
 
 model Document {
-  id              String @id @default(cuid())
-  knowledgeBaseId String
-
-  // File info
-  filename     String
-  originalName String
-  fileType     String // pdf, docx, txt, md, csv, json
-  fileSize     Int // bytes
-  filePath     String // Storage path
-  fileUrl      String? // Public URL if needed
-
-  // Content
-  extractedText String? @db.Text
-  summary       String? @db.Text
-
-  // Metadata
-  pageCount Int?
-  wordCount Int?
-  language  String? @default("en")
-
-  // Processing status
-  status          ProcessingStatus @default(PENDING)
-  processingError String?          @db.Text
-
-  // Chunking info
-  chunkingStrategy String? @default("recursive")
-  chunkSize        Int?    @default(1000)
-  chunkOverlap     Int?    @default(200)
-
-  isActive  Boolean  @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  // Relations
-  knowledgeBase KnowledgeBase   @relation(fields: [knowledgeBaseId], references: [id], onDelete: Cascade)
-  chunks        DocumentChunk[]
+  id               String           @id @default(cuid())
+  knowledgeBaseId  String
+  filename         String
+  originalName     String
+  fileType         String
+  fileSize         Int
+  filePath         String
+  fileUrl          String?
+  extractedText    String?
+  summary          String?
+  pageCount        Int?
+  wordCount        Int?
+  language         String?          @default("en")
+  status           ProcessingStatus @default(PENDING)
+  processingError  String?
+  chunkingStrategy String?          @default("recursive")
+  chunkSize        Int?             @default(1000)
+  chunkOverlap     Int?             @default(200)
+  isActive         Boolean          @default(true)
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+  chunks           DocumentChunk[]
+  knowledgeBase    KnowledgeBase    @relation(fields: [knowledgeBaseId], references: [id], onDelete: Cascade)
 
   @@index([knowledgeBaseId])
   @@index([status])
@@ -331,26 +268,17 @@ model Document {
 }
 
 model DocumentChunk {
-  id         String @id @default(cuid())
-  documentId String
-
-  // Chunk info
-  content    String @db.Text
-  chunkIndex Int
-  tokenCount Int
-
-  // Metadata
-  pageNumber Int?
-  section    String?
-
-  // Vector embedding (stored as JSON for now, pgvector later)
+  id             String   @id @default(cuid())
+  documentId     String
+  content        String
+  chunkIndex     Int
+  tokenCount     Int
+  pageNumber     Int?
+  section        String?
   embedding      Json?
-  embeddingModel String @default("text-embedding-3-small")
-
-  createdAt DateTime @default(now())
-
-  // Relations
-  document Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  embeddingModel String   @default("text-embedding-3-small")
+  createdAt      DateTime @default(now())
+  document       Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
 
   @@index([documentId])
   @@index([chunkIndex])
@@ -358,21 +286,16 @@ model DocumentChunk {
 }
 
 model WorkflowKnowledgeBase {
-  id              String @id @default(cuid())
-  workflowId      String
-  knowledgeBaseId String
-
-  // Configuration
-  priority            Int   @default(0)
-  retrievalLimit      Int   @default(5) // Top K results
-  similarityThreshold Float @default(0.7)
-
-  isActive   Boolean  @default(true)
-  assignedAt DateTime @default(now())
-
-  // Relations
-  workflow      Workflow      @relation(fields: [workflowId], references: [id], onDelete: Cascade)
-  knowledgeBase KnowledgeBase @relation(fields: [knowledgeBaseId], references: [id], onDelete: Cascade)
+  id                  String        @id @default(cuid())
+  workflowId          String
+  knowledgeBaseId     String
+  priority            Int           @default(0)
+  retrievalLimit      Int           @default(5)
+  similarityThreshold Float         @default(0.7)
+  isActive            Boolean       @default(true)
+  assignedAt          DateTime      @default(now())
+  knowledgeBase       KnowledgeBase @relation(fields: [knowledgeBaseId], references: [id], onDelete: Cascade)
+  workflow            Workflow      @relation(fields: [workflowId], references: [id], onDelete: Cascade)
 
   @@unique([workflowId, knowledgeBaseId])
   @@index([workflowId])
@@ -380,36 +303,20 @@ model WorkflowKnowledgeBase {
   @@map("workflow_knowledge_bases")
 }
 
-enum KBType {
-  USER // Global user KB
-  WORKFLOW // Workflow-specific KB
-  DEMO // Demo-specific KB
-}
-
-enum ProcessingStatus {
-  PENDING
-  PROCESSING
-  COMPLETED
-  FAILED
-}
-
-// Token table for verification & reset
 model VerificationToken {
   id        String   @id @default(cuid())
   userId    String
-  tokenHash String // store hash, not raw token
-  type      String // 'email_verify' | 'password_reset'
+  tokenHash String
+  type      String
   expiresAt DateTime
   createdAt DateTime @default(now())
-
-  user User @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
 
   @@index([userId, type])
   @@index([expiresAt])
   @@map("verification_tokens")
 }
 
-// Feature Management for Tiered Access
 model Feature {
   id          String           @id @default(cuid())
   name        String           @unique
@@ -418,9 +325,7 @@ model Feature {
   isActive    Boolean          @default(true)
   createdAt   DateTime         @default(now())
   updatedAt   DateTime         @updatedAt
-
-  // Relations
-  users UserFeature[]
+  userFeatures UserFeature[] @relation("FeatureToUserFeature") // Explicit relation name
 
   @@map("features")
 }
@@ -431,10 +336,8 @@ model UserFeature {
   featureId String
   grantedAt DateTime  @default(now())
   expiresAt DateTime?
-
-  // Relations
-  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  feature Feature @relation(fields: [featureId], references: [id], onDelete: Cascade)
+  feature   Feature   @relation("FeatureToUserFeature", fields: [featureId], references: [id], onDelete: Cascade) // Link to Feature with explicit relation name
+  user      User      @relation("UserToUserFeature", fields: [userId], references: [id], onDelete: Cascade) // Link to User with explicit relation name
 
   @@unique([userId, featureId])
   @@index([userId])
@@ -442,7 +345,6 @@ model UserFeature {
   @@map("user_features")
 }
 
-// Dynamic Tier Limits Configuration
 model TierLimit {
   id                   String           @id @default(cuid())
   tier                 SubscriptionTier @unique
@@ -451,39 +353,40 @@ model TierLimit {
   maxKnowledgeBases    Int
   maxDocuments         Int
   maxIntegrations      Int
-  maxHelpdeskAgents    Int              @default(1)
   apiCallsPerMonth     Int
-  documentSizeLimit    Int // in bytes
+  documentSizeLimit    Int
   chunkSize            Int
   maxChunksPerDocument Int
   isActive             Boolean          @default(true)
   createdAt            DateTime         @default(now())
   updatedAt            DateTime         @updatedAt
+  maxHelpdeskAgents    Int              @default(1)
 
   @@map("tier_limits")
 }
 
-// Pricing Plans Configuration
 model PricingPlan {
   id          String           @id @default(cuid())
   tier        SubscriptionTier @unique
   name        String
   price       Decimal          @db.Decimal(10, 2)
   currency    String           @default("USD")
-  period      String           @default("month") // month, year, forever
+  period      String           @default("month")
   description String
-  features    String[] // Array of feature descriptions
+  features    String[]
   isPopular   Boolean          @default(false)
   isActive    Boolean          @default(true)
   ctaText     String           @default("Get Started")
   ctaHref     String           @default("/dashboard/userdemo")
+  stripeMonthlyPriceId String? // Stripe Price ID for monthly subscriptions
+  stripeYearlyPriceId  String? // Stripe Price ID for yearly subscriptions
+  annualDiscountPercentage Int? @default(0) // New: Annual discount percentage
   createdAt   DateTime         @default(now())
   updatedAt   DateTime         @updatedAt
 
   @@map("pricing_plans")
 }
 
-// Optional: disposable domain list (adding if not present, otherwise skipping)
 model BlockedEmailDomain {
   domain    String   @id
   reason    String?
@@ -492,68 +395,52 @@ model BlockedEmailDomain {
   @@map("blocked_email_domains")
 }
 
-// API Call Logging for Usage Tracking
 model ApiCallLog {
-  id     String @id @default(cuid())
-  userId String
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  // API Call Details
-  provider String // "openai", "anthropic", "google", etc.
-  model    String // "text-embedding-3-small", "gpt-4o", etc.
-  endpoint String // "embeddings", "chat", "completions", etc.
-
-  // Token Usage
-  inputTokens  Int @default(0)
-  outputTokens Int @default(0)
-  totalTokens  Int @default(0)
-
-  // Cost and Performance
-  cost         Float @default(0.0)
-  responseTime Int   @default(0) // milliseconds
-
-  // Context
-  context         String? // "knowledge_base_processing", "chat", "search", etc.
-  documentId      String? // Link to document if applicable
-  knowledgeBaseId String? // Link to knowledge base if applicable
-  workflowId      String? // Link to workflow if applicable
-
-  // Metadata
-  success      Boolean  @default(true)
-  errorMessage String?
-  createdAt    DateTime @default(now())
+  id              String   @id @default(cuid())
+  userId          String
+  provider        String
+  model           String
+  endpoint        String
+  inputTokens     Int      @default(0)
+  outputTokens    Int      @default(0)
+  totalTokens     Int      @default(0)
+  cost            Float    @default(0.0)
+  responseTime    Int      @default(0)
+  context         String?
+  documentId      String?
+  knowledgeBaseId String?
+  workflowId      String?
+  success         Boolean  @default(true)
+  errorMessage    String?
+  createdAt       DateTime @default(now())
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("api_call_logs")
 }
 
-// Helpdesk User Management
 model HelpdeskUser {
-  id             String   @id @default(cuid())
+  id             String              @id @default(cuid())
   userId         String
   name           String
   email          String
   chatwootUserId Int?
-  chatwootRole   String   @default("agent")
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-
-  // Relations
-  user    User                @relation(fields: [userId], references: [id], onDelete: Cascade)
-  inboxes HelpdeskUserInbox[]
+  chatwootRole   String              @default("agent")
+  createdAt      DateTime            @default(now())
+  updatedAt      DateTime            @updatedAt
+  inboxes        HelpdeskUserInbox[]
+  user           User                @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@map("helpdesk_users")
 }
 
 model HelpdeskUserInbox {
-  id             String   @id @default(cuid())
+  id             String       @id @default(cuid())
   helpdeskUserId String
   inboxId        Int
-  isActive       Boolean  @default(true)
-  assignedAt     DateTime @default(now())
-
-  // Relations
-  helpdeskUser HelpdeskUser @relation(fields: [helpdeskUserId], references: [id], onDelete: Cascade)
+  isActive       Boolean      @default(true)
+  assignedAt     DateTime     @default(now())
+  helpdeskUser   HelpdeskUser @relation(fields: [helpdeskUserId], references: [id], onDelete: Cascade)
 
   @@unique([helpdeskUserId, inboxId])
   @@index([helpdeskUserId])
@@ -561,22 +448,20 @@ model HelpdeskUserInbox {
   @@map("helpdesk_user_inboxes")
 }
 
-// NextAuth.js required tables
 model Account {
   id                String  @id @default(cuid())
   userId            String
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String? @db.Text
-  access_token      String? @db.Text
+  refresh_token     String?
+  access_token      String?
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String? @db.Text
+  id_token          String?
   session_state     String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
   @@map("accounts")
@@ -590,4 +475,54 @@ model Session {
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("sessions")
+}
+
+enum UserRole {
+  USER
+  ADMIN
+  SUPER_ADMIN
+}
+
+enum SubscriptionTier {
+  FREE
+  STARTER
+  TEAM
+  BUSINESS
+  ENTERPRISE
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  EXPIRED
+  CANCELLED
+  SUSPENDED
+}
+
+enum WorkflowStatus {
+  ACTIVE
+  INACTIVE
+  ERROR
+  PENDING
+}
+
+enum IntegrationType {
+  CALENDAR
+  DATABASE
+  API
+  WEBHOOK
+  CRM
+  HELPDESK
+}
+
+enum KBType {
+  USER
+  WORKFLOW
+  DEMO
+}
+
+enum ProcessingStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
 }

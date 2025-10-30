@@ -24,6 +24,7 @@ declare module 'next-auth' {
       totpRequired?: boolean // Add totpRequired
       subscriptionTier?: string // Add subscriptionTier
       subscriptionStatus?: string // Add subscriptionStatus
+      freeTrialEndsAt?: string | Date | null // Add freeTrialEndsAt
     }
   }
 
@@ -35,6 +36,7 @@ declare module 'next-auth' {
     totpRequired?: boolean // Add totpRequired to User type
     subscriptionTier?: string // Add subscriptionTier
     subscriptionStatus?: string // Add subscriptionStatus
+    freeTrialEndsAt?: string | Date | null // Add freeTrialEndsAt
   }
 }
 
@@ -48,6 +50,7 @@ declare module 'next-auth/jwt' {
     totpRequired?: boolean // Add totpRequired to JWT type
     subscriptionTier?: string // Add subscriptionTier
     subscriptionStatus?: string // Add subscriptionStatus
+    freeTrialEndsAt?: string | Date | null // Add freeTrialEndsAt
   }
 }
 
@@ -204,8 +207,12 @@ export const authOptions: NextAuthOptions = {
             });
             
             if (!existingUser) {
+              // Calculate free trial end date (14 days from now)
+              const freeTrialEndsAt = new Date();
+              freeTrialEndsAt.setDate(freeTrialEndsAt.getDate() + 14);
+
               // Create new user
-              await prisma?.user.create({
+              await prisma!.user.create({
                 data: {
                   email: user.email,
                   name: user.name || profile?.name || '',
@@ -213,7 +220,8 @@ export const authOptions: NextAuthOptions = {
                   isVerified: true,
                   role: 'USER',
                   subscriptionTier: 'FREE',
-                  subscriptionStatus: 'ACTIVE'
+                  subscriptionStatus: 'ACTIVE',
+                  freeTrialEndsAt, // Set free trial end date
                 }
               });
               console.log('[Auth] Created new Google OAuth user:', user.email);
@@ -242,19 +250,20 @@ export const authOptions: NextAuthOptions = {
     },
     async jwt({ token, user, trigger, session }) {
       // Always fetch the latest user data to ensure up-to-date verification status
-      const dbUser = await prisma?.user.findUnique({
+      const dbUser = await prisma!.user.findUnique({
         where: { email: (token.email || user?.email) as string }, // Use email instead of id
-        select: { 
-          id: true, 
-          role: true, 
-          tenantId: true, 
-          isVerified: true, 
-          avatarUrl: true, 
-          name: true, 
-          email: true, 
+        select: {
+          id: true,
+          role: true,
+          tenantId: true,
+          isVerified: true,
+          avatarUrl: true,
+          name: true,
+          email: true,
           totpSecret: true,
           subscriptionTier: true,
-          subscriptionStatus: true
+          subscriptionStatus: true,
+          freeTrialEndsAt: true, // Include freeTrialEndsAt
         }
       });
 
@@ -269,6 +278,7 @@ export const authOptions: NextAuthOptions = {
         token.totpRequired = dbUser.totpSecret ? true : false;
         token.subscriptionTier = dbUser.subscriptionTier as string;
         token.subscriptionStatus = dbUser.subscriptionStatus as string;
+        token.freeTrialEndsAt = dbUser.freeTrialEndsAt; // Set freeTrialEndsAt
       } else if (user) {
         // If user is new (only provided on first sign in), use its data
         token.id = user.id;
@@ -280,6 +290,7 @@ export const authOptions: NextAuthOptions = {
         token.email = user.email; // Ensure email is present
         token.subscriptionTier = user.subscriptionTier as string;
         token.subscriptionStatus = user.subscriptionStatus as string;
+        token.freeTrialEndsAt = (user as any).freeTrialEndsAt; // Assuming it might be passed from a custom authorize
         if ('totpRequired' in user) {
           token.totpRequired = user.totpRequired; // Set totpRequired if present from authorize
         }
@@ -306,6 +317,7 @@ export const authOptions: NextAuthOptions = {
         session.user.avatarUrl = token.avatarUrl;
         session.user.subscriptionTier = token.subscriptionTier as string;
         session.user.subscriptionStatus = token.subscriptionStatus as string;
+        session.user.freeTrialEndsAt = token.freeTrialEndsAt; // Set freeTrialEndsAt
         if ('totpRequired' in token) {
           session.user.totpRequired = token.totpRequired; // Add totpRequired to session
         }

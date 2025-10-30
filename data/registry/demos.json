@@ -961,26 +961,26 @@
   "localboxs-com-49d2553e": {
     "slug": "localboxs-com-49d2553e",
     "business": "localboxs.com",
-    "url": "https://localboxs.com",
+    "url": "https://localboxs.com/",
     "system_message_file": "./public/system_messages/n8n_System_Message_localboxs-com-49d2553e.md",
     "demo_url": "http://localhost:3000/demo/localboxs-com-49d2553e",
     "chatwoot": {
-      "inbox_id": 160,
-      "website_token": "T5Tezxunvo54iuLnAcAG9ZBd"
+      "inbox_id": 168,
+      "website_token": "wZrDctBx95FrvgP22zztwubQ"
     },
     "workflow_duplication": "success",
     "agent_bot": {
-      "id": 158,
-      "access_token": "EtHQ6ZFDbxuEcBbom2yjA5Su"
+      "id": 166,
+      "access_token": "RqvB9UWhdaGmKojr45qzoaFE"
     },
     "lead": {
       "name": "yilak kidane",
-      "email": "service@mcp4.ai",
+      "email": "yilak@mcp4.ai",
       "company": "",
       "phone": ""
     },
     "created_at": "2025-10-17T21:25:50.564Z",
-    "updated_at": "2025-10-27T03:14:17.045Z"
+    "updated_at": "2025-10-30T14:02:47.326Z"
   },
   "humanbot-io-0afa2bd9": {
     "slug": "humanbot-io-0afa2bd9",

@@ -162,10 +162,7 @@ export function UsageDashboard({ className = '' }: UsageDashboardProps) {
             <div className="flex items-center gap-2 mt-1 flex-wrap">
               <TierBadge tier={userTier} />
               {hasCritical && (
-                <span className="text-[10px] sm:text-xs text-red-600 dark:text-red-400 flex items-center gap-1">
-                  <AlertTriangle className="w-3 h-3" />
-                  Limits Exceeded
-                </span>
+                <></>
               )}
               {hasWarnings && !hasCritical && (
                 <span className="text-[10px] sm:text-xs text-amber-600 dark:text-amber-400 flex items-center gap-1">
@@ -269,11 +266,11 @@ export function UsageDashboard({ className = '' }: UsageDashboardProps) {
                   </div>
                   <div className="flex-1">
                     <h4 className="font-semibold text-slate-900 dark:text-slate-100 mb-1">
-                      {hasCritical ? 'Limits Exceeded' : 'Approaching Limits'}
+                      {hasCritical ? 'Limits Reached' : 'Approaching Limits'}
                     </h4>
                     <p className="text-sm text-slate-600 dark:text-slate-400 mb-3">
                       {hasCritical 
-                        ? 'You have exceeded your current plan limits. Upgrade to continue using the service.'
+                        ? 'You have reached your current plan limits. Upgrade to increase your limits.'
                         : 'You are approaching your current plan limits. Consider upgrading to avoid interruptions.'
                       }
                     </p>

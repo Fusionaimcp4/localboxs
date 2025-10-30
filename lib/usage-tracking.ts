@@ -1,8 +1,110 @@
 import { prisma } from '@/lib/prisma';
 import { SubscriptionTier } from '@/lib/generated/prisma';
 import { getDynamicTierLimits, DynamicTierLimits } from '@/lib/dynamic-tier-limits';
-import { checkUsageLimits, UsageStats } from '@/lib/tier-access';
+import { checkUsageLimits } from '@/lib/tier-access';
 import { FusionSubAccountService } from '@/lib/fusion-sub-accounts';
+import { getTierLimits } from '@/lib/features';
+
+export interface UsageStats {
+  demos: number;
+  workflows: number;
+  knowledgeBases: number;
+  documents: number;
+  integrations: number;
+  helpdeskAgents: number;
+  apiCalls: number;
+  fusionSpend: number;
+  fusionRequests: number;
+}
+
+// Metering helper: decide if a call is covered by plan or billed from balance.
+// If no cost provided, fetches actual Fusion costs first.
+export async function consumeApiCall(
+  userId: string,
+  usageCostUsd?: number
+): Promise<{
+  allowed: boolean;
+  coveredByPlan: boolean;
+  overQuota: boolean;
+  balanceAfter?: number;
+  reason?: string;
+}> {
+  try {
+    const user = await prisma!.user.findUnique({
+      where: { id: userId },
+      select: {
+        subscriptionTier: true,
+        apiCallsThisMonth: true,
+        balanceUsd: true,
+        freeTrialEndsAt: true, // Include freeTrialEndsAt
+      }
+    });
+
+    if (!user) {
+      return { allowed: false, coveredByPlan: false, overQuota: false, reason: 'User not found' };
+    }
+
+    const tier = user.subscriptionTier as SubscriptionTier;
+    const limits = await getDynamicTierLimits(tier);
+    const quota = limits.apiCallsPerMonth; // -1 means unlimited
+
+    // Check for expired free trial for FREE tier users
+    if (tier === 'FREE' && user.freeTrialEndsAt && new Date() > new Date(user.freeTrialEndsAt)) {
+      return {
+        allowed: false,
+        coveredByPlan: false,
+        overQuota: false,
+        reason: 'Free trial has ended. Please upgrade your plan.'
+      };
+    }
+
+    // Covered by plan if under quota or unlimited
+    const underQuota = quota === -1 || user.apiCallsThisMonth < quota;
+    if (underQuota) {
+      await prisma!.user.update({
+        where: { id: userId },
+        data: { apiCallsThisMonth: { increment: 1 } }
+      });
+      return { allowed: true, coveredByPlan: true, overQuota: false, balanceAfter: Number(user.balanceUsd) };
+    }
+
+    // Over quota: need to deduct exact cost from balance
+    const currentBalance = Number(user.balanceUsd || 0);
+    if (usageCostUsd === undefined) {
+      return {
+        allowed: false,
+        coveredByPlan: false,
+        overQuota: true,
+        balanceAfter: currentBalance,
+        reason: 'Usage cost not provided for over-quota call.'
+      };
+    }
+
+    if (currentBalance >= usageCostUsd) {
+      const updated = await prisma!.user.update({
+        where: { id: userId },
+        data: {
+          apiCallsThisMonth: { increment: 1 },
+          balanceUsd: { decrement: usageCostUsd }
+        },
+        select: { balanceUsd: true }
+      });
+      return { allowed: true, coveredByPlan: false, overQuota: true, balanceAfter: Number(updated.balanceUsd) };
+    }
+
+    // Insufficient balance
+    return {
+      allowed: false,
+      coveredByPlan: false,
+      overQuota: true,
+      balanceAfter: currentBalance,
+      reason: 'Insufficient balance. Please add funds.'
+    };
+  } catch (error) {
+    console.error('Failed to consume API call:', error);
+    return { allowed: false, coveredByPlan: false, overQuota: false, reason: 'Internal error' };
+  }
+}
 
 // Usage tracking for API routes
 export async function trackUsage(
@@ -27,17 +129,17 @@ export async function trackUsage(
 export async function getUserUsageStats(userId: string): Promise<UsageStats> {
   try {
     const [demos, workflows, knowledgeBases, documents, integrations, helpdeskAgents, user] = await Promise.all([
-      prisma.demo.count({ where: { userId } }),
-      prisma.workflow.count({ where: { userId } }),
-      prisma.knowledgeBase.count({ where: { userId } }),
-      prisma.document.count({ 
+      prisma!.demo.count({ where: { userId } }),
+      prisma!.workflow.count({ where: { userId } }),
+      prisma!.knowledgeBase.count({ where: { userId } }),
+      prisma!.document.count({ 
         where: { 
           knowledgeBase: { userId } 
         } 
       }),
-      prisma.integration.count({ where: { userId } }),
-      prisma.helpdeskUser.count({ where: { userId } }),
-      prisma.user.findUnique({
+      prisma!.integration.count({ where: { userId } }),
+      prisma!.helpdeskUser.count({ where: { userId } }),
+      prisma!.user.findUnique({
         where: { id: userId },
         select: { fusionSubAccountId: true }
       })
@@ -46,12 +148,16 @@ export async function getUserUsageStats(userId: string): Promise<UsageStats> {
     // Get API calls from both Fusion and our local tracking
     let fusionApiCalls = 0;
     let localApiCalls = 0;
+    let fusionSpend = 0; // Initialize fusionSpend
+    let fusionRequests = 0; // Initialize fusionRequests
     
     // Get Fusion API calls if user has a sub-account
     if (user?.fusionSubAccountId) {
       try {
         const usageData = await FusionSubAccountService.getUsageMetrics(parseInt(user.fusionSubAccountId));
         fusionApiCalls = usageData.metrics?.requests || 0;
+        fusionSpend = usageData.metrics?.spend || 0; // Populate fusionSpend
+        fusionRequests = usageData.metrics?.requests || 0; // Populate fusionRequests
       } catch (error) {
         console.error('Failed to get Fusion usage data:', error);
         // Continue with fusionApiCalls = 0 if Fusion call fails
@@ -60,7 +166,7 @@ export async function getUserUsageStats(userId: string): Promise<UsageStats> {
     
     // Get local API calls (knowledge base processing, etc.)
     try {
-      const localStats = await prisma.apiCallLog.aggregate({
+      const localStats = await prisma!.apiCallLog.aggregate({
         where: { userId },
         _count: { id: true },
       });
@@ -79,7 +185,9 @@ export async function getUserUsageStats(userId: string): Promise<UsageStats> {
       documents,
       integrations,
       helpdeskAgents,
-      apiCalls
+      apiCalls,
+      fusionSpend,
+      fusionRequests,
     };
   } catch (error) {
     console.error('Failed to get usage stats:', error);
@@ -90,7 +198,9 @@ export async function getUserUsageStats(userId: string): Promise<UsageStats> {
       documents: 0,
       integrations: 0,
       helpdeskAgents: 0,
-      apiCalls: 0
+      apiCalls: 0,
+      fusionSpend: 0,
+      fusionRequests: 0,
     };
   }
 }
@@ -101,18 +211,32 @@ export async function canPerformAction(
   action: 'create_demo' | 'create_workflow' | 'create_knowledge_base' | 'upload_document' | 'create_integration'
 ): Promise<{ allowed: boolean; reason?: string; usage?: UsageStats }> {
   try {
-    const user = await prisma.user.findUnique({
+    const user = await prisma!.user.findUnique({
       where: { id: userId },
-      select: { subscriptionTier: true }
+      select: {
+        subscriptionTier: true,
+        freeTrialEndsAt: true, // Include freeTrialEndsAt
+      }
     });
 
     if (!user) {
       return { allowed: false, reason: 'User not found' };
     }
 
+    const userTier = user.subscriptionTier as SubscriptionTier;
+    const limits = await getDynamicTierLimits(userTier);
+
+    // Check for expired free trial for FREE tier users
+    if (userTier === 'FREE' && user.freeTrialEndsAt && new Date() > new Date(user.freeTrialEndsAt)) {
+      return {
+        allowed: false,
+        reason: 'Free trial has ended. Please upgrade your plan.',
+        usage: await getUserUsageStats(userId) // Provide updated usage stats
+      };
+    }
+
     const usage = await getUserUsageStats(userId);
-    const limits = await getDynamicTierLimits(user.subscriptionTier as SubscriptionTier);
-    const usageCheck = checkUsageLimits(user.subscriptionTier as SubscriptionTier, usage);
+    const usageCheck = checkUsageLimits(userTier, usage);
 
     // Check specific action limits using dynamic limits
     switch (action) {
@@ -191,7 +315,7 @@ export function withTierCheck(
         );
       }
 
-      const user = await prisma.user.findUnique({
+      const user = await prisma!.user.findUnique({
         where: { id: userId },
         select: { subscriptionTier: true }
       });
@@ -207,7 +331,7 @@ export function withTierCheck(
       const limits = getTierLimits(userTier);
       
       // Check if user has access to the required tier
-      const tierOrder = ['FREE', 'PRO', 'PRO_PLUS', 'ENTERPRISE'];
+      const tierOrder = ['FREE', 'STARTER', 'TEAM', 'BUSINESS', 'ENTERPRISE'];
       const userTierIndex = tierOrder.indexOf(userTier);
       const requiredTierIndex = tierOrder.indexOf(requiredTier);
       
@@ -239,7 +363,7 @@ export function withTierCheck(
 export async function getUsageAnalytics(userId: string) {
   try {
     const usage = await getUserUsageStats(userId);
-    const user = await prisma.user.findUnique({
+    const user = await prisma!.user.findUnique({
       where: { id: userId },
       select: { subscriptionTier: true }
     });

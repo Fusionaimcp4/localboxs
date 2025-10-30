@@ -74,7 +74,7 @@ export async function PUT(request: NextRequest) {
     }
 
     // Validate tier
-    const validTiers: SubscriptionTier[] = ['FREE', 'PRO', 'PRO_PLUS', 'ENTERPRISE'];
+    const validTiers: SubscriptionTier[] = ['FREE', 'STARTER', 'TEAM', 'BUSINESS', 'ENTERPRISE'];
     if (!validTiers.includes(tier)) {
       return NextResponse.json(
         { error: 'Invalid tier' },
@@ -148,7 +148,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Validate tier
-    const validTiers: SubscriptionTier[] = ['FREE', 'PRO', 'PRO_PLUS', 'ENTERPRISE'];
+    const validTiers: SubscriptionTier[] = ['FREE', 'STARTER', 'TEAM', 'BUSINESS', 'ENTERPRISE'];
     if (!validTiers.includes(tier)) {
       return NextResponse.json(
         { error: 'Invalid tier' },

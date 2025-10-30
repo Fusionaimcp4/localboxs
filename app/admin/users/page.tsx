@@ -98,8 +98,9 @@ const roleConfig = {
 
 const tierConfig = {
   FREE: { label: 'Free', color: 'bg-slate-100 text-slate-700 dark:bg-slate-700 dark:text-slate-300', icon: Zap },
-  PRO: { label: 'Pro', color: 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300', icon: Crown },
-  PRO_PLUS: { label: 'Pro+', color: 'bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-300', icon: Crown },
+  STARTER: { label: 'Starter', color: 'bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-300', icon: Crown },
+  TEAM: { label: 'Team', color: 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300', icon: Crown },
+  BUSINESS: { label: 'Business', color: 'bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-300', icon: Crown },
   ENTERPRISE: { label: 'Enterprise', color: 'bg-gradient-to-r from-amber-100 to-orange-100 text-amber-700 dark:from-amber-900 dark:to-orange-900 dark:text-amber-300', icon: Crown }
 };
 
@@ -462,8 +463,9 @@ export default function AdminUsersPage() {
                   <SelectContent>
                     <SelectItem value="all">All tiers</SelectItem>
                     <SelectItem value="FREE">Free</SelectItem>
-                    <SelectItem value="PRO">Pro</SelectItem>
-                    <SelectItem value="PRO_PLUS">Pro+</SelectItem>
+                    <SelectItem value="STARTER">Starter</SelectItem>
+                    <SelectItem value="TEAM">Team</SelectItem>
+                    <SelectItem value="BUSINESS">Business</SelectItem>
                     <SelectItem value="ENTERPRISE">Enterprise</SelectItem>
                   </SelectContent>
                 </Select>
@@ -543,7 +545,8 @@ export default function AdminUsersPage() {
               <tbody>
                 {users.map((user) => {
                   const RoleIcon = roleConfig[user.role].icon;
-                  const TierIcon = tierConfig[user.subscriptionTier].icon;
+                  const tierConfigItem = tierConfig[user.subscriptionTier];
+                  const TierIcon = tierConfigItem?.icon || Crown;
                   
                   return (
                     <tr key={user.id} className="border-b border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/50">
@@ -579,9 +582,9 @@ export default function AdminUsersPage() {
                         </Badge>
                       </td>
                       <td className="p-3">
-                        <Badge className={tierConfig[user.subscriptionTier].color}>
+                        <Badge className={tierConfigItem?.color || 'bg-slate-100 text-slate-700 dark:bg-slate-700 dark:text-slate-300'}>
                           <TierIcon className="h-3 w-3 mr-1" />
-                          {tierConfig[user.subscriptionTier].label}
+                          {tierConfigItem?.label || user.subscriptionTier}
                         </Badge>
                       </td>
                       <td className="p-3">
@@ -858,8 +861,9 @@ function EditUserForm({
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="FREE">Free</SelectItem>
-              <SelectItem value="PRO">Pro</SelectItem>
-              <SelectItem value="PRO_PLUS">Pro+</SelectItem>
+              <SelectItem value="STARTER">Starter</SelectItem>
+              <SelectItem value="TEAM">Team</SelectItem>
+              <SelectItem value="BUSINESS">Business</SelectItem>
               <SelectItem value="ENTERPRISE">Enterprise</SelectItem>
             </SelectContent>
           </Select>
@@ -1017,8 +1021,9 @@ function CreateUserForm({
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="FREE">Free</SelectItem>
-              <SelectItem value="PRO">Pro</SelectItem>
-              <SelectItem value="PRO_PLUS">Pro+</SelectItem>
+              <SelectItem value="STARTER">Starter</SelectItem>
+              <SelectItem value="TEAM">Team</SelectItem>
+              <SelectItem value="BUSINESS">Business</SelectItem>
               <SelectItem value="ENTERPRISE">Enterprise</SelectItem>
             </SelectContent>
           </Select>

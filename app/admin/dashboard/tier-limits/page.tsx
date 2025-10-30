@@ -35,23 +35,28 @@ interface TierLimitsData {
 }
 
 const tierConfig = {
-  FREE: { 
-    label: 'Free', 
+  FREE: {
+    label: 'Free',
     color: 'bg-slate-100 text-slate-700 dark:bg-slate-700 dark:text-slate-300',
     icon: <Zap className="w-4 h-4" />
   },
-  PRO: { 
-    label: 'Pro', 
+  STARTER: {
+    label: 'Starter',
+    color: 'bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-300',
+    icon: <Crown className="w-4 h-4" />
+  },
+  TEAM: {
+    label: 'Team',
     color: 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300',
     icon: <Crown className="w-4 h-4" />
   },
-  PRO_PLUS: { 
-    label: 'Pro+', 
+  BUSINESS: {
+    label: 'Business',
     color: 'bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-300',
     icon: <Crown className="w-4 h-4" />
   },
-  ENTERPRISE: { 
-    label: 'Enterprise', 
+  ENTERPRISE: {
+    label: 'Enterprise',
     color: 'bg-gradient-to-r from-amber-100 to-orange-100 text-amber-700 dark:from-amber-900 dark:to-orange-900 dark:text-amber-300',
     icon: <Crown className="w-4 h-4" />
   }
@@ -215,171 +220,173 @@ export default function TierLimitsManagement() {
 
       {/* Tier Limits */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {Object.entries(tierLimits).map(([tier, limits], index) => {
-          const config = tierConfig[tier as keyof typeof tierConfig];
-          
-          return (
-            <motion.div
-              key={tier}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3, delay: index * 0.1 }}
-              className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6"
-            >
-              {/* Tier Header */}
-              <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center gap-3">
-                  <span className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium ${config.color}`}>
-                    {config.icon}
-                    {config.label}
-                  </span>
-                </div>
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => resetTierLimits(tier)}
-                    disabled={saving === tier}
-                    className="p-2 rounded-lg bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors disabled:opacity-50"
-                    title="Reset to defaults"
-                  >
-                    <RotateCcw className="w-4 h-4" />
-                  </button>
-                  <button
-                    onClick={() => updateTierLimits(tier, limits)}
-                    disabled={saving === tier}
-                    className="p-2 rounded-lg bg-emerald-100 dark:bg-emerald-900 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-200 dark:hover:bg-emerald-800 transition-colors disabled:opacity-50"
-                    title="Save changes"
-                  >
-                    {saving === tier ? (
-                      <div className="w-4 h-4 border-2 border-emerald-600 border-t-transparent rounded-full animate-spin" />
-                    ) : (
-                      <Save className="w-4 h-4" />
-                    )}
-                  </button>
-                </div>
-              </div>
-
-              {/* Limits Form */}
-              <div className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
-                      <BarChart3 className="w-4 h-4 inline mr-1" />
-                      Demos
-                    </label>
-                    <input
-                      type="number"
-                      value={limits.maxDemos === -1 ? '' : limits.maxDemos}
-                      onChange={(e) => handleLimitChange(tier, 'maxDemos', e.target.value)}
-                      placeholder="Unlimited"
-                      className="w-full px-3 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg focus:outline-none focus:border-emerald-500 transition-colors text-slate-900 dark:text-slate-100"
-                    />
+        {Object.entries(tierLimits)
+          .filter(([tier]) => tierConfig.hasOwnProperty(tier))
+          .map(([tier, limits], index) => {
+            const config = tierConfig[tier as keyof typeof tierConfig];
+            
+            return (
+              <motion.div
+                key={tier}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: index * 0.1 }}
+                className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6"
+              >
+                {/* Tier Header */}
+                <div className="flex items-center justify-between mb-6">
+                  <div className="flex items-center gap-3">
+                    <span className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium ${config.color}`}>
+                      {config.icon}
+                      {config.label}
+                    </span>
                   </div>
-                  <div>
-                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
-                      <Settings className="w-4 h-4 inline mr-1" />
-                      Workflows
-                    </label>
-                    <input
-                      type="number"
-                      value={limits.maxWorkflows === -1 ? '' : limits.maxWorkflows}
-                      onChange={(e) => handleLimitChange(tier, 'maxWorkflows', e.target.value)}
-                      placeholder="Unlimited"
-                      className="w-full px-3 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg focus:outline-none focus:border-emerald-500 transition-colors text-slate-900 dark:text-slate-100"
-                    />
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => resetTierLimits(tier)}
+                      disabled={saving === tier}
+                      className="p-2 rounded-lg bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors disabled:opacity-50"
+                      title="Reset to defaults"
+                    >
+                      <RotateCcw className="w-4 h-4" />
+                    </button>
+                    <button
+                      onClick={() => updateTierLimits(tier, limits)}
+                      disabled={saving === tier}
+                      className="p-2 rounded-lg bg-emerald-100 dark:bg-emerald-900 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-200 dark:hover:bg-emerald-800 transition-colors disabled:opacity-50"
+                      title="Save changes"
+                    >
+                      {saving === tier ? (
+                        <div className="w-4 h-4 border-2 border-emerald-600 border-t-transparent rounded-full animate-spin" />
+                      ) : (
+                        <Save className="w-4 h-4" />
+                      )}
+                    </button>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
-                      <Database className="w-4 h-4 inline mr-1" />
-                      Knowledge Bases
-                    </label>
-                    <input
-                      type="number"
-                      value={limits.maxKnowledgeBases === -1 ? '' : limits.maxKnowledgeBases}
-                      onChange={(e) => handleLimitChange(tier, 'maxKnowledgeBases', e.target.value)}
-                      placeholder="Unlimited"
-                      className="w-full px-3 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg focus:outline-none focus:border-emerald-500 transition-colors text-slate-900 dark:text-slate-100"
-                    />
+                {/* Limits Form */}
+                <div className="space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
+                        <BarChart3 className="w-4 h-4 inline mr-1" />
+                        Demos
+                      </label>
+                      <input
+                        type="number"
+                        value={limits.maxDemos === -1 ? '' : limits.maxDemos}
+                        onChange={(e) => handleLimitChange(tier, 'maxDemos', e.target.value)}
+                        placeholder="Unlimited"
+                        className="w-full px-3 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg focus:outline-none focus:border-emerald-500 transition-colors text-slate-900 dark:text-slate-100"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
+                        <Settings className="w-4 h-4 inline mr-1" />
+                        Workflows
+                      </label>
+                      <input
+                        type="number"
+                        value={limits.maxWorkflows === -1 ? '' : limits.maxWorkflows}
+                        onChange={(e) => handleLimitChange(tier, 'maxWorkflows', e.target.value)}
+                        placeholder="Unlimited"
+                        className="w-full px-3 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg focus:outline-none focus:border-emerald-500 transition-colors text-slate-900 dark:text-slate-100"
+                      />
+                    </div>
                   </div>
-                  <div>
-                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
-                      <FileText className="w-4 h-4 inline mr-1" />
-                      Documents
-                    </label>
-                    <input
-                      type="number"
-                      value={limits.maxDocuments === -1 ? '' : limits.maxDocuments}
-                      onChange={(e) => handleLimitChange(tier, 'maxDocuments', e.target.value)}
-                      placeholder="Unlimited"
-                      className="w-full px-3 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg focus:outline-none focus:border-emerald-500 transition-colors text-slate-900 dark:text-slate-100"
-                    />
-                  </div>
-                </div>
 
-                <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
+                        <Database className="w-4 h-4 inline mr-1" />
+                        Knowledge Bases
+                      </label>
+                      <input
+                        type="number"
+                        value={limits.maxKnowledgeBases === -1 ? '' : limits.maxKnowledgeBases}
+                        onChange={(e) => handleLimitChange(tier, 'maxKnowledgeBases', e.target.value)}
+                        placeholder="Unlimited"
+                        className="w-full px-3 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg focus:outline-none focus:border-emerald-500 transition-colors text-slate-900 dark:text-slate-100"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
+                        <FileText className="w-4 h-4 inline mr-1" />
+                        Documents
+                      </label>
+                      <input
+                        type="number"
+                        value={limits.maxDocuments === -1 ? '' : limits.maxDocuments}
+                        onChange={(e) => handleLimitChange(tier, 'maxDocuments', e.target.value)}
+                        placeholder="Unlimited"
+                        className="w-full px-3 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg focus:outline-none focus:border-emerald-500 transition-colors text-slate-900 dark:text-slate-100"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
+                        <LinkIcon className="w-4 h-4 inline mr-1" />
+                        Integrations
+                      </label>
+                      <input
+                        type="number"
+                        value={limits.maxIntegrations === -1 ? '' : limits.maxIntegrations}
+                        onChange={(e) => handleLimitChange(tier, 'maxIntegrations', e.target.value)}
+                        placeholder="Unlimited"
+                        className="w-full px-3 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg focus:outline-none focus:border-emerald-500 transition-colors text-slate-900 dark:text-slate-100"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
+                        <Crown className="w-4 h-4 inline mr-1" />
+                        Helpdesk Agents
+                      </label>
+                      <input
+                        type="number"
+                        value={limits.maxHelpdeskAgents === -1 ? '' : limits.maxHelpdeskAgents}
+                        onChange={(e) => handleLimitChange(tier, 'maxHelpdeskAgents', e.target.value)}
+                        placeholder="Unlimited"
+                        className="w-full px-3 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg focus:outline-none focus:border-emerald-500 transition-colors text-slate-900 dark:text-slate-100"
+                      />
+                    </div>
+                  </div>
+
                   <div>
                     <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
-                      <LinkIcon className="w-4 h-4 inline mr-1" />
-                      Integrations
+                      <Zap className="w-4 h-4 inline mr-1" />
+                      API Calls/Month
                     </label>
                     <input
                       type="number"
-                      value={limits.maxIntegrations === -1 ? '' : limits.maxIntegrations}
-                      onChange={(e) => handleLimitChange(tier, 'maxIntegrations', e.target.value)}
+                      value={limits.apiCallsPerMonth === -1 ? '' : limits.apiCallsPerMonth}
+                      onChange={(e) => handleLimitChange(tier, 'apiCallsPerMonth', e.target.value)}
                       placeholder="Unlimited"
                       className="w-full px-3 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg focus:outline-none focus:border-emerald-500 transition-colors text-slate-900 dark:text-slate-100"
                     />
                   </div>
+
                   <div>
                     <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
-                      <Crown className="w-4 h-4 inline mr-1" />
-                      Helpdesk Agents
+                      Document Size Limit
                     </label>
                     <input
                       type="number"
-                      value={limits.maxHelpdeskAgents === -1 ? '' : limits.maxHelpdeskAgents}
-                      onChange={(e) => handleLimitChange(tier, 'maxHelpdeskAgents', e.target.value)}
-                      placeholder="Unlimited"
+                      value={limits.documentSizeLimit === -1 ? '' : Math.round(limits.documentSizeLimit / (1024 * 1024))}
+                      onChange={(e) => handleLimitChange(tier, 'documentSizeLimit', e.target.value ? (parseInt(e.target.value) * 1024 * 1024).toString() : '0')}
+                      placeholder="MB"
                       className="w-full px-3 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg focus:outline-none focus:border-emerald-500 transition-colors text-slate-900 dark:text-slate-100"
                     />
+                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                      Current: {formatBytes(limits.documentSizeLimit)}
+                    </p>
                   </div>
                 </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
-                    <Zap className="w-4 h-4 inline mr-1" />
-                    API Calls/Month
-                  </label>
-                  <input
-                    type="number"
-                    value={limits.apiCallsPerMonth === -1 ? '' : limits.apiCallsPerMonth}
-                    onChange={(e) => handleLimitChange(tier, 'apiCallsPerMonth', e.target.value)}
-                    placeholder="Unlimited"
-                    className="w-full px-3 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg focus:outline-none focus:border-emerald-500 transition-colors text-slate-900 dark:text-slate-100"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
-                    Document Size Limit
-                  </label>
-                  <input
-                    type="number"
-                    value={limits.documentSizeLimit === -1 ? '' : Math.round(limits.documentSizeLimit / (1024 * 1024))}
-                    onChange={(e) => handleLimitChange(tier, 'documentSizeLimit', e.target.value ? (parseInt(e.target.value) * 1024 * 1024).toString() : '0')}
-                    placeholder="MB"
-                    className="w-full px-3 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg focus:outline-none focus:border-emerald-500 transition-colors text-slate-900 dark:text-slate-100"
-                  />
-                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                    Current: {formatBytes(limits.documentSizeLimit)}
-                  </p>
-                </div>
-              </div>
-            </motion.div>
-          );
-        })}
+              </motion.div>
+            );
+          })}
       </div>
 
       {/* Info Box */}

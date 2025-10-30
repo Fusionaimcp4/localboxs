@@ -125,7 +125,7 @@ export function UsageLimit({ current, limit, label, className = '' }: UsageLimit
       
       {status !== 'safe' && (
         <p className="text-xs text-amber-600 dark:text-amber-400">
-          {status === 'critical' ? 'Limit exceeded' : 'Approaching limit'}
+          {status === 'critical' ? 'Limit reached — upgrade to unlock more.' : 'Approaching limit'}
         </p>
       )}
     </div>
@@ -153,6 +153,21 @@ export function TierBadge({ tier, className = '' }: TierBadgeProps) {
     PRO_PLUS: { 
       label: 'Pro+', 
       color: 'bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-300',
+      icon: <Crown className="w-3 h-3" />
+    },
+    STARTER: {
+      label: 'Starter',
+      color: 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300',
+      icon: <Crown className="w-3 h-3" />
+    },
+    TEAM: {
+      label: 'Team',
+      color: 'bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-300',
+      icon: <Crown className="w-3 h-3" />
+    },
+    BUSINESS: {
+      label: 'Business',
+      color: 'bg-indigo-100 text-indigo-700 dark:bg-indigo-900 dark:text-indigo-300',
       icon: <Crown className="w-3 h-3" />
     },
     ENTERPRISE: { 
