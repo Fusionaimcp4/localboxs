@@ -228,7 +228,7 @@ export default function BillingPage() {
           <div className="flex flex-col gap-2">
             <div className="font-medium text-slate-700 dark:text-slate-300 text-sm mb-1">Add Funds:</div>
           <div className="flex flex-wrap gap-2">
-            {[10, 25, 50].map(a => (
+            {[25, 50, 100].map(a => (
               <button
                 key={a}
                 disabled={creating === 'topup'}
