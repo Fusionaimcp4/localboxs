@@ -156,34 +156,34 @@ export default function AdminPricingPage() {
   const getTierIcon = (tier: SubscriptionTier) => {
     switch (tier) {
       case 'FREE':
-        return <Zap className="w-6 h-6 text-slate-600 dark:text-slate-400" />;
+        return <Zap className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />;
       case 'STARTER':
-        return <Crown className="w-6 h-6 text-blue-500 dark:text-blue-400" />;
+        return <Crown className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />;
       case 'TEAM':
-        return <Crown className="w-6 h-6 text-blue-600 dark:text-blue-400" />;
+        return <Crown className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />;
       case 'BUSINESS':
-        return <Crown className="w-6 h-6 text-purple-600 dark:text-purple-400" />;
+        return <Crown className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />;
       case 'ENTERPRISE':
-        return <Crown className="w-6 h-6 text-amber-600 dark:text-amber-400" />;
+        return <Crown className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />;
       default:
-        return <Crown className="w-6 h-6 text-slate-600 dark:text-slate-400" />;
+        return <Crown className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />;
     }
   };
 
   const getTierColor = (tier: SubscriptionTier) => {
     switch (tier) {
       case 'FREE':
-        return 'bg-slate-100 dark:bg-slate-700';
+        return 'bg-emerald-50 dark:bg-emerald-900/20';
       case 'STARTER':
-        return 'bg-blue-50 dark:bg-blue-900/20';
+        return 'bg-emerald-50 dark:bg-emerald-900/20';
       case 'TEAM':
-        return 'bg-blue-100 dark:bg-blue-900';
+        return 'bg-emerald-50 dark:bg-emerald-900/20';
       case 'BUSINESS':
-        return 'bg-purple-100 dark:bg-purple-900';
+        return 'bg-emerald-50 dark:bg-emerald-900/20';
       case 'ENTERPRISE':
-        return 'bg-gradient-to-r from-amber-100 to-orange-100 dark:from-amber-900 dark:to-orange-900';
+        return 'bg-emerald-50 dark:bg-emerald-900/20';
       default:
-        return 'bg-slate-100 dark:bg-slate-700';
+        return 'bg-emerald-50 dark:bg-emerald-900/20';
     }
   };
 
@@ -211,10 +211,12 @@ export default function AdminPricingPage() {
 
   if (error) {
     return (
-      <div className="px-4 py-6 space-y-6 text-center text-red-500 dark:text-red-400">
-        <XCircle className="w-12 h-12 mx-auto" />
-        <p className="text-lg">Error: {error}</p>
-        <Button onClick={fetchPricingPlans}>Retry</Button>
+      <div className="px-4 py-6 space-y-6">
+        <div className="p-4 rounded-xl flex items-center gap-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800">
+          <XCircle className="w-5 h-5 text-red-600 dark:text-red-400" />
+          <span className="font-medium text-red-800 dark:text-red-200">Error: {error}</span>
+          <Button onClick={fetchPricingPlans} variant="outline" className="ml-auto">Retry</Button>
+        </div>
       </div>
     );
   }
@@ -224,7 +226,7 @@ export default function AdminPricingPage() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="px-4 py-6 space-y-6"
+      className="px-4 py-6 space-y-6 text-slate-900"
     >
       <div className="flex items-center justify-between">
         <div>
@@ -243,15 +245,15 @@ export default function AdminPricingPage() {
         {pricingPlans
           .sort((a, b) => tierOrder.indexOf(a.tier) - tierOrder.indexOf(b.tier))
           .map((plan) => (
-            <Card key={plan.id} className="relative">
+            <Card key={plan.id} className="relative bg-white border border-slate-200">
               <CardHeader className="pb-4">
                 <div className="flex items-center gap-3">
                   <div className={`p-2 rounded-lg ${getTierColor(plan.tier)}`}>
                     {getTierIcon(plan.tier)}
                   </div>
                   <div className="flex-1">
-                    <CardTitle className="text-xl">{plan.name}</CardTitle>
-                    <p className="text-sm text-slate-600 dark:text-slate-400">{plan.tier}</p>
+                    <CardTitle className="text-xl text-slate-900">{plan.name}</CardTitle>
+                    <p className="text-sm text-slate-600">{plan.tier}</p>
                   </div>
                   {plan.isPopular && (
                     <div className="flex items-center gap-1 px-2 py-1 bg-gradient-to-r from-emerald-100 to-emerald-200 dark:from-emerald-900 dark:to-emerald-800 rounded-full">
@@ -266,16 +268,17 @@ export default function AdminPricingPage() {
                 {/* Basic Info */}
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor={`${plan.id}-name`}>Plan Name</Label>
+                    <Label htmlFor={`${plan.id}-name`} className="text-slate-900">Plan Name</Label>
                     <Input
                       id={`${plan.id}-name`}
                       value={plan.name}
                       onChange={(e) => handleInputChange(plan.id, 'name', e.target.value)}
                       placeholder="Plan name"
+                      className="bg-white text-slate-900 border border-slate-300 placeholder:text-slate-400"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor={`${plan.id}-price`}>Price</Label>
+                    <Label htmlFor={`${plan.id}-price`} className="text-slate-900">Price</Label>
                     <div className="relative">
                       <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-slate-400" />
                       <Input
@@ -284,7 +287,7 @@ export default function AdminPricingPage() {
                         value={plan.price}
                         onChange={(e) => handleInputChange(plan.id, 'price', parseFloat(e.target.value) || 0)}
                         placeholder="0"
-                        className="pl-10"
+                        className="pl-10 bg-white text-slate-900 border border-slate-300 placeholder:text-slate-400"
                         min="0"
                         step="0.01"
                       />
@@ -294,91 +297,99 @@ export default function AdminPricingPage() {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor={`${plan.id}-currency`}>Currency</Label>
+                    <Label htmlFor={`${plan.id}-currency`} className="text-slate-900">Currency</Label>
                     <Input
                       id={`${plan.id}-currency`}
                       value={plan.currency}
                       onChange={(e) => handleInputChange(plan.id, 'currency', e.target.value)}
                       placeholder="USD"
+                      className="bg-white text-slate-900 border border-slate-300 placeholder:text-slate-400"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor={`${plan.id}-period`}>Period</Label>
+                    <Label htmlFor={`${plan.id}-period`} className="text-slate-900">Period</Label>
                     <Input
                       id={`${plan.id}-period`}
                       value={plan.period}
                       onChange={(e) => handleInputChange(plan.id, 'period', e.target.value)}
                       placeholder="month, year, forever, contact us"
+                      className="bg-white text-slate-900 border border-slate-300 placeholder:text-slate-400"
                     />
                   </div>
                 </div>
 
                 {/* Description */}
                 <div className="space-y-2">
-                  <Label htmlFor={`${plan.id}-description`}>Description</Label>
+                  <Label htmlFor={`${plan.id}-description`} className="text-slate-900">Description</Label>
                   <Textarea
                     id={`${plan.id}-description`}
                     value={plan.description}
                     onChange={(e) => handleInputChange(plan.id, 'description', e.target.value)}
                     placeholder="Plan description"
                     rows={2}
+                    className="bg-white text-slate-900 border border-slate-300 placeholder:text-slate-400"
                   />
                 </div>
 
                 {/* CTA Settings */}
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor={`${plan.id}-ctaText`}>CTA Text</Label>
+                    <Label htmlFor={`${plan.id}-ctaText`} className="text-slate-900">CTA Text</Label>
                     <Input
                       id={`${plan.id}-ctaText`}
                       value={plan.ctaText}
                       onChange={(e) => handleInputChange(plan.id, 'ctaText', e.target.value)}
                       placeholder="Get Started"
+                      className="bg-white text-slate-900 border border-slate-300 placeholder:text-slate-400"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor={`${plan.id}-ctaHref`}>CTA Link</Label>
+                    <Label htmlFor={`${plan.id}-ctaHref`} className="text-slate-900">CTA Link</Label>
                     <Input
                       id={`${plan.id}-ctaHref`}
                       value={plan.ctaHref}
                       onChange={(e) => handleInputChange(plan.id, 'ctaHref', e.target.value)}
                       placeholder="/dashboard/userdemo"
+                      className="bg-white text-slate-900 border border-slate-300 placeholder:text-slate-400"
                     />
                   </div>
                 </div>
 
                 {/* Stripe Price ID */}
                 <div className="space-y-2">
-                  <Label htmlFor={`${plan.id}-stripeMonthlyPriceId`}>Stripe Monthly Price ID</Label>
+                  <Label htmlFor={`${plan.id}-stripeMonthlyPriceId`} className="text-slate-900">Stripe Monthly Price ID</Label>
                   <Input
                     id={`${plan.id}-stripeMonthlyPriceId`}
                     value={plan.stripeMonthlyPriceId || ''}
                     onChange={(e) => handleInputChange(plan.id, 'stripeMonthlyPriceId', e.target.value)}
                     placeholder="Monthly price ID (e.g., price_month_123)"
+                    className="bg-white text-slate-900 border border-slate-300 placeholder:text-slate-400"
                   />
-                  <p className="text-xs text-slate-500">Use the monthly recurring Price ID from the plan's LIVE product.</p>
+                  <p className="text-xs text-slate-600">Use the monthly recurring Price ID from the plan's LIVE product.</p>
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor={`${plan.id}-stripeYearlyPriceId`}>Stripe Yearly Price ID</Label>
+                  <Label htmlFor={`${plan.id}-stripeYearlyPriceId`} className="text-slate-900">Stripe Yearly Price ID</Label>
                   <Input
                     id={`${plan.id}-stripeYearlyPriceId`}
                     value={plan.stripeYearlyPriceId || ''}
                     onChange={(e) => handleInputChange(plan.id, 'stripeYearlyPriceId', e.target.value)}
                     placeholder="Yearly price ID (e.g., price_year_123)"
+                    className="bg-white text-slate-900 border border-slate-300 placeholder:text-slate-400"
                   />
-                  <p className="text-xs text-slate-500">Use the yearly recurring Price ID from the plan's LIVE product.</p>
+                  <p className="text-xs text-slate-600">Use the yearly recurring Price ID from the plan's LIVE product.</p>
                 </div>
 
                 {/* Annual Discount Percentage */}
                 <div className="space-y-2">
-                  <Label htmlFor={`${plan.id}-annualDiscountPercentage`}>Annual Discount (%)</Label>
+                  <Label htmlFor={`${plan.id}-annualDiscountPercentage`} className="text-slate-900">Annual Discount (%)</Label>
                   <Input
                     id={`${plan.id}-annualDiscountPercentage`}
                     type="number"
                     value={plan.annualDiscountPercentage ?? 0}
                     onChange={(e) => handleInputChange(plan.id, 'annualDiscountPercentage', parseInt(e.target.value) || 0)}
                     placeholder="0"
+                    className="bg-white text-slate-900 border border-slate-300 placeholder:text-slate-400"
                     min="0"
                     max="100"
                   />
@@ -386,7 +397,7 @@ export default function AdminPricingPage() {
 
                 {/* Popular Toggle */}
                 <div className="flex items-center justify-between">
-                  <Label htmlFor={`${plan.id}-popular`}>Mark as Popular</Label>
+                  <Label htmlFor={`${plan.id}-popular`} className="text-slate-900">Mark as Popular</Label>
                   <Switch
                     id={`${plan.id}-popular`}
                     checked={plan.isPopular}
@@ -397,7 +408,7 @@ export default function AdminPricingPage() {
                 {/* Features */}
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <Label>Features</Label>
+                    <Label className="text-slate-900">Features</Label>
                     <Button
                       type="button"
                       variant="outline"
@@ -414,7 +425,7 @@ export default function AdminPricingPage() {
                           value={feature}
                           onChange={(e) => handleFeatureChange(plan.id, index, e.target.value)}
                           placeholder={`Feature ${index + 1}`}
-                          className="flex-1"
+                          className="flex-1 bg-white text-slate-900 border border-slate-300 placeholder:text-slate-400"
                         />
                         <Button
                           type="button"
@@ -455,12 +466,12 @@ export default function AdminPricingPage() {
       {/* Success Message */}
       {!error && pricingPlans.length > 0 && (
         <motion.div
-          initial={{ opacity: 0, y: 10 }}
+          initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="fixed bottom-4 right-4 bg-emerald-500 text-white px-4 py-2 rounded-lg shadow-lg flex items-center gap-2"
+          className="p-4 rounded-xl flex items-center gap-3 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800"
         >
-          <CheckCircle className="w-4 h-4" />
-          <span className="text-sm font-medium">Pricing plans loaded successfully</span>
+          <CheckCircle className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+          <span className="font-medium text-emerald-800 dark:text-emerald-200">Pricing plans loaded successfully</span>
         </motion.div>
       )}
     </motion.div>
