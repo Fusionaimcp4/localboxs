@@ -30,7 +30,7 @@ export function StandalonePricingPage() {
   const plans: PricingPlan[] = [
     {
       name: "Starter",
-      price: { monthly: 49, yearly: 490 },
+      price: { monthly: 49, yearly: 500 },
       description: "For small companies getting started with AI automation",
       features: [
         "1 active chatbot",
@@ -41,7 +41,7 @@ export function StandalonePricingPage() {
     },
     {
       name: "Team",
-      price: { monthly: 139, yearly: 1390 },
+      price: { monthly: 139, yearly: 1418 },
       description: "For growing companies with team collaboration needs",
       features: [
         "5 active chatbots",
@@ -53,7 +53,7 @@ export function StandalonePricingPage() {
     },
     {
       name: "Business",
-      price: { monthly: 413, yearly: 4130 },
+      price: { monthly: 413, yearly: 4213 },
       description: "For businesses that need advanced AI features",
       features: [
         "Unlimited active chatbots",
@@ -78,7 +78,7 @@ export function StandalonePricingPage() {
   // Calculate annual discount percentage
   const calculateDiscount = () => {
     const starterMonthly = 49 * 12 // $588
-    const starterYearly = 490
+    const starterYearly = 500
     const discount = Math.round(((starterMonthly - starterYearly) / starterMonthly) * 100)
     return discount
   }
@@ -371,7 +371,7 @@ export function StandalonePricingPage() {
                     <td className="py-4 px-6 text-slate-700 dark:text-slate-300 font-medium">Knowledge Bases</td>
                     <td className="text-center py-4 px-6 text-slate-900 dark:text-slate-100">1</td>
                     <td className="text-center py-4 px-6 text-slate-900 dark:text-slate-100">5</td>
-                    <td className="text-center py-4 px-6 text-slate-900 dark:text-slate-100">50</td>
+                    <td className="text-center py-4 px-6 text-slate-900 dark:text-slate-100">25</td>
                     <td className="text-center py-4 px-6 text-slate-900 dark:text-slate-100">Unlimited</td>
                   </tr>
                   
@@ -380,7 +380,7 @@ export function StandalonePricingPage() {
                     <td className="py-4 px-6 text-slate-700 dark:text-slate-300 font-medium">Helpdesk Agents</td>
                     <td className="text-center py-4 px-6 text-slate-900 dark:text-slate-100">1 seat</td>
                     <td className="text-center py-4 px-6 text-slate-900 dark:text-slate-100">5 seats</td>
-                    <td className="text-center py-4 px-6 text-slate-900 dark:text-slate-100">50 seats</td>
+                    <td className="text-center py-4 px-6 text-slate-900 dark:text-slate-100">10 seats</td>
                     <td className="text-center py-4 px-6 text-slate-900 dark:text-slate-100">Unlimited</td>
                   </tr>
                   
@@ -389,7 +389,7 @@ export function StandalonePricingPage() {
                     <td className="py-4 px-6 text-slate-700 dark:text-slate-300 font-medium">Documents</td>
                     <td className="text-center py-4 px-6 text-slate-900 dark:text-slate-100">1</td>
                     <td className="text-center py-4 px-6 text-slate-900 dark:text-slate-100">50</td>
-                    <td className="text-center py-4 px-6 text-slate-900 dark:text-slate-100">500</td>
+                    <td className="text-center py-4 px-6 text-slate-900 dark:text-slate-100">250</td>
                     <td className="text-center py-4 px-6 text-slate-900 dark:text-slate-100">Unlimited</td>
                   </tr>
                   

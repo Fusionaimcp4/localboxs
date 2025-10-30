@@ -51,18 +51,50 @@ export function ComparisonPanel() {
                     <div className="bg-white dark:bg-slate-700 rounded-2xl px-4 py-3 shadow-sm flex-1">
                       <p className="text-sm text-slate-900 dark:text-white">{item.message}</p>
                     </div>
-                    {i === 0 && <div className="w-6 h-6 rounded bg-[#FF6900] flex items-center justify-center flex-shrink-0 self-end shadow-sm">
-                      <MessageSquare className="w-3.5 h-3.5 text-white" />
-                    </div>}
-                    {i === 1 && <div className="w-6 h-6 rounded bg-purple-600 flex items-center justify-center flex-shrink-0 self-end shadow-sm">
-                      <MessageSquare className="w-3.5 h-3.5 text-white" />
-                    </div>}
-                    {i === 2 && <div className="w-6 h-6 rounded bg-indigo-600 flex items-center justify-center flex-shrink-0 self-end shadow-sm">
-                      <MessageSquare className="w-3.5 h-3.5 text-white" />
-                    </div>}
-                    {i === 3 && <div className="w-6 h-6 rounded bg-red-500 flex items-center justify-center flex-shrink-0 self-end shadow-sm">
-                      <MessageSquare className="w-3.5 h-3.5 text-white" />
-                    </div>}
+                    {i === 0 && (
+  <div className="w-6 h-6 flex items-center justify-center flex-shrink-0 self-end shadow-sm">
+    <Image 
+      src="/webchat.svg" 
+      alt="WeChat" 
+      width={24} 
+      height={24} 
+      className="w-full h-full object-contain"
+    />
+  </div>
+)}
+                    {i === 1 && (
+  <div className="w-6 h-6 flex items-center justify-center flex-shrink-0 self-end shadow-sm">
+    <Image 
+      src="/email.svg" 
+      alt="WeChat" 
+      width={24} 
+      height={24} 
+      className="w-full h-full object-contain"
+    />
+  </div>
+)}
+                    {i === 2 && (
+  <div className="w-6 h-6 flex items-center justify-center flex-shrink-0 self-end shadow-sm">
+    <Image 
+      src="/whatsapp.svg" 
+      alt="WeChat" 
+      width={24} 
+      height={24} 
+      className="w-full h-full object-contain"
+    />
+  </div>
+)}
+                    {i === 3 && (
+  <div className="w-6 h-6 flex items-center justify-center flex-shrink-0 self-end shadow-sm">
+    <Image 
+      src="/messenger.svg" 
+      alt="WeChat" 
+      width={24} 
+      height={24} 
+      className="w-full h-full object-contain"
+    />
+  </div>
+)}
                   </div>
                 ))}
               </div>
